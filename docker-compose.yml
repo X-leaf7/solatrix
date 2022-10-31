@@ -1,0 +1,43 @@
+version: '2'
+services:
+  django:
+    image: ss_django
+    build:
+      context: ./
+    volumes:
+      - ./:/app
+    ports:
+      - "8000:8000"
+    links:
+      - db
+      - redis
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.local
+  client:
+    image: ss_client
+    build:
+      context: ./client
+    links:
+      - django
+    volumes:
+      - ./client:/app
+      - exclude:/app/node_modules/
+    ports:
+      - "80:80"
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: localpostgrespassword
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+  redis:
+    image: redis
+
+volumes:
+  exclude:

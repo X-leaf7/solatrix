@@ -1,0 +1,153 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  This template generates a Fargate Cluster and required resources
+
+Metadata:
+  Author: https://www.linkedin.com/in/jacob-foster-508280140/
+
+Parameters:
+  ClusterName:
+    Type: String
+    Description: The name of the Fargate Cluster
+
+  AdminImage:
+    Type: String
+    Description: ECR Image URI for the Admin App
+
+Resources:
+
+  Cluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      CapacityProviders:
+        - FARGATE
+      ClusterName: !Ref ClusterName
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+      Configuration:
+        ExecuteCommandConfiguration:
+          Logging: DEFAULT
+
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Join ['', [!Ref ClusterName, LoadBalancerSecurityGroup]]
+      VpcId: !GetAtt VPC.Outputs.VPCId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  ContainerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Join ['', [!Ref ClusterName, ContainerSecurityGroup]]
+      VpcId: !GetAtt VPC.Outputs.VPCId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3000
+          ToPort: 3000
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+
+  AdminService:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      Parameters:
+        ServiceName: AdminBackend
+        ClusterName: !Ref ClusterName
+        Cluster: !Ref Cluster
+        VPC: !GetAtt VPC.Outputs.VPCId
+        PrivateSubnet1: !GetAtt VPC.Outputs.PrivateSubnet0
+        PrivateSubnet2: !GetAtt VPC.Outputs.PrivateSubnet1
+        PublicSubnet1: !GetAtt VPC.Outputs.PublicSubnet0
+        PublicSubnet2: !GetAtt VPC.Outputs.PublicSubnet1
+        ExecutionRole: !Ref ExecutionRole
+        TaskRole: !Ref TaskRole
+        AutoScalingRole: !GetAtt AutoScalingRole.Arn
+        LoadBalancerSecurityGroup: !Ref LoadBalancerSecurityGroup
+        ContainerSecurityGroup: !Ref ContainerSecurityGroup
+        Image: !Ref AdminImage
+        HealthCheckPath: "/"
+        MaxContainers: 2
+        AutoScalingTargetValue: 80
+        RDSConnectionSecret: !GetAtt RDSCluster.Outputs.ConnectionSecret
+      TemplateURL: FargateService.yaml
+
+  RDSCluster:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      Parameters:
+        ClusterName: !Ref ClusterName
+        SubnetA: !GetAtt VPC.Outputs.PrivateSubnet0
+        SubnetB: !GetAtt VPC.Outputs.PrivateSubnet1
+        VPC: !GetAtt VPC.Outputs.VPCId
+        ContainerSecurityGroup: !Ref ContainerSecurityGroup
+      TemplateURL: RDS.yaml
+
+  VPC:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      Parameters: 
+        VPCName: !Ref ClusterName
+      TemplateURL: VPC.yaml
+
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
+      Policies:
+        - PolicyName: AllowReadConnectionSecret
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: 'secretsmanager:GetSecretValue'
+                Resource: !GetAtt RDSCluster.Outputs.ConnectionSecret
+
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: AllowECSExec
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Resource: '*'
+                Action:
+                  - 'ssmmessages:CreateControlChannel'
+                  - 'ssmmessages:CreateDataChannel'
+                  - 'ssmmessages:OpenControlChannel'
+                  - 'ssmmessages:OpenDataChannel'
+
+  AutoScalingRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole'
