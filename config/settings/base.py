@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'rest_framework',
-    'constance',
 
     # Django CMS
     'djangocms_text_ckeditor',
@@ -160,9 +159,3 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = "/app/static"
-
-CONSTANCE_CONFIG = {
-    'CONTACT_EMAIL': ('support@split-side.com', 'Email Address to display to the public'),
-}
-CONSTANCE_BACKEND = 'constance.backends.redisd.CachingRedisBackend'
-CONSTANCE_REDIS_CACHE_TIMEOUT = 60

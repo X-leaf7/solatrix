@@ -1,6 +1,5 @@
 coreapi==2.3.3
 django==4.0.8
-django-constance==2.9.1
 django-cms==3.11.0
 djangocms-text-ckeditor==5.1.1
 djangocms-file==3.0.0
