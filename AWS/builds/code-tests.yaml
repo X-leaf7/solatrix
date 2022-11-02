@@ -4,7 +4,7 @@ phases:
   install:
     on-failure: ABORT
     runtime-versions:
-      python: 3.9
+      python: 3.10
       nodejs: 16
   build:
     on-failure: ABORT
