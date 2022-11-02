@@ -5,6 +5,7 @@ phases:
     on-failure: ABORT
     runtime-versions:
       python: 3.9
+      nodejs: 16
   build:
     on-failure: ABORT
     commands:
@@ -18,7 +19,9 @@ phases:
     on-failure: ABORT
     commands:
       - aws cloudformation package --template-file AWS/cloudformation/Stack.yaml --s3-bucket $S3_ARTIFACT_BUCKET --s3-prefix $CODEBUILD_RESOLVED_SOURCE_VERSION --output-template-file stack.yaml
+      - cd client && npm ci && npm run build
 
 artifacts:
   files:
     - stack.yaml
+    - client/out/**/*

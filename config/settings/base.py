@@ -161,10 +161,6 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATIC_ROOT = "/app/static"
 
-STATICFILES_DIRS = [
-    BASE_DIR / "client/out/",
-]
-
 CONSTANCE_CONFIG = {
     'CONTACT_EMAIL': ('support@split-side.com', 'Email Address to display to the public'),
 }

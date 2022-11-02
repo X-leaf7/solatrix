@@ -1,0 +1,147 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  This template runs the ECS task definition on a schedule for different cron events
+
+Metadata:
+  Author: https://www.linkedin.com/in/jacob-foster-508280140/
+
+Parameters:
+  ClusterName:
+    Type: String
+
+  DjangoAdminLoadBalancerUrl:
+    Type: String
+
+  Domain:
+    Type: String
+
+  CertificateArn:
+    Type: String
+    # Must be in us-east-1
+    Default: 'arn:aws:acm:us-east-1:514205568277:certificate/9eb13fdb-082c-4d3c-b26f-a23343e41a0d'
+
+Resources:
+
+  Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      AccessControl: Private
+
+  CloudFrontOriginAccess:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties: 
+      OriginAccessControlConfig: 
+        Description: 'Access S3 from CloudFront'
+        Name: !Ref ClusterName
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  CorsResponsePolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub "${ClusterName}-CORS"
+        CorsConfig:
+          AccessControlAllowCredentials: false
+          AccessControlAllowHeaders:
+            Items:
+              - '*'
+          AccessControlExposeHeaders:
+            Items:
+              - '*'
+          AccessControlAllowMethods:
+            Items:
+              - GET
+              - HEAD
+              - OPTIONS
+          AccessControlAllowOrigins:
+            Items:
+              - !Sub 'https://${Domain}'
+          OriginOverride: true
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Sid: AllowCloudFrontServicePrincipalReadOnly
+          Effect: Allow
+          Principal:
+            Service: "cloudfront.amazonaws.com"
+          Action: "s3:GetObject"
+          Resource: !Sub "arn:aws:s3:::${Bucket}/*"
+          Condition:
+             StringEquals:
+                "AWS:SourceArn": !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${CDN}"
+
+  BackendCachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties: 
+      CachePolicyConfig: 
+        Comment: Caching Policy for Admin Django Backend
+        DefaultTTL: 3600
+        MaxTTL: 86400
+        MinTTL: 300
+        Name: !Sub "${ClusterName}-Backend"
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingGzip: false
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringsBehavior: none
+
+  CDN:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref Domain
+        Comment: Staging CloudFront Distribution
+        CacheBehaviors:
+          - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            CachePolicyId: !Ref BackendCachePolicy
+            PathPattern: '/api/*'
+            TargetOriginId: django-backend
+            ViewerProtocolPolicy: redirect-to-https
+          - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            CachePolicyId: !Ref BackendCachePolicy
+            PathPattern: '/cms/*'
+            TargetOriginId: django-backend
+            ViewerProtocolPolicy: redirect-to-https
+        DefaultCacheBehavior:
+          TargetOriginId: s3-bucket
+          AllowedMethods: [GET, HEAD]
+          ViewerProtocolPolicy: redirect-to-https
+          Compress: true
+          CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6' # AWS Managed Cache optimized
+          ResponseHeadersPolicyId: !Ref CorsResponsePolicy
+        DefaultRootObject: index.html
+        Enabled: true
+        Origins: 
+          - Id: s3-bucket
+            DomainName: !Sub "${Bucket}.s3.amazonaws.com"
+            OriginAccessControlId: !GetAtt CloudFrontOriginAccess.Id
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+          - Id: django-backend
+            DomainName: !Ref DjangoAdminLoadBalancerUrl
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+        PriceClass: PriceClass_100
+        ViewerCertificate: 
+          AcmCertificateArn: !Ref CertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+
+Outputs:
+  Bucket:
+    Value: !Ref Bucket

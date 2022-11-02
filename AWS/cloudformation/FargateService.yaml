@@ -66,6 +66,10 @@ Parameters:
   AutoScalingTargetValue:
     Type: Number
     Default: 50
+  S3BucketName:
+    Type: String
+  Domain:
+    Type: String
 Resources:
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
@@ -104,6 +108,10 @@ Resources:
               Value: postgres
             - Name: DJANGO_SETTINGS_MODULE
               Value: config.settings.prod
+            - Name: S3_BUCKET
+              Value: !Ref S3BucketName
+            - Name: WEB_DOMAIN
+              Value: !Ref Domain
           Secrets:
             - Name: DB_USERNAME
               ValueFrom: !Sub "${RDSConnectionSecret}:username::"
@@ -242,3 +250,8 @@ Resources:
         ScaleOutCooldown: 10
         # Keep things at or lower than 50% CPU utilization, for example
         TargetValue: !Ref AutoScalingTargetValue
+
+
+Outputs:
+  LoadBalancerUrl:
+    Value: !GetAtt LoadBalancer.DNSName

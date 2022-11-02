@@ -218,7 +218,7 @@ Resources:
               InputArtifacts:
                 - Name: App
               OutputArtifacts:
-                - Name: PackagedStack
+                - Name: BuildOutput
               RunOrder: 1
         - Name: UpdateDevOpsStack
           Actions:
@@ -253,6 +253,7 @@ Resources:
                 Provider: CodeBuild
               Configuration:
                 ProjectName: !Ref DockerBuild
+                PrimarySource: App
                 EnvironmentVariables: !Sub |
                   [
                     {"name": "REPOSITORY_URI", "value": "${AdminAppEcrRepository.RepositoryUri}"},
@@ -260,6 +261,7 @@ Resources:
                   ]
               InputArtifacts:
                 - Name: App
+                - Name: BuildOutput
               OutputArtifacts:
                 - Name: AdminImageJSON
               RunOrder: 1
@@ -272,14 +274,14 @@ Resources:
                 Provider: CloudFormation
                 Version: 1
               InputArtifacts:
-                - Name: PackagedStack
+                - Name: BuildOutput
                 - Name: AdminImageJSON
               Configuration:
                 ActionMode: CREATE_UPDATE
                 StackName: !Sub "${GitSourceRepo}-${GitBranch}-app"
                 Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 RoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/CloudFormationRole"
-                TemplatePath: PackagedStack::stack.yaml
+                TemplatePath: BuildOutput::stack.yaml
                 ParameterOverrides: !Sub |
                   {
                     "ClusterName": "${GitSourceRepo}-${GitBranch}",

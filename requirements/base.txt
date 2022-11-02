@@ -6,6 +6,7 @@ djangocms-text-ckeditor==5.1.1
 djangocms-file==3.0.0
 django-filer==2.2.3
 djangorestframework==3.14.0
+django-storages==1.13.1
 psycopg2-binary==2.9.5
 gunicorn==20.1.0
 redis==4.3.4

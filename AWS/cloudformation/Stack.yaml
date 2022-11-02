@@ -15,6 +15,10 @@ Parameters:
     Type: String
     Description: ECR Image URI for the Admin App
 
+  Domain:
+    Type: String
+    Default: 'newprod.split-side.com'
+
 Resources:
 
   Cluster:
@@ -78,6 +82,8 @@ Resources:
         MaxContainers: 2
         AutoScalingTargetValue: 80
         RDSConnectionSecret: !GetAtt RDSCluster.Outputs.ConnectionSecret
+        S3BucketName: !GetAtt CDN.Outputs.Bucket
+        Domain: !Ref Domain
       TemplateURL: FargateService.yaml
 
   RDSCluster:
@@ -97,6 +103,15 @@ Resources:
       Parameters: 
         VPCName: !Ref ClusterName
       TemplateURL: VPC.yaml
+
+  CDN:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        ClusterName: !Ref ClusterName
+        Domain: !Ref Domain
+        DjangoAdminLoadBalancerUrl: !GetAtt AdminService.LoadBalancerUrl
+      TemplateURL: CDN.yaml
 
   ExecutionRole:
     Type: AWS::IAM::Role
@@ -139,6 +154,15 @@ Resources:
                   - 'ssmmessages:CreateDataChannel'
                   - 'ssmmessages:OpenControlChannel'
                   - 'ssmmessages:OpenDataChannel'
+        - PolicyName: AllowS3Access
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Resource:
+                  - !Sub "arn:aws:s3:::${CDN.Outputs.Bucket}/*"
+                  - !Sub "arn:aws:s3:::${CDN.Outputs.Bucket}"
+                Action: "s3:*"
 
   AutoScalingRole:
     Type: AWS::IAM::Role
