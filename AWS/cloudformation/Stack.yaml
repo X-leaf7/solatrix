@@ -110,7 +110,7 @@ Resources:
       Parameters:
         ClusterName: !Ref ClusterName
         Domain: !Ref Domain
-        DjangoAdminLoadBalancerUrl: !GetAtt AdminService.LoadBalancerUrl
+        DjangoAdminLoadBalancerUrl: !GetAtt AdminService.Outputs.LoadBalancerUrl
       TemplateURL: CDN.yaml
 
   ExecutionRole:
