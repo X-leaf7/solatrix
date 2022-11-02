@@ -82,7 +82,7 @@ Resources:
         MaxContainers: 2
         AutoScalingTargetValue: 80
         RDSConnectionSecret: !GetAtt RDSCluster.Outputs.ConnectionSecret
-        S3BucketName: !GetAtt CDN.Outputs.Bucket
+        S3BucketName: !Ref Bucket
         Domain: !Ref Domain
       TemplateURL: FargateService.yaml
 
@@ -104,6 +104,12 @@ Resources:
         VPCName: !Ref ClusterName
       TemplateURL: VPC.yaml
 
+  Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      AccessControl: Private
+
   CDN:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -111,6 +117,7 @@ Resources:
         ClusterName: !Ref ClusterName
         Domain: !Ref Domain
         DjangoAdminLoadBalancerUrl: !GetAtt AdminService.Outputs.LoadBalancerUrl
+        Bucket: !Ref Bucket
       TemplateURL: CDN.yaml
 
   ExecutionRole:
@@ -160,8 +167,8 @@ Resources:
             Statement:
               - Effect: Allow
                 Resource:
-                  - !Sub "arn:aws:s3:::${CDN.Outputs.Bucket}/*"
-                  - !Sub "arn:aws:s3:::${CDN.Outputs.Bucket}"
+                  - !Sub "arn:aws:s3:::${Bucket}/*"
+                  - !Sub "arn:aws:s3:::${Bucket}"
                 Action: "s3:*"
 
   AutoScalingRole:
