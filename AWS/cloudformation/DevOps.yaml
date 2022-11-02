@@ -142,7 +142,7 @@ Resources:
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
         Type: LINUX_CONTAINER
-        Image: "aws/codebuild/standard:4.0"
+        Image: "aws/codebuild/standard:6.0"
         EnvironmentVariables:
           - Name: S3_ARTIFACT_BUCKET
             Value: !Ref CodePipelineArtifactBucket
@@ -160,7 +160,7 @@ Resources:
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
         Type: LINUX_CONTAINER
-        Image: "aws/codebuild/standard:4.0"
+        Image: "aws/codebuild/standard:6.0"
         PrivilegedMode: True
       Name: !Sub "${GitSourceRepo}-${GitBranch}-docker-build"
       ServiceRole: !Ref CodeBuildServiceRole
@@ -176,7 +176,7 @@ Resources:
       Environment:
         ComputeType: BUILD_GENERAL1_SMALL
         Type: LINUX_CONTAINER
-        Image: "aws/codebuild/standard:4.0"
+        Image: "aws/codebuild/standard:6.0"
       Name: !Sub "${GitSourceRepo}-${GitBranch}-e2e-tests"
       ServiceRole: !Ref CodeBuildServiceRole
 
