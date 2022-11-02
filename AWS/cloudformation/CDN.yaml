@@ -92,7 +92,7 @@ Resources:
           HeadersConfig:
             HeaderBehavior: none
           QueryStringsConfig:
-            QueryStringsBehavior: none
+            QueryStringBehavior: none
 
   CDN:
     Type: AWS::CloudFront::Distribution
