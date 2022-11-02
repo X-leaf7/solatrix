@@ -12,11 +12,7 @@ RUN cd ${WORKDIR} \
 # Create the final container with the app
 FROM public.ecr.aws/docker/library/python:${PYTHON_VERSION}-slim
 
-ENV USER=docker \
-    GROUP=docker \
-    UID=12345 \
-    GID=23456 \
-    HOME=/app \
+ENV HOME=/app \
     PYTHONUNBUFFERED=1
 
 WORKDIR ${HOME}
@@ -24,9 +20,7 @@ WORKDIR ${HOME}
 # Copy installed packages
 COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 # Copy the application
-COPY --chown=docker:docker . .
-# Collect the static files
-RUN python manage.py collectstatic --noinput
+COPY . .
 
 EXPOSE 80
 
