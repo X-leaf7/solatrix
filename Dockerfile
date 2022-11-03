@@ -22,6 +22,6 @@ COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python
 # Copy the application
 COPY . .
 
-EXPOSE 80
+EXPOSE 8000
 
 CMD ["./run-web.sh"]
