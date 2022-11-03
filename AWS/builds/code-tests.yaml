@@ -25,3 +25,8 @@ artifacts:
   files:
     - stack.yaml
     - client/out/**/*
+
+cache:
+  paths:
+    - 'client/node_modules/**/*' # Cache `node_modules` for faster `npm ci`
+    - 'client/.next/cache/**/*' # Cache Next.js for faster application rebuilds
