@@ -41,7 +41,7 @@ Parameters:
     Type: String
   ContainerPort:
     Type: Number
-    Default: 3000
+    Default: 8000
   LoadBalancerPort:
     Type: Number
     Default: 443
