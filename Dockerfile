@@ -1,7 +1,7 @@
 ARG PYTHON_VERSION=3.9
 
 # Build dependencies in separate container
-FROM public.ecr.aws/docker/library/python:${PYTHON_VERSION}-slim as builder
+FROM public.ecr.aws/docker/library/python:${PYTHON_VERSION} as builder
 ENV WORKDIR /app
 ADD requirements ${WORKDIR}/requirements
 
@@ -10,10 +10,11 @@ RUN cd ${WORKDIR} \
     && pip install -r requirements/base.txt 
 
 # Create the final container with the app
-FROM public.ecr.aws/docker/library/python:${PYTHON_VERSION}-slim
+FROM public.ecr.aws/docker/library/python:${PYTHON_VERSION}
 
 ENV HOME=/app \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    APP_PORT=8000
 
 WORKDIR ${HOME}
 
@@ -22,6 +23,8 @@ COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python
 # Copy the application
 COPY . .
 
-EXPOSE 8000
+EXPOSE ${APP_PORT}
+
+HEALTHCHECK --retries=5 CMD curl --fail http://localhost:${APP_PORT}/health/ || exit 1
 
 CMD ["./run-web.sh"]
