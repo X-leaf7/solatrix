@@ -78,7 +78,7 @@ Resources:
         LoadBalancerSecurityGroup: !Ref LoadBalancerSecurityGroup
         ContainerSecurityGroup: !Ref ContainerSecurityGroup
         Image: !Ref AdminImage
-        HealthCheckPath: "/"
+        HealthCheckPath: "/health/"
         MaxContainers: 2
         AutoScalingTargetValue: 80
         RDSConnectionSecret: !GetAtt RDSCluster.Outputs.ConnectionSecret

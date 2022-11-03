@@ -33,8 +33,9 @@ router.register(r'stadiums', StadiumViewSet)
 router.register(r'sports', SportViewSet)
 
 urlpatterns = [
-    path('api/', include(router.urls)),
+    path('health/', include('health_check.urls')),
     path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     re_path(r'^cms/', include('cms.urls'))
 ]
