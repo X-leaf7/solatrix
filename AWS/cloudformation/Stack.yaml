@@ -56,8 +56,8 @@ Resources:
       VpcId: !GetAtt VPC.Outputs.VPCId
       SecurityGroupIngress:
         - IpProtocol: tcp
-          FromPort: 3000
-          ToPort: 3000
+          FromPort: 8000
+          ToPort: 8000
           SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
 
   AdminService:
