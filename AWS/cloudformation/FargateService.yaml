@@ -152,7 +152,7 @@ Resources:
         MinimumHealthyPercent: 100
         MaximumPercent: 200
       # This may need to be adjusted if the container takes a while to start up
-      HealthCheckGracePeriodSeconds: 60
+      HealthCheckGracePeriodSeconds: 90
       LaunchType: FARGATE
       EnableExecuteCommand: true
       NetworkConfiguration:
@@ -186,7 +186,7 @@ Resources:
       # will look for a 200 status code by default unless specified otherwise
       HealthCheckPath: !Ref HealthCheckPath
       HealthCheckTimeoutSeconds: 5
-      UnhealthyThresholdCount: 2
+      UnhealthyThresholdCount: 3
       HealthyThresholdCount: 2
       Port: !Ref ContainerPort
       Protocol: HTTP
