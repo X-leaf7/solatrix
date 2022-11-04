@@ -103,6 +103,11 @@ Resources:
       ContainerDefinitions:
         - Name: !Ref ServiceName
           Image: !Ref Image
+          HealthCheck:
+            Command: [ "CMD-SHELL", "curl --fail http://localhost:${APP_PORT}/health/ || exit 1"]
+            StartPeriod: 30
+            Interval: 10
+            Retries: 5
           Environment:
             - Name: DB_NAME
               Value: postgres

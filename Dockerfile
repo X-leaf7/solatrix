@@ -25,6 +25,4 @@ COPY . .
 
 EXPOSE ${APP_PORT}
 
-HEALTHCHECK --retries=5 CMD curl --fail http://localhost:${APP_PORT}/health/ || exit 1
-
 CMD ["./run-web.sh"]
