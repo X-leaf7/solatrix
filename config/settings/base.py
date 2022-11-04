@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-pd5!s0xp0237d=%3(v#+%0wh!&*l#949+%696v!e(_l)h1yiuo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -44,9 +44,9 @@ INSTALLED_APPS = [
     # Health Checks
     'health_check',
     'health_check.db',
-    'health_check.cache',
+    # 'health_check.cache',
     'health_check.storage',
-    'health_check.contrib.migrations',
+    # 'health_check.contrib.migrations',
 
     # DRF
     'rest_framework',

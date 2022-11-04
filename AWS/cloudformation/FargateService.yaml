@@ -107,7 +107,7 @@ Resources:
             Command:
               - "CMD-SHELL"
               - !Sub "curl --fail http://localhost:${ContainerPort}/health/ || exit 1"
-            StartPeriod: 30
+            StartPeriod: 90
             Interval: 10
             Retries: 5
           Environment:
