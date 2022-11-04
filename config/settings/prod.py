@@ -34,7 +34,7 @@ if EC2_PRIVATE_IPS:
     # or .append() will fail
     ALLOWED_HOSTS.extend(EC2_PRIVATE_IPS)
 
-ALLOWED_HOSTS += ['*.split-side.com', 'split-side.com']
+ALLOWED_HOSTS += ['.split-side.com', 'split-side.com']
 
 
 DATABASES = {
