@@ -36,6 +36,8 @@ if EC2_PRIVATE_IPS:
 
 ALLOWED_HOSTS += ['.split-side.com', 'split-side.com']
 
+CSRF_TRUSTED_ORIGINS = ['https://*.split-side.com']
+
 
 DATABASES = {
     'default': {
