@@ -4,7 +4,7 @@ import requests
 
 from .base import *
 
-DEBUG = False
+DEBUG = True
 
 EC2_PRIVATE_IPS = []
 METADATA_URI = getenv('ECS_CONTAINER_METADATA_URI_V4')
