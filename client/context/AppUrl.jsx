@@ -1,9 +1,6 @@
 
 export const URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || ""
 
-
-export const LOGIN = `${URL}/api/front/login`
-
 export const EVENT_LIST = `${URL}/api/front/event-list`
 
 export const CURRENT_USER = `${URL}/api/front/current-user`
@@ -20,7 +17,6 @@ export const JOIN_EVENT = `${URL}/api/joinevent`
 
 
 export const PROFILE_IMG = `${URL}/img/profile_img.png`
-export const REGISTRATION = `${URL}/api/front/registration`
 
 export const SEND_FORGET_PASS_EMAIL = `${URL}/api/front/sendForgotPassEmail`
 
@@ -41,3 +37,6 @@ export const SET_USER_TEAM = `${URL}/api/front/setUserTeam`
 export const GET_CMS_PAGE = `${URL}/cms/`
 export const GET_EVENTS = `${URL}/api/events/`
 export const GET_SPORTS = `${URL}/api/sports/`
+export const LOGIN = `${URL}/api/auth/token/login/`
+export const REGISTRATION = `${URL}/api/auth/users/`
+export const ACTIVATE = `${URL}/api/auth/users/activation/`

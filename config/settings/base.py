@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from os import getenv
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,11 +28,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost']
 
+DOMAIN = SITE_NAME = getenv('WEB_DOMAIN')
+
 
 # Application definition
 
 INSTALLED_APPS = [
     'djangocms_admin_style', # must be before admin
+    'users', # must be before auth
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -52,6 +56,8 @@ INSTALLED_APPS = [
 
     # DRF
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
 
     # Django CMS
     'djangocms_text_ckeditor',
@@ -146,6 +152,20 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+AUTH_USER_MODEL = 'users.User'
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '/activate/?uid={uid}&token={token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'LOGIN_FIELD': 'email',
+    'SERIALIZERS': {},
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
+}
 
 
 # Internationalization

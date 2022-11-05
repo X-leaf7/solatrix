@@ -107,10 +107,10 @@ const Signup = () => {
                     validateOnBlur={false}
                     onSubmit={async (values) => {
                     
-                      const cridentials = {
-                        userName: values.userName,
-                        firstName: values.firstName,
-                        lastName: values.lastName,
+                      const credentials = {
+                        username: values.userName,
+                        first_name: values.firstName,
+                        last_name: values.lastName,
                         email: values.email,
                         password: values.password
                       }
@@ -119,12 +119,12 @@ const Signup = () => {
                         headers: {
                           'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(cridentials),
+                        body: JSON.stringify(credentials),
                       })
                         .then(data => data)
                         .catch(err => console.log(err))
 
-                      if (response.status === 200) {
+                      if (response.status === 201) {
                         swal("Success", "Please click the link in your email to verify your account and complete the registration process.", "success");
                         Router.push('/')
                       } else if (response.status === 400) {

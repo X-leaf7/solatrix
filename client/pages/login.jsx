@@ -27,8 +27,8 @@ function Login() {
     const router = useRouter()
 
     const [isPasswordShown, setIsPasswordShown] = useState(false);
-    const [emails, setEmail] = useState('');
-    const [passwords, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [loader, setLoader] = useState(false);
     const [getModel, setModel] = useState(false);
 
@@ -42,13 +42,13 @@ function Login() {
             Router.push('/')
         }
         if (Cookies.get('email')) {
-            const emails = Cookies.get('email');
-            const passwords = Cookies.get('setpassword');
-            setEmail(emails)
-            setPassword(passwords)
+            const email = Cookies.get('email');
+            const password = Cookies.get('setpassword');
+            setEmail(email)
+            setPassword(password)
         }
         setLoader(true)
-    }, [emails, passwords])
+    }, [email, password])
     useEffect(() => {
         if (getModel === false) {
             if (router.query) {
@@ -79,8 +79,8 @@ function Login() {
                                         loader && <div className="card-body">
                                             <Formik
                                                 initialValues={{
-                                                    email: emails,
-                                                    password: passwords,
+                                                    email: email,
+                                                    password: password,
                                                     recaptcha: "",
                                                     remember: false
                                                 }}
@@ -113,8 +113,8 @@ function Login() {
 
                                                         Cookies.set('password', values.password);
                                                         Cookies.set('setpassword', values.password);
-                                                        Cookies.set('userInfo', JSON.stringify(data.responseData.user))
-                                                        Cookies.set('Token', data.responseData.token)
+                                                        //Cookies.set('userInfo', JSON.stringify(data.responseData.user))
+                                                        Cookies.set('Token', data.auth_token)
                                                         swal("Success", "You are now logged in.", "success");
                                                         Router.push('/')
                                                         signIn();

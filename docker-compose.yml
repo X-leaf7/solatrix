@@ -16,6 +16,7 @@ services:
         condition: service_healthy
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.local
+      WEB_DOMAIN: localhost
   client:
     image: ss_client
     build:
