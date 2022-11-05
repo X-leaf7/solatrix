@@ -108,12 +108,14 @@ Resources:
             PathPattern: '/api/*'
             TargetOriginId: django-backend
             ViewerProtocolPolicy: redirect-to-https
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
           - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
             CachedMethods: [GET, HEAD, OPTIONS]
             CachePolicyId: !Ref BackendCachePolicy
             PathPattern: '/cms/*'
             TargetOriginId: django-backend
             ViewerProtocolPolicy: redirect-to-https
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
         DefaultCacheBehavior:
           TargetOriginId: s3-bucket
           AllowedMethods: [GET, HEAD]
