@@ -94,6 +94,31 @@ Resources:
           QueryStringsConfig:
             QueryStringBehavior: none
 
+  SpaRewrite:
+    Type: AWS::CloudFront::Function
+    Properties:
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Rewrites URIs to handle SPA refreshes
+        Runtime: cloudfront-js-1.0
+      Name: !Sub "${ClusterName}-SPA-rewrite"
+      FunctionCode: >
+        function handler(event) {
+            var request = event.request;
+            var uri = request.uri;
+            
+            // Check whether the URI is missing a file name.
+            if (uri.endsWith('/')) {
+                request.uri += 'index.html';
+            } 
+            // Check whether the URI is missing a file extension.
+            else if (!uri.includes('.')) {
+                request.uri += '/index.html';
+            }
+        
+            return request;
+        }
+
   CDN:
     Type: AWS::CloudFront::Distribution
     Properties:
@@ -101,11 +126,6 @@ Resources:
         Aliases:
           - !Ref Domain
         Comment: Staging CloudFront Distribution
-        CustomErrorResponses:
-          - ErrorCachingMinTTL: 300
-            ErrorCode: 403
-            ResponseCode: 200
-            ResponsePagePath: /index.html
         CacheBehaviors:
           - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
             CachedMethods: [GET, HEAD, OPTIONS]
@@ -129,6 +149,9 @@ Resources:
           CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6' # AWS Managed Cache optimized
           ResponseHeadersPolicyId: !Ref CorsResponsePolicy
           OriginRequestPolicyId: '88a5eaf4-2fd4-4709-b370-b4c650ea3fcf' # AWS Managed S3 CORS
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt SpaRewrite.FunctionMetadata.FunctionARN
         DefaultRootObject: index.html
         Enabled: true
         Origins: 

@@ -155,9 +155,9 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'users.User'
 
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '/activate/?uid={uid}&token={token}',
+    'PASSWORD_RESET_CONFIRM_URL': 'reset-password/?uid={uid}&token={token}',
+    'USERNAME_RESET_CONFIRM_URL': 'reset-username/?uid={uid}&token={token}',
+    'ACTIVATION_URL': 'activate/?uid={uid}&token={token}',
     'SEND_ACTIVATION_EMAIL': True,
     'LOGIN_FIELD': 'email',
     'SERIALIZERS': {},
