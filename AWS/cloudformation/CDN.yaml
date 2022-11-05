@@ -134,6 +134,8 @@ Resources:
             DomainName: !Ref DjangoAdminLoadBalancerUrl
             CustomOriginConfig:
               OriginProtocolPolicy: https-only
+              OriginSSLProtocols:
+                - TLSv1.2
         PriceClass: PriceClass_100
         ViewerCertificate: 
           AcmCertificateArn: !Ref CertificateArn
