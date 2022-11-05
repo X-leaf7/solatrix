@@ -12,8 +12,4 @@ DATABASES = {
     }
 }
 
-CONSTANCE_REDIS_CONNECTION = {
-    'host': 'redis',
-    'port': 6379,
-    'db': 0,
-}
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

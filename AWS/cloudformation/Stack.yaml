@@ -181,6 +181,18 @@ Resources:
                   - !Sub "arn:aws:s3:::${Bucket}/*"
                   - !Sub "arn:aws:s3:::${Bucket}"
                 Action: "s3:*"
+        - PolicyName: AllowSendEmails
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'ses:SendEmail'
+                  - 'ses:SendRawEmail'
+                Resource: !Sub 'arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/accounts@split-side.com'
+              - Effect: Allow
+                Action: 'ses:GetSendQuota'
+                Resource: '*'
 
   AutoScalingRole:
     Type: AWS::IAM::Role

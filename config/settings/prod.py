@@ -52,8 +52,11 @@ DATABASES = {
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3StaticStorage'
 AWS_STORAGE_BUCKET_NAME = getenv('S3_BUCKET')
-AWS_S3_CUSTOM_DOMAIN = getenv('WEB_DOMAIN')
+AWS_S3_CUSTOM_DOMAIN = DOMAIN
 
 STATICFILES_DIRS = [
     BASE_DIR / "client/out/",
 ]
+
+EMAIL_BACKEND = 'django_ses.SESBackend'
+DEFAULT_FROM_EMAIL = 'accounts@split-side.com'
