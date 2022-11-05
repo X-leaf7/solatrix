@@ -189,7 +189,7 @@ Resources:
                 Action:
                   - 'ses:SendEmail'
                   - 'ses:SendRawEmail'
-                Resource: !Sub 'arn:aws:ses:${AWS::Region}:${AWS::AccountId}:identity/accounts@split-side.com'
+                Resource: '*'
               - Effect: Allow
                 Action: 'ses:GetSendQuota'
                 Resource: '*'
