@@ -109,6 +109,17 @@ Resources:
     DeletionPolicy: Retain
     Properties:
       AccessControl: Private
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+            AllowedOrigins:
+              - 'https://*.split-side.com'
+            ExposedHeaders: []
+            Id: allow
+            MaxAge: 3000
 
   CDN:
     Type: AWS::CloudFormation::Stack
