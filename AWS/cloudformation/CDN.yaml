@@ -101,6 +101,11 @@ Resources:
         Aliases:
           - !Ref Domain
         Comment: Staging CloudFront Distribution
+        CustomErrorResponses:
+          - ErrorCachingMinTTL: 300
+            ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
         CacheBehaviors:
           - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
             CachedMethods: [GET, HEAD, OPTIONS]
