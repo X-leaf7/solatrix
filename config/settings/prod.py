@@ -60,3 +60,4 @@ STATICFILES_DIRS = [
 
 EMAIL_BACKEND = 'django_ses.SESBackend'
 DEFAULT_FROM_EMAIL = 'accounts@split-side.com'
+AWS_SES_REGION_NAME = getenv('AWS_REGION')
