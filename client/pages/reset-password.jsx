@@ -5,7 +5,7 @@ import Router from 'next/router'
 import { Formik, Field } from 'formik';
 import axios from 'axios'
 import swal from 'sweetalert';
-import { SEND_FORGET_PASS_EMAIL } from '/context/AppUrl'
+import { REQUEST_RESET_PASSWORD } from '/context/AppUrl'
 import Head from 'next/head'
 
 function ResetPassword() {
@@ -42,28 +42,26 @@ function ResetPassword() {
                                             }
                                             return errors;
                                         }}
-                                        onSubmit={(values, { setSubmitting }) => {
+                                        onSubmit={async (values, { setSubmitting }) => {
                                             setSubmitting(false);
-                                            let data = JSON.stringify({
-                                                "email": values.email
-                                            });
-
-                                            let config = {
-                                                method: 'post',
-                                                url: SEND_FORGET_PASS_EMAIL,
+                                            const response = await fetch(REQUEST_RESET_PASSWORD, {
+                                                method: 'POST',
                                                 headers: {
                                                     'Content-Type': 'application/json'
                                                 },
-                                                data: data
-                                            };
+                                                body: JSON.stringify({
+                                                    "email": values.email
+                                                }),
+                                            })
+                                                .then(data => data)
+                                                .catch(err => console.log(err))
 
-                                            axios(config)
-                                                .then((response) => {
-                                                    swal("Success", response.data.message, "success");
-                                                })
-                                                .catch((error) => {
-                                                    swal("Error", "Email not found", "error");
-                                                });
+                                            if (response.status == 204) {
+                                                swal("Success", "Please check your email for instructions to reset your password.", "success");
+                                            }
+                                            else {
+                                                swal("Error", "Email not found", "error");
+                                            }
                                         }}
                                     >
                                         {({

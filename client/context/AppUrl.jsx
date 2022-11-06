@@ -18,8 +18,6 @@ export const JOIN_EVENT = `${URL}/api/joinevent`
 
 export const PROFILE_IMG = `${URL}/img/profile_img.png`
 
-export const SEND_FORGET_PASS_EMAIL = `${URL}/api/front/sendForgotPassEmail`
-
 
 export const EVENT_DETAILS = `${URL}/api/getEventDetails?id=`
 export const GET_DETAILS = `${URL}/api/cms/getDetails?id=`
@@ -40,3 +38,5 @@ export const GET_SPORTS = `${URL}/api/sports/`
 export const LOGIN = `${URL}/api/auth/token/login/`
 export const REGISTRATION = `${URL}/api/auth/users/`
 export const ACTIVATE = `${URL}/api/auth/users/activation/`
+export const REQUEST_RESET_PASSWORD = `${URL}/api/auth/users/reset_password/`
+export const PASSWORD_RESET = `${URL}/api/auth/users/reset_password_confirm/`

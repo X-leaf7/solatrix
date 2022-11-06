@@ -6,7 +6,7 @@ import AppContext, { AuthContext } from "../context/AppContext";
 import Router from 'next/router'
 import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
-import { UPDATE_PASSWORD } from '/context/AppUrl'
+import { PASSWORD_RESET } from '/context/AppUrl'
 
 const createNewPasswordSchema = Yup.object().shape({
     password: Yup.string()
@@ -55,32 +55,28 @@ function CreatePassword() {
                                         }}
                                         validationSchema={createNewPasswordSchema}
                                         onSubmit={async (values) => {
-                                            let token = '0'
-                                            if (router.query) {
-                                                if (router.query.token) {
-                                                    token = router.query.token
-                                                }
-                                            }
+                                            let token = router.query.token;
+                                            let uid = router.query.uid;
 
-                                            values.resetToken = token;
-
-                                            const response = await fetch(UPDATE_PASSWORD, {
+                                            const response = await fetch(PASSWORD_RESET, {
                                                 method: 'POST',
                                                 headers: {
                                                     'Content-Type': 'application/json'
                                                 },
-                                                body: JSON.stringify(values),
+                                                body: JSON.stringify({
+                                                    "token": token,
+                                                    "uid": uid,
+                                                    "new_password": values.password
+                                                }),
                                             })
                                                 .then(data => data)
                                                 .catch(err => console.log(err))
 
-                                            const data = await response.json();
-                                            if (data.status == 'success') {
+                                            if (response.status == 204) {
                                                 swal("Success", "Your password has been changed. Please login.", "success");
                                                 Router.push('/login')
                                             } else {
-
-                                                swal("Error", data.message, "error");
+                                                swal("Error", "There was a problem, please try again.", "error");
                                             }
                                         }}
                                     >
