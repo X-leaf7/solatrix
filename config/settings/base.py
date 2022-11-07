@@ -160,7 +160,9 @@ DJOSER = {
     'ACTIVATION_URL': 'activate/?uid={uid}&token={token}',
     'SEND_ACTIVATION_EMAIL': True,
     'LOGIN_FIELD': 'email',
-    'SERIALIZERS': {},
+    'SERIALIZERS': {
+        'token': 'users.serializers.TokenPlusUserSerializer'
+    },
 }
 
 REST_FRAMEWORK = {
