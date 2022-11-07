@@ -11,7 +11,7 @@ import Router from 'next/router'
 import swal from 'sweetalert';
 import socketClient from "socket.io-client";
 import { useRouter } from 'next/router'
-import { GET_EVENTS, URL } from '/context/AppUrl'
+import { GET_EVENTS, LOGOUT, URL } from '/context/AppUrl'
 
 function MyApp({ Component, pageProps }) {
 
@@ -80,18 +80,23 @@ function MyApp({ Component, pageProps }) {
         },
         signOut: async () => {
             try {
-                if (router.pathname === '/create-new-password') {
-                    Router.push('/')
-                    swal("Success", "You have successfully logged out.", "success");
-                } else {
-                    Router.push('/')
-                    swal("Success", "You have successfully logged out.", "success");
-                }
+                const token = Cookies.get("Token");
                 Cookies.remove("isLogin");
                 Cookies.remove("Token");
                 Cookies.remove("userInfo");
                 Cookies.remove('password');
                 setIsLogin(false);
+
+                fetch(LOGOUT, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Token ' + token
+                    }
+                })
+
+                Router.push('/')
+                swal("Success", "You have successfully logged out.", "success")
             } catch (e) {
                 console.log(e);
             }

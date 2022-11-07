@@ -113,14 +113,14 @@ function Login() {
 
                                                         Cookies.set('password', values.password);
                                                         Cookies.set('setpassword', values.password);
-                                                        //Cookies.set('userInfo', JSON.stringify(data.responseData.user))
+                                                        Cookies.set('userInfo', JSON.stringify(data.user))
                                                         Cookies.set('Token', data.auth_token)
                                                         swal("Success", "You are now logged in.", "success");
                                                         Router.push('/')
                                                         signIn();
                                                     } else if (response.status === 400) {
-                                                        const data = await response.json();
-                                                        swal("Error", data.message, "error");
+                                                        console.log("Got an error!");
+                                                        swal("Error", "There was an error logging you in. Please check your username and password and try again.", "error");
                                                     }
 
 

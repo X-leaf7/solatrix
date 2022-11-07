@@ -36,6 +36,7 @@ export const GET_CMS_PAGE = `${URL}/cms/`
 export const GET_EVENTS = `${URL}/api/events/`
 export const GET_SPORTS = `${URL}/api/sports/`
 export const LOGIN = `${URL}/api/auth/token/login/`
+export const LOGOUT = `${URL}/api/auth/token/logout/`
 export const REGISTRATION = `${URL}/api/auth/users/`
 export const ACTIVATE = `${URL}/api/auth/users/activation/`
 export const REQUEST_RESET_PASSWORD = `${URL}/api/auth/users/reset_password/`
