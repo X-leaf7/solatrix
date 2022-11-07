@@ -95,8 +95,6 @@ function EditAccount() {
             setData("");
             const token = Cookies.get('Token')
             const userData = Cookies.get('userInfo')
-            const password = Cookies.get('setpassword')
-            setPassword(password)
             setToken(token)
             console.log("userData =>", userData)
             const user = JSON.parse(userData)
@@ -249,7 +247,6 @@ function EditAccount() {
                 console.log("res", response)
 
                 Router.push('/');
-                Cookies.set('setpassword', passwordNew);
             })
             .catch((error) => {
                 console.log(error);

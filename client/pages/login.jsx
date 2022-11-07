@@ -43,9 +43,7 @@ function Login() {
         }
         if (Cookies.get('email')) {
             const email = Cookies.get('email');
-            const password = Cookies.get('setpassword');
             setEmail(email)
-            setPassword(password)
         }
         setLoader(true)
     }, [email, password])
@@ -91,10 +89,7 @@ function Login() {
 
                                                     if (values.remember) {
                                                         Cookies.set('email', values.email);
-                                                        Cookies.set('setpassword', values.password);
                                                     }
-
-                                                    Cookies.set('password', values.password);
 
                                                     const response = await fetch(LOGIN, {
                                                         method: 'POST',
@@ -110,9 +105,6 @@ function Login() {
 
 
                                                         const data = await response.json();
-
-                                                        Cookies.set('password', values.password);
-                                                        Cookies.set('setpassword', values.password);
                                                         Cookies.set('userInfo', JSON.stringify(data.user))
                                                         Cookies.set('Token', data.auth_token)
                                                         swal("Success", "You are now logged in.", "success");
