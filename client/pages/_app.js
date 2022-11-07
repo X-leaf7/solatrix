@@ -56,6 +56,13 @@ function MyApp({ Component, pageProps }) {
     const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
     const router = useRouter()
 
+    const flushCookie = async () => {
+        Cookies.remove("isLogin");
+        Cookies.remove("Token");
+        Cookies.remove("userInfo");
+        setIsLogin(false);
+    };
+
     const authContext = React.useMemo(() => ({
         signIn: async () => {
             const userToken = 'user';
@@ -81,11 +88,6 @@ function MyApp({ Component, pageProps }) {
         signOut: async () => {
             try {
                 const token = Cookies.get("Token");
-                Cookies.remove("isLogin");
-                Cookies.remove("Token");
-                Cookies.remove("userInfo");
-                Cookies.remove('password');
-                setIsLogin(false);
 
                 fetch(LOGOUT, {
                     method: 'POST',
@@ -95,13 +97,16 @@ function MyApp({ Component, pageProps }) {
                     }
                 })
 
+                flushCookie();
+
                 Router.push('/')
                 swal("Success", "You have successfully logged out.", "success")
             } catch (e) {
                 console.log(e);
             }
             dispatch({ type: 'LOGOUT' });
-        }
+        },
+        flushCookie: flushCookie
     }), []);
 
     const [isLogin, setIsLogin] = useState(false);

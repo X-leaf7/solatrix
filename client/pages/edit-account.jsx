@@ -15,7 +15,7 @@ import Table from 'react-bootstrap/Table';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAtom } from '@fortawesome/free-solid-svg-icons';
 
-import { URL, CURRENT_USER, DECATICATE_USER, USER_UPDATE, CHANGE_PASSWORD } from '/context/AppUrl'
+import { URL, CURRENT_USER, DEACTIVATE, USER_UPDATE, CHANGE_PASSWORD } from '/context/AppUrl'
 const editAccount = Yup.object().shape({
     userName: Yup.string()
         .max(16, "Username must be 4-16 characters with letters, numbers or underscores only")
@@ -61,7 +61,7 @@ function EditAccount() {
     const { isLogin } = React.useContext(AppContext);
 
     const [data, setData] = useState(null)
-    const { signOut } = useContext(AuthContext);
+    const { flushCookie, signOut } = useContext(AuthContext);
     const [isPasswordShown, setIsPasswordShown] = useState(false);
     const [password, setPassword] = useState('');
     const [avatarImage, setAvatarImage] = useState();
@@ -147,43 +147,46 @@ function EditAccount() {
         return acceptedKeys.indexOf(charValue) > -1;
     }
 
-    function deactivate() {
-        const axios = require('axios');
-        let data = '';
-
-        let config = {
-            method: 'put',
-            url: DECATICATE_USER,
+    const deactivate =  async (password) => {
+        const response = await fetch(DEACTIVATE, {
+            method: 'DELETE',
             headers: {
-                'x-access-token': token
+                'Content-Type': 'application/json',
+                'Authorization': 'Token ' + token
             },
-            data: data
-        };
+            body: JSON.stringify({
+                'current_password': password
+            }),
+        })
 
-        axios(config)
-            .then((response) => {
-
-                signOut();
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        if (response.status === 204) {
+            flushCookie();
+            Router.push('/')
+        }
     }
 
-    const deactivateAccount = () => {
+    const deactivateAccount = async () => {
         swal({
             title: "Need a break?",
-            text: "You can contact support@split-side.com to request reactivation of your account.",
+            text: "You can contact support@split-side.com to request reactivation of your account. Please enter your current password to deactivate.",
             icon: "warning",
+            content: {
+              element: "input",
+              attributes: {
+                placeholder: "Type your password",
+                type: "password",
+              },
+            },
             buttons: true,
             dangerMode: true,
         })
-            .then((willDelete) => {
-                if (willDelete) {
-                    swal("Hope to see you again soon! Your account has been deactivated", {
-                        icon: "success",
-                    });
-                    deactivate();
+            .then((password) => {
+                if (password) {
+                    deactivate(password).then(() => {
+                        swal("Hope to see you again soon! Your account has been deactivated", {
+                            icon: "success",
+                        });
+                    })
                 } else {
                     swal("Cancelled", "Your account is still active", "error");
                 }

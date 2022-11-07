@@ -39,5 +39,6 @@ export const LOGIN = `${URL}/api/auth/token/login/`
 export const LOGOUT = `${URL}/api/auth/token/logout/`
 export const REGISTRATION = `${URL}/api/auth/users/`
 export const ACTIVATE = `${URL}/api/auth/users/activation/`
+export const DEACTIVATE = `${URL}/api/auth/users/me/`
 export const REQUEST_RESET_PASSWORD = `${URL}/api/auth/users/reset_password/`
 export const PASSWORD_RESET = `${URL}/api/auth/users/reset_password_confirm/`
