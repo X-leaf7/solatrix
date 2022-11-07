@@ -163,6 +163,10 @@ DJOSER = {
     'SERIALIZERS': {
         'token': 'users.serializers.TokenPlusUserSerializer'
     },
+    'EMAIL': {
+        'activation': 'users.email.CustomActivationEmail',
+        'password_reset': 'users.email.CustomPasswordResetEmail',
+    }
 }
 
 REST_FRAMEWORK = {
