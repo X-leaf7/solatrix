@@ -6,7 +6,9 @@
     </head>
     <body>
         {% cms_toolbar %}
-        {% placeholder "content" %}
+        <div id="cms-content">
+            {% placeholder "content" %}
+        </div>
         {% render_block "js" %}
     </body>
 </html>

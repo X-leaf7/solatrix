@@ -32,7 +32,7 @@ export const SET_USER_TEAM = `${URL}/api/front/setUserTeam`
 
 // NEW DJANGO URLS
 
-export const GET_CMS_PAGE = `${URL}/cms/`
+export const GET_CMS_CONTENT = `${URL}/cms/`
 export const GET_EVENTS = `${URL}/api/events/`
 export const GET_SPORTS = `${URL}/api/sports/`
 export const LOGIN = `${URL}/api/auth/token/login/`

@@ -113,7 +113,6 @@ TEMPLATES = [
 
 CMS_TEMPLATES = [
     ('base.html', 'Base page template'),
-    ('snippet.html', 'HTML Snippet template')
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'

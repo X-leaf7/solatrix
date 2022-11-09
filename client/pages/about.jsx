@@ -1,23 +1,15 @@
 import React, { useState, useContext } from 'react'
 import Link from 'next/link'
 import Cookies from 'js-cookie'
-import { GET_DETAILS } from '/context/AppUrl'
 import Head from 'next/head'
+import { getCMSContent } from '../context/api'
 
 function About() {
 
     const [getAboutDetail, setAboutDetail] = useState(null)
 
     React.useEffect(async () => {
-        const response = await fetch(GET_DETAILS + 1, {
-            method: 'get',
-        })
-            .then(data => data)
-            .catch(err => console.log(err))
-        const data = await response.json();
-        if (response.status === 200) {
-            setAboutDetail(data)
-        }
+        getCMSContent('about', setAboutDetail)
     }, [])
 
     return (
@@ -32,7 +24,7 @@ function About() {
                             <div className="container">
                                 <div className="row text-center">
                                     <div className="col-md-12">
-                                        <h1 className="text-primary display-4">{getAboutDetail.data.title}</h1>
+                                        <h1 className="text-primary display-4">About</h1>
                                         <p className="text-primary lead">Learn About the Split-Side Service</p>
                                     </div>
                                 </div>
@@ -46,7 +38,7 @@ function About() {
                                         <li className="breadcrumb-item">
                                             <Link href="/"><a>Home</a></Link>
                                         </li>
-                                        <li className="breadcrumb-item active"> {getAboutDetail.data.title}</li>
+                                        <li className="breadcrumb-item active"> About</li>
                                     </ol>
                                 </nav>
                             </div>
@@ -56,7 +48,7 @@ function About() {
                             <div className="container">
                                 <div className="row">
                                     <div className="col-md-12">
-                                        <p className="lead mt-4 inlineCss">{getAboutDetail.data.about}</p>
+                                        <p className="lead mt-4 inlineCss">{getAboutDetail}</p>
                                     </div>
                                 </div>
                             </div>
@@ -71,7 +63,7 @@ function About() {
 
                         <section id="team" className="py-5">
                             <div className="container">
-                                <h2 className="text-center" style={{ 'margin-bottom': '1.5rem' }}>Our Team</h2>
+                                <h2 className="text-center" style={{ 'marginBottom': '1.5rem' }}>Our Team</h2>
                                 <div className="row text-center">
                                     <div className="col-md-4">
                                         <h4>Aly Wagner</h4>
