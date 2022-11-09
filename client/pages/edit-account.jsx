@@ -15,7 +15,7 @@ import Table from 'react-bootstrap/Table';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAtom } from '@fortawesome/free-solid-svg-icons';
 
-import { URL, CURRENT_USER, DEACTIVATE, USER_UPDATE, CHANGE_PASSWORD } from '/context/AppUrl'
+import { URL, USER_DETAIL, DEACTIVATE, USER_UPDATE, CHANGE_PASSWORD } from '/context/AppUrl'
 const editAccount = Yup.object().shape({
     userName: Yup.string()
         .max(16, "Username must be 4-16 characters with letters, numbers or underscores only")
@@ -66,7 +66,7 @@ function EditAccount() {
     const [password, setPassword] = useState('');
     const [avatarImage, setAvatarImage] = useState();
     const [token, setToken] = useState(null);
-    const [image, setImages] = useState('img/user_profile_default.png');
+    const [image, setImages] = useState('/img/user_profile_default.png');
 
 
 
@@ -102,19 +102,18 @@ function EditAccount() {
 
             let config = {
                 method: 'get',
-                url: CURRENT_USER,
+                url: USER_DETAIL,
                 headers: {
-                    'x-access-token': token
+                    'Authorization': 'Token ' + token
                 },
-                data: user.id
             };
             axios(config)
                 .then((response) => {
-                    if (user.image != null) {
-                        setImages(`${URL}/${response.data.userDate.image}`)
+                    if (response.data.profile_image != null) {
+                        setImages(response.data.profile_image)
                     }
                     console.log("Response =>", response.data);
-                    setData(response.data.userDate)
+                    setData(response.data)
                 })
                 .catch((error) => {
                     console.log("Somethink is wrong. please try again get profile api.");
@@ -197,34 +196,32 @@ function EditAccount() {
         const axios = require('axios');
         const FormData = require('form-data');
         let data = new FormData();
-        data.append('firstName', value.firstName);
-        data.append('lastName', value.lastName);
-        data.append('userName', value.userName);
+        data.append('first_name', value.firstName);
+        data.append('last_name', value.lastName);
+        data.append('username', value.userName);
         data.append('email', value.email);
 
         data.append('city', value.city);
         data.append('state', value.state);
         data.append('about', value.about);
-
-        const zipCodeValue = document.getElementById('zipcode').value
-        data.append('zipCode', zipCodeValue);
+        data.append('zip_code', value.zipCode);
 
         if (avatarImage) {
-            data.append('image', avatarImage);
+            data.append('profile_image', avatarImage);
         }
         let config = {
             method: 'put',
-            url: USER_UPDATE,
+            url: USER_DETAIL,
             headers: {
-                'x-access-token': token
+                'Authorization': 'Token ' + token
             },
             data: data
         };
 
         axios(config)
             .then((response) => {
-                setData(response.data.userData)
-                Cookies.set('userInfo', JSON.stringify(response.data.userData))
+                setData(response.data);
+                Cookies.set('userInfo', JSON.stringify(response.data))
                 swal("Success", "Your profile has been successfully updated.", "success");
             })
             .catch((error) => {
@@ -277,18 +274,14 @@ function EditAccount() {
                                                     <Formik
                                                         initialValues={{
                                                             userImage: null,
-                                                            userName: data.userName,
-                                                            firstName: data.firstName,
-                                                            lastName: data.lastName,
+                                                            userName: data.username,
+                                                            firstName: data.first_name,
+                                                            lastName: data.last_name,
                                                             email: data.email,
-                                                            currentPassword: password,
-                                                            newPassword: "",
-                                                            confirmPassword: "",
                                                             city: data.city,
                                                             state: data.state,
-                                                            zipCode: data.zipCode,
-                                                            about: data.about,
-                                                            file: ''
+                                                            zipCode: data.zip_code,
+                                                            about: data.about
 
                                                         }}
                                                         validationSchema={editAccount}
@@ -353,41 +346,6 @@ function EditAccount() {
                                                                     {errors.email && touched.email ? (<p className="error-msg">{errors.email}</p>) : null}
                                                                 </div>
                                                                 <div className="form-group">
-                                                                    <label>Current Password</label>
-                                                                    <div className="input-relative">
-                                                                        <Field
-                                                                            type={isPasswordShown ? 'text' : 'password'}
-                                                                            className="form-control"
-                                                                            name="currentPassword"
-                                                                            disabled={true}
-                                                                        />
-                                                                        <div className="password-icon" onClick={handlePasswordShow}>
-                                                                            {
-                                                                                isPasswordShown ? <BsEye /> : <BsEyeSlash />
-                                                                            }
-                                                                        </div>
-                                                                    </div>
-                                                                    {errors.currentPassword && touched.currentPassword ? (<p className="error-msg">{errors.currentPassword}</p>) : null}
-                                                                </div>
-                                                                <div className="form-group">
-                                                                    <label>New Password</label>
-                                                                    <Field
-                                                                        type="password"
-                                                                        className="form-control"
-                                                                        name="newPassword"
-                                                                    />
-                                                                    {errors.newPassword && touched.newPassword ? (<p className="error-msg">{errors.newPassword}</p>) : null}
-                                                                </div>
-                                                                <div className="form-group">
-                                                                    <label>Confirm Password</label>
-                                                                    <Field
-                                                                        type="password"
-                                                                        className="form-control"
-                                                                        name="confirmPassword"
-                                                                    />
-                                                                    {errors.confirmPassword && touched.confirmPassword ? (<p className="error-msg">{errors.confirmPassword}</p>) : null}
-                                                                </div>
-                                                                <div className="form-group">
                                                                     <label>City</label>
                                                                     <Field
                                                                         type="text"
@@ -410,9 +368,7 @@ function EditAccount() {
                                                                     <Field
                                                                         type="text"
                                                                         className="form-control"
-                                                                        id="zipcode"
                                                                         name="zipCode"
-                                                                        onKeyPress={handleKeyPress}
                                                                         maxLength={5}
                                                                     />
                                                                     {errors.zipCode && touched.zipCode ? (<p className="error-msg">{errors.zipCode}</p>) : null}

@@ -161,7 +161,8 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': True,
     'LOGIN_FIELD': 'email',
     'SERIALIZERS': {
-        'token': 'users.serializers.TokenPlusUserSerializer'
+        'token': 'users.serializers.TokenPlusUserSerializer',
+        'current_user': 'users.serializers.FullUserSerializer'
     },
     'EMAIL': {
         'activation': 'users.email.CustomActivationEmail',
@@ -195,3 +196,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = "/app/static"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/app/media'

@@ -80,7 +80,7 @@ export const AvatarPicker = (props) => {
       ctx.drawImage(img, 0, 0, width, height);
 
       canvas.toBlob((blob) => {
-        const resizedFile = new File([blob], file.name, fileObject);
+        const resizedFile = new File([blob], fileObject.name, fileObject);
         setFile(URL.createObjectURL(resizedFile));
         handleChangeImage(resizedFile);
       });
