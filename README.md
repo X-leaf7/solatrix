@@ -21,6 +21,11 @@ $(ss_django)> docker exec -it split-side-django-1 /bin/bash
 ~# python manage.py createsuperuser
 ```
 
+5. Load default CMS data. (Several Frontend pages depend on it to work properly)
+```sh
+~# python manage.py loaddata cms
+```
+
 Happy coding!
 
 
