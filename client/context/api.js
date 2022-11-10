@@ -8,7 +8,7 @@ export function getCMSContent(name, setter) {
         let contentHolder = document.createElement('div');
         contentHolder.innerHTML = responseText.trim();
         let innerContent = contentHolder.querySelector('#cms-content');
-        setter(innerContent.textContent);
+        setter(innerContent.outerHTML);
     }).catch(err => {
         console.log(err)
     });

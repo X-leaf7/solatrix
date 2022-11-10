@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react'
 import Link from 'next/link'
 import { GET_DETAILS } from '/context/AppUrl'
+import { getCMSContent } from '/context/api'
 import Head from 'next/head'
 
 function Privacy() {
@@ -8,15 +9,7 @@ function Privacy() {
     const [getPrivacyDetail, setPrivacyDetail] = useState(null)
 
     React.useEffect(async () => {
-        const response = await fetch(GET_DETAILS + 4, {
-            method: 'get',
-        })
-            .then(data => data)
-            .catch(err => console.log(err))
-        const data = await response.json();
-        if (response.status === 200) {
-            setPrivacyDetail(data)
-        }
+        getCMSContent('privacy', setPrivacyDetail)
     }, [])
 
     return (
@@ -31,7 +24,7 @@ function Privacy() {
                         <div className="container">
                             <div className="row text-center">
                                 <div className="col-md-12">
-                                    <h1 className="text-primary display-4">{getPrivacyDetail.data.title}</h1>
+                                    <h1 className="text-primary display-4">Privacy</h1>
                                     <p className="text-primary lead">Review the Privacy Policy of this Website</p>
                                 </div>
                             </div>
@@ -45,7 +38,7 @@ function Privacy() {
                                     <li className="breadcrumb-item">
                                         <Link href="/"><a >Home</a></Link>
                                     </li>
-                                    <li className="breadcrumb-item active"> {getPrivacyDetail.data.title}</li>
+                                    <li className="breadcrumb-item active"> Privacy</li>
                                 </ol>
                             </nav>
                         </div>
@@ -54,8 +47,7 @@ function Privacy() {
                     <section id="about">
                         <div className="container">
                             <div className="row">
-                                <div className="col-md-12 mb-4">
-                                    <p className="col-md-12 inlineCss">{getPrivacyDetail.data.about}</p>
+                                <div className="col-md-12 mb-4" dangerouslySetInnerHTML={{ __html: getPrivacyDetail }}>
                                 </div>
                             </div>
                         </div>

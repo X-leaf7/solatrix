@@ -47,8 +47,7 @@ function About() {
                         <section id="about" className="py-4">
                             <div className="container">
                                 <div className="row">
-                                    <div className="col-md-12">
-                                        <p className="lead mt-4 inlineCss">{getAboutDetail}</p>
+                                    <div className="col-md-12" dangerouslySetInnerHTML={{ __html: getAboutDetail }}>
                                     </div>
                                 </div>
                             </div>

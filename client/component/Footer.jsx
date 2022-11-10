@@ -33,7 +33,10 @@ function Footer() {
                         <div className="col-md-3">
                             <h5 className="text-light">Contact</h5>
                             <ul className="footer-contact">
-                                <li><span>Email:</span> <a href="{ getContactEmail }">{getContactEmail}</a></li>
+                                <li>
+                                    <span>Email:</span>
+                                    <span dangerouslySetInnerHTML={{ __html: getContactEmail }}></span>
+                                </li>
                              </ul>
                         </div>
                     </div>

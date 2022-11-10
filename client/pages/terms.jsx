@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import Link from 'next/link'
-import { GET_DETAILS } from '/context/AppUrl'
+import { getCMSContent } from '/context/api'
 import Head from 'next/head'
 
 function Terms() {
@@ -8,15 +8,7 @@ function Terms() {
     const [getTermDetail, setTermDetail] = useState(null)
 
     React.useEffect(async () => {
-        const response = await fetch(GET_DETAILS + 4, {
-            method: 'get',
-        })
-            .then(data => data)
-            .catch(err => console.log(err))
-        const data = await response.json();
-        if (response.status === 200) {
-            setTermDetail(data)
-        }
+        getCMSContent('terms', setTermDetail)
     }, [])
 
 
@@ -33,7 +25,7 @@ function Terms() {
                         <div className="container">
                             <div className="row text-center">
                                 <div className="col-md-12">
-                                    <h1 className="text-primary display-4">{getTermDetail.data.title}</h1>
+                                    <h1 className="text-primary display-4">Terms</h1>
                                     <p className="text-primary lead">Review the Terms & Conditions of this Website</p>
                                 </div>
                             </div>
@@ -48,7 +40,7 @@ function Terms() {
                                     <li className="breadcrumb-item">
                                         <Link href="/"><a>Home</a></Link>
                                     </li>
-                                    <li className="breadcrumb-item active"> {getTermDetail.data.title}</li>
+                                    <li className="breadcrumb-item active"> Terms</li>
                                 </ol>
                             </nav>
                         </div>
@@ -57,9 +49,7 @@ function Terms() {
                     <section id="about">
                         <div className="container">
                             <div className="row">
-                                <div className="col-md-12 mb-4">
-                                    <p className="col-md-12 inlineCss">{getTermDetail.data.about}</p>
-
+                                <div className="col-md-12 mb-4" dangerouslySetInnerHTML={{ __html: getTermDetail }}>
                                 </div>
                             </div>
                         </div>
