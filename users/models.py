@@ -1,12 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
-from django_softdelete.models import SoftDeleteModel, SoftDeleteManager
+from django_softdelete.models import SoftDeleteModel, SoftDeleteQuerySet
 
 from config.models import SSBaseModel
 
 
-class HybridUserManager(UserManager, SoftDeleteManager):
-    pass
+class HybridUserManager(UserManager):
+
+    def get_queryset(self):
+        return SoftDeleteQuerySet(self.model, using=self._db).filter(is_deleted=False)
 
 
 class User(SoftDeleteModel, AbstractUser, SSBaseModel):
