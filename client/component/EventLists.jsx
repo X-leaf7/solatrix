@@ -8,10 +8,11 @@ import { Alert } from 'react-bootstrap';
 import Cookies from 'js-cookie'
 import swal from 'sweetalert';
 import { EVENT_DETAILS,  SET_USER_TEAM} from '/context/AppUrl'
+import EventCard from './EventCard';
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // import { faAtom } from '@fortawesome/free-solid-svg-icons';
 import 'font-awesome/css/font-awesome.min.css';
-import { DateTime } from 'luxon';
+
 
 function EventLists({ searchFilter, selected}) {
     const { isLogin, event, search, setSelectedTeam } = useContext(AppContext);
@@ -24,67 +25,7 @@ function EventLists({ searchFilter, selected}) {
     const [noEvent, setNoEvent] = useState(false);
     const [getTeamName, setTeamName] = useState('home');
 
-    const handleShowCreateChat = async() => {
-        setShowCreateChat(true)
-        setShow(false)
-    } 
-
-    const handleShow = async (event) => {
-        setShowCreateChat(false)
-        const response = await fetch(EVENT_DETAILS + event.id, {
-            method: 'get',
-        })
-            .then(data => data)
-            .catch(err => console.log(err))
-        const data = await response.json();
-        console.log("upper", data)
-        if (data.statusCode === 200) {
-            let eventAwayUser = []
-            let eventHomeUser = []
-
-            if (data.data.event.awayuser !== null) {
-                eventAwayUser = data.data.event.awayuser
-            }
-            if (data.data.event.homeuser !== null) {
-                eventHomeUser = data.data.event.homeuser
-            }
-
-            const userData = Cookies.get('userInfo')
-            const user = JSON.parse(userData)
-
-            if (eventAwayUser.indexOf((user.id).toString()) !== -1) {
-                let obj = {
-                    id: event.id,
-                    selectTeamName: 'away'
-                }
-                console.log("away", `${event.homeTeamRef.name}-at-${event.awayTeamRef.name}`)
-
-                Cookies.set('selectEventData', JSON.stringify(obj))
-                Router.push({
-                    pathname: '/[Team]/[TeamID]',
-                    query: { Team: `${event.homeTeamRef.name}-at-${event.awayTeamRef.name}`, TeamID: event.roomId },
-                })
-            } else if (eventHomeUser.indexOf((user.id).toString()) !== -1) {
-                let obj = {
-                    id: event.id,
-                    selectTeamName: 'home'
-                }
-                Cookies.set('selectEventData', JSON.stringify(obj))
-                Router.push({
-                    pathname: '/[Team]/[TeamID]',
-                    query: { Team: `${event.homeTeamRef.name}-at-${event.awayTeamRef.name}`, TeamID: event.roomId },
-                })
-            } else {
-                setEvData(data.data)
-                setShow(true)
-            }
-        } else {
-            swal("Error", "Something is wrong. Please try again.", "error")
-            return false
-        }
-
-
-    };
+    
     useEffect(() => {
         if (searchFilter) {
             if (event) {
@@ -203,79 +144,11 @@ function EventLists({ searchFilter, selected}) {
 
                     {Router.pathname == '/' ?
                         searchEvent.slice(0, 6).map((event, index) => {
-                            return (
-                                <div className="col-md-6 col-lg-4 mb-4" key={index}>
-                                    <div className="card listing-preview">
-                                        <div className="card-body">
-                                            <div className="listing-heading text-center">
-                                                {
-                                                    event.home_team && <h4 className="text-primary">{event.home_team.name} at {event.away_team.name}</h4>
-                                                }
-
-                                                <p className="text-center my-2">{DateTime.fromISO(event.lobby_start_time).toLocaleString()}</p>
-                                                <p className="text-center mt-2 mb-4">Hosted by:  {event.host.username}</p>
-                                            {/* <hr /> */}
-                                            <div className="d-flex justify-content-evenly ">
-                                                {
-                                                    
-                                                        <Button className='create-chat' variant="outline-dark" onClick={() => handleShowCreateChat(event)}>
-                                                            Create Chat
-                                                        </Button>
-                                                }
-                                            
-                                                {
-                                                    !isLogin ? <Link href="/login">
-                                                        <button className="btn btn-outline-dark join-chat">Join Chat</button>
-                                                    </Link> :
-                                                        <Button className='join-chat' variant="outline-dark" onClick={() => handleShow(event)}>
-                                                            Join Event Chat
-                                                        </Button>
-                                                }
-                                            </div>
-                                                </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
+                            return <EventCard event={event} key={index}></EventCard>
                         })
                         :
                         searchEvent ? searchEvent.map((event, index) => {
-                            return (
-                                <div className="col-md-6 col-lg-4 mb-4" key={index}>
-                                    <div className="card listing-preview">
-                                        <div className="card-body">
-                                            <div className="listing-heading text-center">
-                                                {
-                                                    event.homeTeamRef && <h4 className="text-primary">{event.homeTeamRef.name} at {event.awayTeamRef.name}</h4>
-                                                }
-
-                                                <p className="text-center mt-3 mb-3">{event.joinDate}</p>
-                                                <p className="text-center mt-3 mb-3">{event.joinTime} PT</p>
-                                                <p className="text-center mt-3 mb-3">Hosted by: {event.hostuser.userName}</p>
-                                            </div>
-                                            <hr />
-                                            <div className="d-flex justify-content-evenly">
-                                                {
-                                                   
-                                                        <Button className='create-chat' variant="outline-dark" onClick={() => handleShowCreateChat(event)}>
-                                                            Create Chat
-                                                        </Button>
-                                                }
-
-                                                {
-                                                    !isLogin ? <Link href="/login">
-                                                        <button className="btn btn-outline-dark join-chat">Join Chat</button>
-                                                    </Link> :
-                                                        <Button className='join-chat' variant="outline-dark" onClick={() => handleShow(event)}>
-                                                            Join Event Chat
-                                                        </Button>
-                                                }
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )
+                            return <EventCard event={event} key={index}></EventCard>
                         }) : <>
                             {[
                                 'danger'
