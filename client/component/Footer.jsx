@@ -12,7 +12,7 @@ function Footer() {
 
     return (
         <>
-            <footer className="main-footer bg-primary">
+            <footer className="main-footer bg-primary mt-auto">
                 <div className="container">
                     <div className="row pt-4">
                         <div className="col-md-7">

@@ -4,9 +4,11 @@ import Footer from '../component/Footer'
 export default function Layout({ children }) {
   return (
     <>
-      <Header />
-      {children}
-      <Footer />
+      <div className="d-flex flex-column min-vh-100">
+        <Header />
+        {children}
+        <Footer />
+      </div>
     </>
   )
 }
