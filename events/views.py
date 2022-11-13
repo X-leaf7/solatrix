@@ -1,3 +1,5 @@
+from datetime import date
+
 from rest_framework import viewsets
 from rest_framework import permissions
 
@@ -9,5 +11,7 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows teams to be viewed.
     """
-    queryset = Event.objects.all().order_by('-event_start_time')
+    queryset = Event.objects.all()\
+        .order_by('-event_start_time')\
+        .filter(lobby_start_time__date__gt=date.today())
     serializer_class = EventSerializer
