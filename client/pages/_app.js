@@ -11,7 +11,7 @@ import Router from 'next/router'
 import swal from 'sweetalert';
 import socketClient from "socket.io-client";
 import { useRouter } from 'next/router'
-import { GET_EVENTS, LOGOUT, URL } from '/context/AppUrl'
+import { LOGOUT, URL } from '/context/AppUrl'
 
 function MyApp({ Component, pageProps }) {
 
@@ -111,7 +111,6 @@ function MyApp({ Component, pageProps }) {
 
     const [isLogin, setIsLogin] = useState(false);
     const [search, setSearch] = useState('');
-    const [event, setEvent] = useState(null);
     const [selectedTeam, setSelectedTeam] = useState({});
     React.useEffect(() => {
         if (Cookies.get('isLogin')) {
@@ -134,17 +133,8 @@ function MyApp({ Component, pageProps }) {
     //     })
     // }, [URL])
 
-    React.useEffect(async () => {
-        await fetch(GET_EVENTS)
-            .then(data => data.json())
-            .then(setEvent)
-            .catch(err => {
-                setEvent([])
-            })
-
-    }, [])
     return (
-        <AppContext.Provider value={{ isLogin, setIsLogin, search, setSearch, event, selectedTeam, setSelectedTeam }}>
+        <AppContext.Provider value={{ isLogin, setIsLogin, search, setSearch, selectedTeam, setSelectedTeam }}>
             <AuthContext.Provider value={authContext}>
                 <Layout>
                     <Component {...pageProps} />
