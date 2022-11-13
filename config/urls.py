@@ -22,11 +22,12 @@ from django.urls import include, path, re_path
 from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
 
-from events.views import EventViewSet
+from events.views import EventViewSet, AttendeeViewSet
 from sports.views import LeagueViewSet, SportViewSet, StadiumViewSet, TeamViewSet
 
 
 router = routers.DefaultRouter()
+router.register(r'attendees', AttendeeViewSet)
 router.register(r'events', EventViewSet)
 router.register(r'leagues', LeagueViewSet)
 router.register(r'teams', TeamViewSet)

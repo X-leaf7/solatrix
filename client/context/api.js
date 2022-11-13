@@ -1,5 +1,7 @@
 import { GET_CMS_CONTENT, GET_EVENTS } from "./AppUrl"
 import useSWR from 'swr'
+import Cookies from 'js-cookie'
+import axios from 'axios'
 
 const jsonFetcher = (...args) => fetch(...args).then(res => res.json())
 const htmlFetcher = (...args) => fetch(...args).then(res => res.text())
@@ -26,4 +28,22 @@ export function useEvents() {
     isLoadingEvents: !error && !data,
     isErrorEvents: error
   }
+}
+
+export function post(url, data) {
+
+    let config = {
+        method: 'post',
+        url: url,
+        headers: {
+            'Authorization': 'Token ' + Cookies.get("Token"),
+            'Content-Type': 'application/json'
+        },
+        data: data
+    };
+
+    return axios(config).catch((error) => {
+        console.log(error);
+        swal("Error", "There was a problem with your request. Please check your information and try again.", "error");
+    });
 }

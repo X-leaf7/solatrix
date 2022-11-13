@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from sports.serializers import SportSerializer, TeamSerializer
-from .models import Event
+from .models import Event, Attendee
 
 class HostSerializer(serializers.ModelSerializer):
 
@@ -23,5 +23,12 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             'name', 'sport', 'host',
             'event_start_time', 'lobby_start_time',
             'home_team', 'away_team',
-            'is_private', 'slug',
+            'is_private', 'slug', 'id'
         ]
+
+
+class AttendeeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Attendee
+        fields = ['user', 'event', 'chosen_team']
