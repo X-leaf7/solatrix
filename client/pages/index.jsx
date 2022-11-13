@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
-import EventLists from '../component/EventLists';
-import SportSelect from '../component/SportSelect';
-import Router from 'next/router'
+import EventList from '../component/EventList'
+import SportSelect from '../component/SportSelect'
 import Head from 'next/head'
 
-function Home({ user }) {
-    const [getText, setText ]= useState("Check out the upcoming games to see what's going on in the world of sports")
-    const [selected, setSelected] = useState();
+function Home() {
+    
+    const [selectedSport, setSelectedSport] = useState();
 
     return (
         <>
@@ -37,15 +36,15 @@ function Home({ user }) {
                         <div className="col-md-8">
                             <h1 className="text-primary text-end display-4 mb-5 mt-5"><b>Schedule</b></h1>
                         </div>
-                        <SportSelect selected={selected} setSelected={setSelected} />
+                        <SportSelect selected={selectedSport} setSelected={setSelectedSport} />
                     </div>
                 </div>
-                <EventLists selected={selected} />
+                <EventList selectedSport={selectedSport} />
             </section>
 
             <section id="work" className="bg-dark text-white text-center mt-5">
                 <h2 className="display-4">Browse Events</h2>
-                <h4>{getText}</h4>
+                <h4>Check out the upcoming games to see what's going on in the world of sports</h4>
                 <hr />
                 <Link href="/events"><a className="btn btn-primary text-black btn-lg">View More Events</a></Link>
             </section>

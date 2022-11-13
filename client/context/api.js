@@ -1,4 +1,8 @@
-import { GET_CMS_CONTENT } from "./AppUrl"
+import { GET_CMS_CONTENT, GET_EVENTS } from "./AppUrl"
+import useSWR from 'swr'
+
+const jsonFetcher = (...args) => fetch(...args).then(res => res.json())
+const htmlFetcher = (...args) => fetch(...args).then(res => res.text())
 
 export function getCMSContent(name, setter) {
     fetch(GET_CMS_CONTENT + name + '/', {
@@ -12,4 +16,14 @@ export function getCMSContent(name, setter) {
     }).catch(err => {
         console.log(err)
     });
+}
+
+export function useEvents() {
+    const { data, error } = useSWR(GET_EVENTS, jsonFetcher)
+
+  return {
+    events: data,
+    isLoadingEvents: !error && !data,
+    isErrorEvents: error
+  }
 }

@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
-import AppContext from "../context/AppContext";
-import { Button, Modal } from 'react-bootstrap';
-import EventLists from '../component/EventLists';
+import EventList from '../component/EventList';
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 
@@ -41,7 +39,7 @@ function Events() {
                 </div>
             </section>
             <section id="events" className="py-4">
-                <EventLists searchFilter={search ? search : null} />
+                <EventList searchFilter={search ? search : null} />
             </section>
         </div>
         </>
