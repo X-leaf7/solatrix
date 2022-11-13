@@ -4,8 +4,7 @@ import Router from 'next/router'
 import swal from 'sweetalert';
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-import { BsEye, BsEyeSlash } from 'react-icons/bs';
-import { Button, Modal } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import AvatarPicker from "../component/AvatarPicker";
 import Cookies from 'js-cookie'
 import axios from 'axios';
@@ -15,7 +14,7 @@ import Table from 'react-bootstrap/Table';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAtom } from '@fortawesome/free-solid-svg-icons';
 
-import { URL, USER_DETAIL, DEACTIVATE, USER_UPDATE, CHANGE_PASSWORD } from '/context/AppUrl'
+import { URL, USER_DETAIL, DEACTIVATE, CHANGE_PASSWORD } from '/context/AppUrl'
 const editAccount = Yup.object().shape({
     userName: Yup.string()
         .max(16, "Username must be 4-16 characters with letters, numbers or underscores only")
@@ -91,7 +90,7 @@ function EditAccount() {
     }
 
     React.useEffect(async () => {
-        if (Cookies.get('isLogin')) {
+        if (isLogin) {
             setData("");
             const token = Cookies.get('Token')
             const userData = Cookies.get('userInfo')
