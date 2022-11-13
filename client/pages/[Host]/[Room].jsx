@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import AppContext from "../../context/AppContext";
+import AppContext from "../../context/AppContext"
 import Router, { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import swal from 'sweetalert';
@@ -9,7 +9,7 @@ import { URL, GET_USER_DETAILS, JOIN_EVENT, PROFILE_IMG, GET_EVENT, CHECK_EVENT_
 import Head from 'next/head'
 let socket = socketClient(URL)
 
-function TeamID() {
+function Room() {
 
 
     const router = useRouter()
@@ -514,4 +514,4 @@ function TeamID() {
     )
 }
 
-export default React.memo(TeamID)
+export default React.memo(Room)
