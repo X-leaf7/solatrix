@@ -23,7 +23,7 @@ function SportSelect({selected, setSelected}) {
         getSports &&
         <div className="col-md-4 customDropDown">
             <select className="custom" defaultValue="" value={selected} onChange={handleChange}>
-                <option value="" disabled>Filter by Sport</option>
+                <option value="">Filter by Sport</option>
                 {getSports.map(sport => (
                   <option key={sport.slug} value={sport.id}>
                     {sport.name}
