@@ -96,6 +96,9 @@ function Room() {
                 event: eventData.id,
             })
             const attendanceResponse = await fetch(`${ATTENDEES}?${verifyAttendance}`, {
+                headers: {
+                    'Authorization': 'Token ' + Cookies.get("Token")
+                },
                 method: 'GET',
             })
                 .then(data => data)
