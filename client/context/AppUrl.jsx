@@ -42,5 +42,6 @@ export const ACTIVATE = `${URL}/api/auth/users/activation/`
 export const DEACTIVATE = `${URL}/api/auth/users/me/`
 export const REQUEST_RESET_PASSWORD = `${URL}/api/auth/users/reset_password/`
 export const PASSWORD_RESET = `${URL}/api/auth/users/reset_password_confirm/`
-export const USER_DETAIL = `${URL}/api/auth/users/me/`
+export const CURRENT_USER_DETAIL = `${URL}/api/auth/users/me/`
 export const ATTENDEES = `${URL}/api/attendees/`
+export const USER_DETAIL = `${URL}/api/profiles/`

@@ -14,7 +14,7 @@ import Table from 'react-bootstrap/Table';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAtom } from '@fortawesome/free-solid-svg-icons';
 
-import { URL, USER_DETAIL, DEACTIVATE, CHANGE_PASSWORD } from '/context/AppUrl'
+import { URL, CURRENT_USER_DETAIL, DEACTIVATE, CHANGE_PASSWORD } from '/context/AppUrl'
 const editAccount = Yup.object().shape({
     userName: Yup.string()
         .max(16, "Username must be 4-16 characters with letters, numbers or underscores only")
@@ -101,7 +101,7 @@ function EditAccount() {
 
             let config = {
                 method: 'get',
-                url: USER_DETAIL,
+                url: CURRENT_USER_DETAIL,
                 headers: {
                     'Authorization': 'Token ' + token
                 },
@@ -210,7 +210,7 @@ function EditAccount() {
         }
         let config = {
             method: 'put',
-            url: USER_DETAIL,
+            url: CURRENT_USER_DETAIL,
             headers: {
                 'Authorization': 'Token ' + token
             },

@@ -16,8 +16,8 @@ function JoinChatModal({show, selectedEvent, onClose}) {
 
     function goToRoom() {
         Router.push({
-            pathname: '/[Host]/[Room]',
-            query: { Host: selectedEvent.host.username, Room: selectedEvent.slug },
+            pathname: '/event/[Room]',
+            query: { Room: selectedEvent.slug },
         })
     }
 

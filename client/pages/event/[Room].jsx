@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useContext } from 'react'
-import AppContext from "../../context/AppContext"
+import AppContext from '/context/AppContext'
 import Router, { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import swal from 'sweetalert';
 import socketClient from "socket.io-client";
-import { Button, Modal } from 'react-bootstrap';
-import { URL, GET_USER_DETAILS, JOIN_EVENT, PROFILE_IMG, GET_EVENT, CHECK_EVENT_USER, SET_USER_TEAM } from '../../context/AppUrl'
+import { ATTENDEES, URL, USER_DETAIL, JOIN_EVENT, PROFILE_IMG, GET_EVENTS, CHECK_EVENT_USER, SET_USER_TEAM } from '../context/AppUrl'
 import Head from 'next/head'
-let socket = socketClient(URL)
+import ProfileModal from '/component/ProfileModal'
+import JoinChatModal from '/component/JoinChatModal'
+//let socket = socketClient(URL)
 
 function Room() {
-
 
     const router = useRouter()
     const { isLogin, event, selectedTeam, setSelectedTeam } = useContext(AppContext);
@@ -18,52 +18,26 @@ function Room() {
     const [getJoinUserDetail, setJoinUserDetail] = useState(null)
     const [getEventTimer, setEventTimer] = useState('00:00:00')
     const [getChatBox, setChatbox] = useState(false)
-    const [show, setShow] = useState(false);
-    const [selectionModal, isSelectionModal] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState(null);
-    const [getImage, setImage] = useState(null);
-    const [getUsername, setUsername] = useState(null);
-    const [getCity, setCity] = useState(null);
-    const [getState, setState] = useState(null);
-    const [getAbout, setAbout] = useState(null);
+    const [showProfile, setShowProfile] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [showJoinChatModal, setShowJoinChatModal] = useState(false);
+    const [eventData, setEventData] = useState(null);
     const [getBannerImage, setBannerImage] = useState(null);
-    const [getcomma, setcomma] = useState(false);
     const [getTeamName, setTeamName] = useState('home');
     const [userID, setUserID] = useState(null);
     // const [getEventData, setGetEventData] = useState({})
     const [urlObj, setUrlObj] = useState(null);
-    const handleClose = () => {
-        isSelectionModal(false)
-        setShow(false);
-    };
 
-    const handleShow = async (event) => {
+    const handleShowProfile = async (event) => {
         const { param } = event.target.dataset;
-        const response = await fetch(GET_USER_DETAILS + param, {
-            method: 'get',
-        })
-            .then(data => data)
-            .catch(err => console.log(err))
-        const data = await response.json();
-        if (response.status === 200) {
-            var setimage = ''
-            if (data.data.image == null) {
-                setimage = 'img/profile_img.png'
-            } else {
-                setimage = data.data.image
-            }
+        setSelectedUser(param)
+        setShowProfile(true)
+    }
 
-            setImage(URL + '/' + setimage)
-            setUsername(data.data.userName)
-            setCity(data.data.city)
-            setState(data.data.state)
-            setAbout(data.data.about)
-            setShow(true)
-            if (data.data.city == '' || data.data.state == '' || data.data.city == null || data.data.state == null) {
-                setcomma(true)
-            }
-        }
-    };
+    function handleCloseJoinChat() {
+        setShowJoinChatModal(false)
+    }
+
     function getRadioButtonValue(e) {
         const { value } = e.target;
         setTeamName(value)
@@ -72,7 +46,7 @@ function Room() {
     const hendleClick = async () => {
 
         const param = {
-            roomID: selectedEvent.event.roomId,
+            roomID: eventData.event.roomId,
             userID: userID,
             selectedTeam: getTeamName
         }
@@ -90,59 +64,54 @@ function Room() {
         console.log("SET_USER_TEAM=>",)
 
         setUrlObj({
-            id: selectedEvent.event.id,
+            id: eventData.event.id,
             selectTeamName: getTeamName
         })
         // Router.push({
         //     pathname: '/[Team]/[TeamID]',
         //     query: {
-        //         Team: `${selectedEvent.homeTeam.name}-at-${selectedEvent.awayTeam.name}`,
-        //         TeamID: selectedEvent.event.roomId
+        //         Team: `${eventData.homeTeam.name}-at-${eventData.awayTeam.name}`,
+        //         TeamID: eventData.event.roomId
         //     },
         // })
         isSelectionModal(false)
         // setUserJoinEvent(false)
     }
     const checkSelection = async () => {
-
         const userData = Cookies.get('userInfo')
         const user = JSON.parse(userData)
-        let value = router.query
-        if (value !== {}) {
+        if (router.query.Room) {
             setUserID(user.id)
-            const eventResponse = await fetch(GET_EVENT + value.TeamID, {
+
+            const eventResponse = await fetch(`${GET_EVENTS}${router.query.Room}/`, {
                 method: 'get',
             })
                 .then(data => data)
                 .catch(err => console.log(err))
             const eventData = await eventResponse.json();
-            setSelectedEvent(eventData?.data)
-            const param = {
-                userid: user.id,
-                roomid: value.TeamID,
-            }
-            const response = await fetch(CHECK_EVENT_USER, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(param),
+            setEventData(eventData)
+
+            const verifyAttendance = new URLSearchParams({
+                user: user.id,
+                event: eventData.id,
+            })
+            const attendanceResponse = await fetch(`${ATTENDEES}?${verifyAttendance}`, {
+                method: 'GET',
             })
                 .then(data => data)
                 .catch(err => console.log(err))
-            if (response.status === 200) {
-                const data = await response.json();
-                console.log("response =>", data)
-                if (data.valide === false) {
-                    isSelectionModal(true)
-                } else {
-                    setUrlObj({
-                        id: data.data.id,
-                        selectTeamName: data.selectedTeam
-                    })
-                }
+            if (attendanceResponse.status === 200) {
+                const data = await attendanceResponse.json();
+                setUrlObj({
+                    id: data[0].id,
+                    chosenTeam: data[0].chosen_team
+                })
+
+                setEventTimer('00:00:00')
+                setChatbox(true)
+                //setBannerImage(URL + '/' + response.data.event.banner)
             } else {
-                Router.push('/event')
+                setShowJoinChatModal(true)
             }
         }
     }
@@ -191,46 +160,15 @@ function Room() {
 
             const userData = Cookies.get('userInfo')
             const user = JSON.parse(userData)
-            var joinEventData = {
-                id: getEventData.id,
-                teamType: getEventData.selectTeamName,
-                userId: (user.id).toString()
-            }
 
-            console.log("joinEventData", joinEventData)
-            const response = await fetch(JOIN_EVENT, {
-                method: 'put',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(joinEventData),
-            })
-                .then(data => data)
-                .catch(err => console.log(err))
-            const data = await response.json();
-            console.log("data", data)
-            if (response.status === 200) {
-                setUserJoinEvent(true)
-                let eventId = {
-                    eventId: getEventData.id
-                }
-                socket.emit("join", eventId, (response) => {
-                    if (response.statusCode === 200) {
-                        if (response.data.eventTime.eventStart === true) {
-                            setEventTimer('00:00:00')
-                            setChatbox(true)
-                        }
-                        setJoinUserDetail(response.data)
-                        setBannerImage(URL + '/' + response.data.event.banner)
-                    } else {
-                        swal("Error", "Something is wrong. Please try again.", "error")
-                        return false
-                    }
-                })
-            } else if (response.status === 400) {
-                swal("Error", "Something is wrong. Please try again.", "error")
-                return false
-            }
+            //socket.emit("join", eventId, (response) => {
+            //    if (response.statusCode === 200) {
+            //        
+            //    } else {
+            //        swal("Error", "Something is wrong. Please try again.", "error")
+            //        return false
+            //    }
+            //})
         }
     }, [userJoinEvent, urlObj])
 
@@ -293,41 +231,40 @@ function Room() {
         if (urlObj) {
             const getSelectedEventId = Cookies.get('selectEventData')
             const getSelectedEventData = JSON.parse(getSelectedEventId)
-            socket.on('counter', (response) => {
-                if (response.eventId === parseInt(getSelectedEventData.id)) {
-                    if (response.eventStart === false) {
-                        setEventTimer(response.watingTime)
-                        setChatbox(false)
-                    } else {
-                        setEventTimer('00:00:00')
-                        setChatbox(true)
-                    }
-                }
-            })
+            //socket.on('counter', (response) => {
+            //    if (response.eventId === parseInt(getSelectedEventData.id)) {
+            //        if (response.eventStart === false) {
+            //            setEventTimer(response.watingTime)
+            //            setChatbox(false)
+            //        } else {
+            //            setEventTimer('00:00:00')
+            //            setChatbox(true)
+            //        }
+            //    }
+            //})
 
-            socket.on("thread", (response) => {
-                const eventSelectData = Cookies.get('selectEventData')
-                const getEventData = JSON.parse(eventSelectData)
-                const getAllmsg = JSON.parse(localStorage.getItem('allMsg'));
+            //socket.on("thread", (response) => {
+            //    const eventSelectData = Cookies.get('selectEventData')
+            //    const getEventData = JSON.parse(eventSelectData)
+            //    const getAllmsg = JSON.parse(localStorage.getItem('allMsg'));
+            //    if (response.statusCode == 200) {
+            //        var msgData = response.data
+            //        if (parseInt(getEventData.id) === msgData.eventid) {
+            //            getAllmsg.messages.push(msgData)
+            //            setJoinUserDetail(getAllmsg)
+            //        }
+            //    } else {
+            //        Router.push('/event', { shallow: true })
+            //        swal("Error", "Currently this event is inactive. Please try again.", "error")
+            //        return false
+            //    }
+            //})
 
-                if (response.statusCode == 200) {
-                    var msgData = response.data
-                    if (parseInt(getEventData.id) === msgData.eventid) {
-                        getAllmsg.messages.push(msgData)
-                        setJoinUserDetail(getAllmsg)
-                    }
-                } else {
-                    Router.push('/event', { shallow: true })
-                    swal("Error", "Currently this event is inactive. Please try again.", "error")
-                    return false
-                }
-            })
-
-            socket.on("removeMessage", (response) => {
-                if (response.statusCode === 200) {
-                    document.getElementById(response.data.id).remove();
-                }
-            })
+            //socket.on("removeMessage", (response) => {
+            //    if (response.statusCode === 200) {
+            //        document.getElementById(response.data.id).remove();
+            //    }
+            //})
         }
 
     }, [urlObj])
@@ -365,12 +302,12 @@ function Room() {
                     }
 
                     if (messages[i].sendertype === 'host') {
-                        hostUserMsg.push(<p key={messages[i].id} id={messages[i].id}><b data-param={messages[i].user.id} onClick={handleShow}><img data-param={messages[i].user.id} src={imageSet} className="chatModuleImg" /> {messages[i].user.userName}</b> {messages[i].message}</p>)
+                        hostUserMsg.push(<p key={messages[i].id} id={messages[i].id}><b data-param={messages[i].user.id} onClick={handleShowProfile}><img data-param={messages[i].user.id} src={imageSet} className="chatModuleImg" /> {messages[i].user.userName}</b> {messages[i].message}</p>)
                     } else if (messages[i].sendertype === 'user' || messages[i].sendertype === 'admin') {
                         if (messages[i].type == 'home') {
-                            homeTeamMsg.push(<p key={messages[i].id} id={messages[i].id}><b data-param={messages[i].user.id} onClick={handleShow}><img data-param={messages[i].user.id} src={imageSet} className="chatModuleImg" /> {messages[i].user.userName}</b> {messages[i].message}</p>)
+                            homeTeamMsg.push(<p key={messages[i].id} id={messages[i].id}><b data-param={messages[i].user.id} onClick={handleShowProfile}><img data-param={messages[i].user.id} src={imageSet} className="chatModuleImg" /> {messages[i].user.userName}</b> {messages[i].message}</p>)
                         } else if (messages[i].type === 'away') {
-                            awayTeamMsg.push(<p key={messages[i].id} id={messages[i].id}><b data-param={messages[i].user.id} onClick={handleShow}><img data-param={messages[i].user.id} src={imageSet} className="chatModuleImg" />  {messages[i].user.userName}</b> {messages[i].message}</p>)
+                            awayTeamMsg.push(<p key={messages[i].id} id={messages[i].id}><b data-param={messages[i].user.id} onClick={handleShowProfile}><img data-param={messages[i].user.id} src={imageSet} className="chatModuleImg" />  {messages[i].user.userName}</b> {messages[i].message}</p>)
                         }
                     }
                 }
@@ -397,12 +334,12 @@ function Room() {
     return (
         <>
             <Head>
-                <title>Split-Side - Events</title>
+                <title>Split-Side - Chat</title>
             </Head>
             <div>
                 <div id="room">
                     {
-                        getJoinUserDetail && <>
+                        eventData && <>
 
                             <div className="room-chat-form mb-3">
                                 <div className="event-start-main">
@@ -425,8 +362,8 @@ function Room() {
                                 </div>
                                 <div className="hosted-first-chat-form">
                                     <div className="hosted-heading-main">
-                                        <h4><b>Hosted:</b> {getJoinUserDetail.event.hostuser.userName}</h4>
-                                        <h4><b>Location:</b> {getJoinUserDetail.event.location}</h4>
+                                        <h4><b>Hosted:</b> {eventData.host.user_name}</h4>
+                                        <h4><b>Location:</b> {eventData.stadium.name}</h4>
                                     </div>
                                     <div className="hosted-first-chat-box" id="hostMsgDiv">
                                         {gethostUserMsg}
@@ -434,11 +371,11 @@ function Room() {
                                 </div>
                                 <div className="hosted-second-chat-form">
                                     <div className="team-chat-box-main">
-                                        <div className="team-heading"><b>Away Team:</b> {getJoinUserDetail.awayTeam.name}</div>
+                                        <div className="team-heading"><b>Away Team:</b> {eventData.away_team.name}</div>
                                         <div className="team-chat-box" id="awayMsgDiv">{getawayTeamMsg}</div>
                                     </div>
                                     <div className="team-chat-box-main right">
-                                        <div className="team-heading"><b>Home Team:</b> {getJoinUserDetail.homeTeam.name}</div>
+                                        <div className="team-heading"><b>Home Team:</b> {eventData.home_team.name}</div>
                                         <div className="team-chat-box" id="homeMsgDiv">{gethomeTeamMsg}</div>
                                     </div>
                                 </div>
@@ -465,48 +402,10 @@ function Room() {
                 </div>
                 <div className="container-chat">
                 </div>
-                <Modal show={show} onHide={handleClose} >
-                    <Modal.Body>
-                        <div className="user-details-main">
-                            <img src={getImage} alt="" />
-                            <h3>{getUsername}</h3>
-                            {getcomma === true ? (
-                                <span>{getCity}  {getState}</span>
-                            ) : (
-                                <span>{getCity} , {getState}</span>
-                            )}
-                            <p>{getAbout}</p>
-                        </div>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={() => handleClose()}>Close</Button>
-                    </Modal.Footer>
-                </Modal>
-                {
-                    selectedEvent && <Modal backdrop="static" keyboard={false} id={selectedEvent.event.id} className={selectedEvent.event.roomId} show={selectionModal} onHide={handleClose}>
-                        <Modal.Header>
-                            <Modal.Title>Join the Chat</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <form id="post-form" method="POST" action="#">
-                                <label><strong>Chat Room Name</strong></label>
 
-                                <p className="text-left mb-3">{selectedEvent.awayTeam.name} at {selectedEvent.homeTeam.name}</p>
-                                <label><strong>Which team are you cheering for?</strong></label>
-                                <div>
-                                    <div className='pb-1'>
-                                        <input type="radio" name="user_team_selection" id="user_team_selection" value="home" checked={getTeamName === 'home'} onChange={getRadioButtonValue} />
-                                        <label className='ps-1'> {selectedEvent.homeTeam.name}</label>
-                                    </div>
-                                    <div className='pb-2'>
-                                        <input type="radio" name="user_team_selection" id="user_team_selection" value="away" checked={getTeamName === 'away'} onChange={getRadioButtonValue} />
-                                        <label className='ps-1'> {selectedEvent.awayTeam.name}</label>
-                                    </div>
-                                </div>
-                                <Button onClick={() => hendleClick()} >Enter Room</Button>
-                            </form>
-                        </Modal.Body>
-                    </Modal>
+                <ProfileModal show={showProfile} userId={selectedUser} />
+                {
+                    eventData && <JoinChatModal show={showJoinChatModal} selectedEvent={eventData} onClose={handleCloseJoinChat} />
                 }
 
             </div>
