@@ -18,15 +18,14 @@ class Event(SSNamedModel):
     event_start_time = models.DateTimeField()
 
     def create_slug(self):
-
+        date_string = self.event_start_time.strftime("%Y-%m-%d")
         return slugify(
             "-".join([
+                self.host.username,
                 self.home_team.name,
                 "vs",
                 self.away_team.name,
-                str(self.event_start_time.year),
-                str(self.event_start_time.month),
-                str(self.event_start_time.day)
+                date_string
             ])
         )
 

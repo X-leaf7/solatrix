@@ -17,6 +17,8 @@ class EventViewSet(viewsets.ModelViewSet):
 
     serializer_class = EventSerializer
 
+    lookup_field = 'slug'
+
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
