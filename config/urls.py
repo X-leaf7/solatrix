@@ -24,6 +24,7 @@ from rest_framework.documentation import include_docs_urls
 
 from events.views import EventViewSet, AttendeeViewSet
 from sports.views import LeagueViewSet, SportViewSet, StadiumViewSet, TeamViewSet
+from users.views import UserViewSet
 
 
 router = routers.DefaultRouter()
@@ -33,6 +34,7 @@ router.register(r'leagues', LeagueViewSet)
 router.register(r'teams', TeamViewSet)
 router.register(r'stadiums', StadiumViewSet)
 router.register(r'sports', SportViewSet)
+router.register(r'profiles', UserViewSet)
 
 urlpatterns = [
     path('health/', include('health_check.urls')),

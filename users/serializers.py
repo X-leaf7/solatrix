@@ -22,5 +22,5 @@ class FullUserSerializer(serializers.ModelSerializer):
         fields = (
             "username", "first_name", "last_name", "email",
             "city", "state", "zip_code", "about",
-            "profile_image"
+            "profile_image", "id"
         )
