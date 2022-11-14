@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from sports.serializers import SportSerializer, TeamSerializer
+from sports.serializers import SportSerializer, TeamSerializer, StadiumSerializer
 from .models import Event, Attendee
 
 class HostSerializer(serializers.ModelSerializer):
@@ -16,13 +16,14 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
     home_team = TeamSerializer()
     away_team = TeamSerializer()
     host = HostSerializer()
+    stadium = StadiumSerializer()
 
     class Meta:
         model = Event
         fields = [
             'name', 'sport', 'host',
             'event_start_time', 'lobby_start_time',
-            'home_team', 'away_team',
+            'home_team', 'away_team', 'stadium',
             'is_private', 'slug', 'id'
         ]
 
