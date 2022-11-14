@@ -31,4 +31,4 @@ class AttendeeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Attendee
-        fields = ['user', 'event', 'chosen_team']
+        fields = ['user', 'event', 'chosen_team', 'id']

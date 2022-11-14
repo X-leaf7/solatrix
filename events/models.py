@@ -37,3 +37,6 @@ class Attendee(SSBaseModel):
 
     def __str__(self):
         return f'{self.user.username} at {self.event.name} for {self.chosen_team.name}'
+
+    class Meta:
+        unique_together = (('user','event'),)

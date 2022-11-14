@@ -31,3 +31,5 @@ class AttendeeViewSet(viewsets.ModelViewSet):
     serializer_class = AttendeeSerializer
 
     permission_classes = [permissions.IsAuthenticated]
+
+    filterset_fields = ['user', 'event']
