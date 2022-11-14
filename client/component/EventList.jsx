@@ -32,23 +32,6 @@ function EventList({ searchFilter, selectedSport }) {
         setShowJoinChat(false)
         setSelectedEvent(null)
     }
-    
-    useEffect(() => {
-        if (searchFilter) {
-            if (events) {
-                setFilteredEvents(
-                    events.filter(item =>
-                        item.awayTeamRef.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
-                        item.homeTeamRef.name.toLowerCase().includes(searchFilter.toLowerCase()) ||
-                        item.roomId.toLowerCase().includes(searchFilter.toLowerCase()) ||
-                        item.hostuser.userName.toLowerCase().includes(searchFilter.toLowerCase())
-                    )
-                )
-            }
-        } else if (events) {
-            setFilteredEvents(events)
-        }
-    }, [searchFilter, events])
 
     useEffect(() => {
         if (filteredEvents) {
@@ -62,32 +45,31 @@ function EventList({ searchFilter, selectedSport }) {
     }, [filteredEvents, searchFilter])
 
     useEffect(() => {
-        if (search && selectedSport) {
-            setFilteredEvents(
-                events.filter(item =>
-                    item.awayTeamRef.name.toLowerCase().includes(search.toLowerCase()) ||
-                    item.homeTeamRef.name.toLowerCase().includes(search.toLowerCase()) ||
-                    item.roomId.toLowerCase().includes(search.toLowerCase()) ||
-                    item.hostuser.userName.toLowerCase().includes(search.toLowerCase())
-                )
-            )
-        } else if(search){
-            setFilteredEvents(
-                events.filter(item =>
-                    item.awayTeamRef.name.toLowerCase().includes(search.toLowerCase()) ||
-                    item.homeTeamRef.name.toLowerCase().includes(search.toLowerCase()) ||
-                    item.roomId.toLowerCase().includes(search.toLowerCase()) ||
-                    item.hostuser.userName.toLowerCase().includes(search.toLowerCase())
-                )
-            )
-        } else if(selectedSport){
-            setFilteredEvents(
-                events.filter(item => item.sports.includes(selectedSport))
-            )
-        } else {
-            setFilteredEvents(events)
+        if (!events) {
+            return
         }
-    }, [search, selectedSport])
+
+        let filters = []
+        let results = events.slice()
+        const lowerSearch = search.toLowerCase()
+
+        if (selectedSport) {
+            filters.push(eventItem => eventItem.sport.id == selectedSport)
+        }
+
+        if (search) {
+            filters.push(eventItem =>
+                eventItem.away_team.name.toLowerCase().includes(lowerSearch) ||
+                eventItem.home_team.name.toLowerCase().includes(lowerSearch) ||
+                eventItem.name.toLowerCase().includes(lowerSearch) ||
+                eventItem.host.username.toLowerCase().includes(lowerSearch)
+            )
+        }
+
+        filters.forEach(filter => results = results.filter(filter))
+
+        setFilteredEvents(results)
+    }, [events, search, selectedSport])
 
     useEffect(() => {
         if (filteredEvents) {

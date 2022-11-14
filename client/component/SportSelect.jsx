@@ -25,7 +25,7 @@ function SportSelect({selected, setSelected}) {
             <select className="custom" defaultValue="" value={selected} onChange={handleChange}>
                 <option value="" disabled>Filter by Sport</option>
                 {getSports.map(sport => (
-                  <option key={sport.slug} value={sport.slug}>
+                  <option key={sport.slug} value={sport.id}>
                     {sport.name}
                   </option>
                 ))}
