@@ -3,7 +3,7 @@ services:
   django:
     image: ss_django
     build:
-      context: ./
+      context: ./admin
     volumes:
       - ./:/app
     ports:
