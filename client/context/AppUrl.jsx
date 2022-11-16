@@ -1,5 +1,6 @@
 
 export const URL = process.env.NEXT_PUBLIC_BACKEND_API_URL || ""
+export const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_SERVER_URL || ""
 
 export const EVENT_LIST = `${URL}/api/front/event-list`
 

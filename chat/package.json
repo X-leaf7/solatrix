@@ -1,0 +1,12 @@
+{
+    "name": "split-side-chat",
+    "version": "0.0.1",
+    "description": "Chat server for Split-Side",
+    "scripts": {
+        "start": "node server.js"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "socket.io": "^4.5.3"
+    }
+}

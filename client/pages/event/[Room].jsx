@@ -3,12 +3,12 @@ import AppContext from '/context/AppContext'
 import Router, { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import swal from 'sweetalert';
-import socketClient from "socket.io-client";
-import { ATTENDEES, URL, USER_DETAIL, JOIN_EVENT, PROFILE_IMG, GET_EVENTS, CHECK_EVENT_USER, SET_USER_TEAM } from '/context/AppUrl'
+import { io } from 'socket.io-client'
+import { ATTENDEES, URL, PROFILE_IMG, GET_EVENTS, SET_USER_TEAM, SOCKET_URL } from '/context/AppUrl'
 import Head from 'next/head'
 import ProfileModal from '/component/ProfileModal'
 import JoinChatModal from '/component/JoinChatModal'
-//let socket = socketClient(URL)
+let socket = io(SOCKET_URL)
 
 function Room() {
 
@@ -184,8 +184,6 @@ function Room() {
                 return false
             }
 
-
-
             if (!mesasge) {
                 swal("Error", "Please enter message.", "error")
                 return false
@@ -196,11 +194,9 @@ function Room() {
                 return false
             }
 
-
-
             const userData = Cookies.get('userInfo')
             const user = JSON.parse(userData)
-            let hostUserUser = getJoinUserDetail.event.host
+            let hostUserUser = eventData.host.id
             const eventSelectData = Cookies.get('selectEventData')
             const getEventData = JSON.parse(eventSelectData)
             var hostOrUser = 'user'
