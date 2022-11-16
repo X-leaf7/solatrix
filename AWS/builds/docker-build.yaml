@@ -10,6 +10,7 @@ phases:
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
       - docker pull $REPOSITORY_URI:latest || true
+      - mkdir -p admin/client/out
       - cp -r $CODEBUILD_SRC_DIR_BuildOutput/client/out $CODEBUILD_SRC_DIR/admin/client/out
   build:
     commands:
