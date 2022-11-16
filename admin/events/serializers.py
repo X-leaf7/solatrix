@@ -22,7 +22,7 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
         model = Event
         fields = [
             'name', 'sport', 'host',
-            'event_start_time', 'lobby_start_time',
+            'event_start_time', 'lobby_start_time', 'banner',
             'home_team', 'away_team', 'stadium',
             'is_private', 'slug', 'id'
         ]

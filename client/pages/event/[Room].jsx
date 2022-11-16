@@ -13,7 +13,7 @@ let socket = io(SOCKET_URL)
 function Room() {
 
     const router = useRouter()
-    const { isLogin, event, selectedTeam, setSelectedTeam } = useContext(AppContext);
+    const { isLogin } = useContext(AppContext);
     const [userJoinEvent, setUserJoinEvent] = useState(false);
     const [getJoinUserDetail, setJoinUserDetail] = useState(null)
     const [getEventTimer, setEventTimer] = useState('00:00:00')
@@ -22,10 +22,7 @@ function Room() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [showJoinChatModal, setShowJoinChatModal] = useState(false);
     const [eventData, setEventData] = useState(null);
-    const [getBannerImage, setBannerImage] = useState(null);
-    const [getTeamName, setTeamName] = useState('home');
     const [userID, setUserID] = useState(null);
-    // const [getEventData, setGetEventData] = useState({})
     const [urlObj, setUrlObj] = useState(null);
 
     const handleShowProfile = async (event) => {
@@ -38,45 +35,6 @@ function Room() {
         setShowJoinChatModal(false)
     }
 
-    function getRadioButtonValue(e) {
-        const { value } = e.target;
-        setTeamName(value)
-
-    }
-    const hendleClick = async () => {
-
-        const param = {
-            roomID: eventData.event.roomId,
-            userID: userID,
-            selectedTeam: getTeamName
-        }
-        console.log("hello", SET_USER_TEAM, param)
-        fetch(SET_USER_TEAM, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(param),
-        })
-            .then(data => data)
-            .catch(err => console.log(err))
-
-        console.log("SET_USER_TEAM=>",)
-
-        setUrlObj({
-            id: eventData.event.id,
-            selectTeamName: getTeamName
-        })
-        // Router.push({
-        //     pathname: '/[Team]/[TeamID]',
-        //     query: {
-        //         Team: `${eventData.homeTeam.name}-at-${eventData.awayTeam.name}`,
-        //         TeamID: eventData.event.roomId
-        //     },
-        // })
-        isSelectionModal(false)
-        // setUserJoinEvent(false)
-    }
     const checkSelection = async () => {
         const userData = Cookies.get('userInfo')
         const user = JSON.parse(userData)
@@ -112,7 +70,6 @@ function Room() {
 
                 setEventTimer('00:00:00')
                 setChatbox(true)
-                //setBannerImage(URL + '/' + response.data.event.banner)
             } else {
                 setShowJoinChatModal(true)
             }
@@ -354,7 +311,7 @@ function Room() {
                                         </div>
                                     ) : (
                                         <div className="event-time-box" style={{ 'border': 'none' }}>
-                                            <img src={getBannerImage} alt="" />
+                                            <img src={eventData.banner} alt="" />
                                         </div>
                                     )}
 
