@@ -257,7 +257,7 @@ Resources:
                 EnvironmentVariables: !Sub |
                   [
                     {"name": "REPOSITORY_URI", "value": "${AdminAppEcrRepository.RepositoryUri}"},
-                    {"name": "DOCKER_BUILD_PATH", "value": "."}
+                    {"name": "DOCKER_BUILD_PATH", "value": "admin/"}
                   ]
               InputArtifacts:
                 - Name: App
