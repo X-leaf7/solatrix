@@ -1,6 +1,18 @@
 # Split-Side
 
-This repository contains the Split-Side Application. It is a Django Backend with a Next.js static frontend.
+This repository contains the Split-Side Application. It is a Django Admin Backend with a Next.js static frontend, and socket.io chat server.
+
+## The Django Admin Backend
+
+The django backend exposes REST APIs for a relational data store (Postgres), as well as a CMS for editing portions of the website that should be editable by non-technical staff.
+
+## Next.js static frontend
+
+The user interacts with the application through a Next.js static frontend.
+
+## Socket.io chat server
+
+Chat functionality, such as sending and receiving messages is handled by a node.js server using Socket.io.
 
 ## Working Locally
 
