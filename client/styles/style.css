@@ -516,6 +516,11 @@ button.join-chat {
   padding: 8px 30px;
 }
 
+img.chathead {
+  height: 2ex;
+  width: auto;
+}
+
 /*=============================================
  Responsive 
  =============================================*/

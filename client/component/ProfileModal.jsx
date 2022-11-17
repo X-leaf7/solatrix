@@ -1,25 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { Button, Modal } from 'react-bootstrap';
+import React from 'react'
+import { Button, Modal } from 'react-bootstrap'
+import { useUser } from '/context/api'
 
 function ProfileModal({show, userId, onClose}) {
 
-    const [user, setUser] = useState(null);
-
-    useEffect(async () => {
-        if (userId) {
-            const response = await fetch(USER_DETAIL + userId, {
-                method: 'get',
-            }).catch(err => console.log(err))
-
-            const data = await response.json();
-            if (response.status === 200) {
-                if (data.profile_image == null) {
-                    data.profile_image = 'img/profile_img.png'
-                }
-                setUser(data)
-            }
-        }
-    }, [userId]);
+    const { user, isLoadingEvents, isErrorEvents } = useUser(userId)
 
     return (
         <>

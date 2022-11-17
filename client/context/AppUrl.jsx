@@ -46,3 +46,4 @@ export const PASSWORD_RESET = `${URL}/api/auth/users/reset_password_confirm/`
 export const CURRENT_USER_DETAIL = `${URL}/api/auth/users/me/`
 export const ATTENDEES = `${URL}/api/attendees/`
 export const USER_DETAIL = `${URL}/api/profiles/`
+export const DEFAULT_PROFILE_IMG = `${URL}/img/user_profile_default.png`

@@ -3,7 +3,7 @@ import Router from 'next/router'
 import { Button, Modal } from 'react-bootstrap'
 import Cookies from 'js-cookie'
 import { ATTENDEES } from '/context/AppUrl'
-import { post } from '/context/api'
+import { getAttendance, post } from '/context/api'
 
 function JoinChatModal({show, selectedEvent, onClose}) {
 
@@ -24,6 +24,13 @@ function JoinChatModal({show, selectedEvent, onClose}) {
     const joinRoom = async () => {
         const userData = Cookies.get('userInfo')
         const user = JSON.parse(userData)
+
+        const alreadyAttending = getAttendance(user.id, selectedEvent.id)
+
+        if (alreadyAttending) {
+            goToRoom()
+            return
+        }
 
         post(ATTENDEES, {
             'user': user.id,

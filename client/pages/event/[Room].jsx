@@ -1,20 +1,21 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import AppContext from '/context/AppContext'
 import Router, { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import swal from 'sweetalert';
 import { io } from 'socket.io-client'
 import { ATTENDEES, URL, PROFILE_IMG, GET_EVENTS, SET_USER_TEAM, SOCKET_URL } from '/context/AppUrl'
+import { getAttendance } from '/context/api'
 import Head from 'next/head'
 import ProfileModal from '/component/ProfileModal'
 import JoinChatModal from '/component/JoinChatModal'
+import ChatMessage from '/component/ChatMessage'
 let socket = io(SOCKET_URL)
 
 function Room() {
 
     const router = useRouter()
     const { isLogin } = useContext(AppContext);
-    const [userJoinEvent, setUserJoinEvent] = useState(false);
     const [getJoinUserDetail, setJoinUserDetail] = useState(null)
     const [getEventTimer, setEventTimer] = useState('00:00:00')
     const [getChatBox, setChatbox] = useState(false)
@@ -22,171 +23,172 @@ function Room() {
     const [selectedUser, setSelectedUser] = useState(null);
     const [showJoinChatModal, setShowJoinChatModal] = useState(false);
     const [eventData, setEventData] = useState(null);
-    const [userID, setUserID] = useState(null);
-    const [urlObj, setUrlObj] = useState(null);
+    const [attendance, setAttendance] = useState(null);
+    const [registeredListeners, doneRegisteredListeners] = useState(false);
+
+    const [homeTeamMessages, setHomeTeamMessages] = useState([]);
+    const [awayTeamMessages, setAwayTeamMessages] = useState([]);
+    const [hostUserMessages, setHostUserMessages] = useState([]);
+
+    useEffect(() => {
+        // Make sure we are logged in
+        if (!Cookies.get("Token")) {
+            Router.push('/login')
+            return
+        }
+    }, []);
+
+    useEffect(async () => {
+        // Once the router has loaded the room name, fetch event details
+        if (router.query.Room) {
+            const eventResponse = await fetch(`${GET_EVENTS}${router.query.Room}/`, {
+                method: 'get',
+            }).catch(err => {
+                console.log(err)
+                swal("Error", "Unable to load Event. Please check the event URL and try again.", "error")
+            })
+            const eventData = await eventResponse.json();
+            setEventData(eventData)
+        }
+    }, [router])
+
+    useEffect(async () => {
+        // Once we have eventData, verify attendance
+        if (eventData) {
+            const userData = Cookies.get('userInfo')
+            const user = JSON.parse(userData)
+
+            const attendanceData = getAttendance(user.id, eventData.id)
+
+            if (attendanceData) {
+                setAttendance({
+                    id: attendanceData.id,
+                    chosenTeam: attendanceData.chosen_team
+                })
+
+                setEventTimer('00:00:00')
+                setChatbox(true)
+            } else {
+                // Give the user a chance to pick a side
+                setShowJoinChatModal(true)
+            }
+        }
+    }, [eventData])
+
+
+    useEffect(async () => {
+        // Once we have verified attendance and loaded event data, we can join the room
+        if (attendance && eventData) {
+            const userData = Cookies.get('userInfo')
+            const user = JSON.parse(userData)
+
+            var joinEventData = {
+                eventId: eventData.id,
+                userId: user.id,
+                token: Cookies.get("Token")
+            }
+            socket.emit("join", joinEventData, (response) => {
+                if (response.success) {
+                    if (response.messages) {
+                        let homeMessages = []
+                        let awayMessages = []
+                        let hostMessages = []
+                        response.messages.forEach((message) => {
+                            if (message.userId == eventData.host.id) {
+                                hostMessages.push(message)
+                            }
+                            else if (message.teamId == eventData.home_team.id) {
+                                homeMessages.push(message)
+                            }
+                            else {
+                                awayMessages.push(message)
+                            }
+                        })
+                        setHostUserMessages(hostMessages)
+                        setHomeTeamMessages(homeMessages)
+                        setAwayTeamMessages(awayMessages)
+                    }
+                } else {
+                    swal("Error", "Unable to join the chat. Please try again.", "error")
+                }
+            })
+        }
+    }, [attendance, eventData])
 
     const handleShowProfile = async (event) => {
-        const { param } = event.target.dataset;
-        setSelectedUser(param)
+        const { user } = event.target.dataset;
+        setSelectedUser(user)
         setShowProfile(true)
+    }
+
+    function handleCloseProfile() {
+        setShowProfile(false)
+        setSelectedUser(null)
     }
 
     function handleCloseJoinChat() {
         setShowJoinChatModal(false)
     }
 
-    const checkSelection = async () => {
-        const userData = Cookies.get('userInfo')
-        const user = JSON.parse(userData)
-        if (router.query.Room) {
-            setUserID(user.id)
-
-            const eventResponse = await fetch(`${GET_EVENTS}${router.query.Room}/`, {
-                method: 'get',
-            })
-                .then(data => data)
-                .catch(err => console.log(err))
-            const eventData = await eventResponse.json();
-            setEventData(eventData)
-
-            const verifyAttendance = new URLSearchParams({
-                user: user.id,
-                event: eventData.id,
-            })
-            const attendanceResponse = await fetch(`${ATTENDEES}?${verifyAttendance}`, {
-                headers: {
-                    'Authorization': 'Token ' + Cookies.get("Token")
-                },
-                method: 'GET',
-            })
-                .then(data => data)
-                .catch(err => console.log(err))
-            if (attendanceResponse.status === 200) {
-                const data = await attendanceResponse.json();
-                setUrlObj({
-                    id: data[0].id,
-                    chosenTeam: data[0].chosen_team
-                })
-
-                setEventTimer('00:00:00')
-                setChatbox(true)
-            } else {
-                setShowJoinChatModal(true)
-            }
-        }
+    function scrollToTop(elementId) {
+        var el = document.getElementById(elementId);
+        el.scrollTop = el.scrollHeight;
     }
 
-    useEffect(() => {
-        const token = Cookies.get('Token')
-        if (token === undefined) {
-            Router.push('/login')
-            return
-        }
-        checkSelection();
-    }, [router.query]);
-
-    useEffect(async () => {
-
-        if (urlObj) {
-            console.log('userJoinEvent false');
-            console.log('urlObj =>', urlObj, typeof urlObj);
-            let obj = router.query
-            console.log("boj", obj)
-            // const isEmpty = Object.keys(obj).length === 0;
-            let getEventData = {}
-            // if (isEmpty === true) {
-            //     console.log('isEmpty true')
-            //     const eventSelectData = Cookies.get('selectEventData')
-            //     getEventData = JSON.parse(eventSelectData)
-            // } else {
-            //     console.log('isEmpty False')
-            //     Cookies.set('selectEventData', JSON.stringify(urlObj))
-            //     const eventSelectData = Cookies.get('selectEventData')
-            //     getEventData = JSON.parse(eventSelectData)
-            // }
-            console.log('isEmpty False')
-            Cookies.set('selectEventData', JSON.stringify(urlObj))
-            const eventSelectData = Cookies.get('selectEventData')
-            getEventData = JSON.parse(eventSelectData)
-
-
-            const checkObjectValue = Object.keys(getEventData).length === 0;
-            if (checkObjectValue === true) {
-                console.log('checkObjectValue TRUE')
-                Router.push('/event')
-                swal("Error", "Something is wrong. Please try again.", "error")
-                return false
+    const handleNewMessage = useCallback((newMessage) => {
+        if (newMessage.userId == eventData.host.id) {
+            setHostUserMessages(hostUserMessages => [...hostUserMessages, newMessage])
+            scrollToTop('hostMsgDiv')
+        } else {
+            if (newMessage.teamId == eventData.home_team.id) {
+                setHomeTeamMessages(homeTeamMessages => [...homeTeamMessages, newMessage])
+                scrollToTop('homeMsgDiv')
+            } else if (newMessage.teamId == eventData.away_team.id) {
+                setAwayTeamMessages(awayTeamMessages => [...awayTeamMessages, newMessage])
+                scrollToTop('hostMsgDiv')
             }
-
-            const userData = Cookies.get('userInfo')
-            const user = JSON.parse(userData)
-
-            //socket.emit("join", eventId, (response) => {
-            //    if (response.statusCode === 200) {
-            //        
-            //    } else {
-            //        swal("Error", "Something is wrong. Please try again.", "error")
-            //        return false
-            //    }
-            //})
         }
-    }, [userJoinEvent, urlObj])
+    }, [eventData, hostUserMessages, homeTeamMessages, awayTeamMessages])
 
     const onClickSendMessage = () => {
-        if (isLogin === true) {
-            const mesasge = document.getElementById('userMessage').value
+        const message = document.getElementById('userMessage').value
 
-            if (mesasge.trim().length === 0) {
-                swal("Error", "Please enter message.", "error")
-                return false
-            }
-
-            if (!mesasge) {
-                swal("Error", "Please enter message.", "error")
-                return false
-            }
-
-            if (mesasge.length > 160) {
-                swal("Error", "MaxLength is 160 characters", "error")
-                return false
-            }
-
-            const userData = Cookies.get('userInfo')
-            const user = JSON.parse(userData)
-            let hostUserUser = eventData.host.id
-            const eventSelectData = Cookies.get('selectEventData')
-            const getEventData = JSON.parse(eventSelectData)
-            var hostOrUser = 'user'
-            if (user.id === hostUserUser) {
-                hostOrUser = 'host'
-            }
-
-            var sendMessageData = {
-                eventId: getEventData.id,
-                userid: user.id,
-                sendertype: hostOrUser,
-                message: mesasge,
-                type: getEventData.selectTeamName
-            }
-            document.getElementById("userMessage").value = '';
-
-            socket.emit('messages', sendMessageData, (response) => {
-                if (response.statusCode === 200) {
-                    document.getElementById("userMessage").value = '';
-                }
-            })
-        } else {
-            swal("Error", "Something is wrong. Please try again.", "error")
+        if (message.trim().length === 0) {
+            swal("Error", "Please enter message.", "error")
             return false
         }
+
+        if (!message) {
+            swal("Error", "Please enter message.", "error")
+            return false
+        }
+
+        if (message.length > 160) {
+            swal("Error", "MaxLength is 160 characters", "error")
+            return false
+        }
+
+        const userData = Cookies.get('userInfo')
+        const user = JSON.parse(userData)
+
+        var sendMessageData = {
+            eventId: eventData.id,
+            userId: user.id,
+            teamId: attendance.chosenTeam,
+            message: message
+        }
+
+        socket.emit('sendMessage', sendMessageData, (response) => {
+            if (response.success) {
+                document.getElementById("userMessage").value = '';
+            }
+        })
     }
 
-
-
     useEffect(async () => {
-        if (urlObj) {
-            const getSelectedEventId = Cookies.get('selectEventData')
-            const getSelectedEventData = JSON.parse(getSelectedEventId)
+        if (eventData && !registeredListeners) {
+
+            socket.on('newMessage', handleNewMessage)
             //socket.on('counter', (response) => {
             //    if (response.eventId === parseInt(getSelectedEventData.id)) {
             //        if (response.eventStart === false) {
@@ -221,9 +223,10 @@ function Room() {
             //        document.getElementById(response.data.id).remove();
             //    }
             //})
+            doneRegisteredListeners(true)
         }
 
-    }, [urlObj])
+    }, [eventData, registeredListeners])
 
 
     const handleKeyPress = (event) => {
@@ -231,61 +234,6 @@ function Room() {
             onClickSendMessage();
         }
     }
-
-    const [gethomeTeamMsg, sethomeTeamMsg] = useState(null);
-    const [getawayTeamMsg, setawayTeamMsg] = useState(null);
-    const [gethostUserMsg, sethostUserMsg] = useState(null);
-
-    useEffect(() => {
-        const token = Cookies.get('Token')
-        if (token) {
-            if (getJoinUserDetail !== null) {
-                let homeTeamMsg = []
-                let awayTeamMsg = []
-                let hostUserMsg = []
-                const userData = Cookies.get('userInfo')
-                const user = JSON.parse(userData)
-                let messages = getJoinUserDetail.messages
-                localStorage.setItem('allMsg', JSON.stringify(getJoinUserDetail));
-
-                for (var i = 0; i < messages.length; i++) {
-
-                    var imageSet = ''
-                    if (messages[i].user.image === null) {
-                        imageSet = PROFILE_IMG
-                    } else {
-                        imageSet = URL + "/" + messages[i].user.image
-                    }
-
-                    if (messages[i].sendertype === 'host') {
-                        hostUserMsg.push(<p key={messages[i].id} id={messages[i].id}><b data-param={messages[i].user.id} onClick={handleShowProfile}><img data-param={messages[i].user.id} src={imageSet} className="chatModuleImg" /> {messages[i].user.userName}</b> {messages[i].message}</p>)
-                    } else if (messages[i].sendertype === 'user' || messages[i].sendertype === 'admin') {
-                        if (messages[i].type == 'home') {
-                            homeTeamMsg.push(<p key={messages[i].id} id={messages[i].id}><b data-param={messages[i].user.id} onClick={handleShowProfile}><img data-param={messages[i].user.id} src={imageSet} className="chatModuleImg" /> {messages[i].user.userName}</b> {messages[i].message}</p>)
-                        } else if (messages[i].type === 'away') {
-                            awayTeamMsg.push(<p key={messages[i].id} id={messages[i].id}><b data-param={messages[i].user.id} onClick={handleShowProfile}><img data-param={messages[i].user.id} src={imageSet} className="chatModuleImg" />  {messages[i].user.userName}</b> {messages[i].message}</p>)
-                        }
-                    }
-                }
-
-                sethomeTeamMsg(homeTeamMsg)
-                setawayTeamMsg(awayTeamMsg)
-                sethostUserMsg(hostUserMsg)
-
-                setTimeout(function () {
-                    var elemAway = document.getElementById('awayMsgDiv');
-                    elemAway.scrollTop = elemAway.scrollHeight;
-
-                    var elemHome = document.getElementById('homeMsgDiv');
-                    elemHome.scrollTop = elemHome.scrollHeight;
-
-                    var elemHost = document.getElementById('hostMsgDiv');
-                    elemHost.scrollTop = elemHost.scrollHeight;
-
-                }, 100);
-            }
-        }
-    }, [getJoinUserDetail, urlObj])
 
     return (
         <>
@@ -322,17 +270,21 @@ function Room() {
                                         <h4><b>Location:</b> {eventData.stadium.name}</h4>
                                     </div>
                                     <div className="hosted-first-chat-box" id="hostMsgDiv">
-                                        {gethostUserMsg}
+                                        {hostUserMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} />)}
                                     </div>
                                 </div>
                                 <div className="hosted-second-chat-form">
                                     <div className="team-chat-box-main">
                                         <div className="team-heading"><b>Away Team:</b> {eventData.away_team.name}</div>
-                                        <div className="team-chat-box" id="awayMsgDiv">{getawayTeamMsg}</div>
+                                        <div className="team-chat-box" id="awayMsgDiv">
+                                            {awayTeamMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId}/>)}
+                                        </div>
                                     </div>
                                     <div className="team-chat-box-main right">
                                         <div className="team-heading"><b>Home Team:</b> {eventData.home_team.name}</div>
-                                        <div className="team-chat-box" id="homeMsgDiv">{gethomeTeamMsg}</div>
+                                        <div className="team-chat-box" id="homeMsgDiv">
+                                            {homeTeamMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId}/>)}
+                                        </div>
                                     </div>
                                 </div>
                                 {getChatBox === false ? (
@@ -359,7 +311,7 @@ function Room() {
                 <div className="container-chat">
                 </div>
 
-                <ProfileModal show={showProfile} userId={selectedUser} />
+                <ProfileModal show={showProfile} userId={selectedUser} onClose={handleCloseProfile} />
                 {
                     eventData && <JoinChatModal show={showJoinChatModal} selectedEvent={eventData} onClose={handleCloseJoinChat} />
                 }

@@ -1,4 +1,4 @@
-import { GET_CMS_CONTENT, GET_EVENTS } from "./AppUrl"
+import { GET_CMS_CONTENT, GET_EVENTS, USER_DETAIL, ATTENDEES } from "./AppUrl"
 import useSWR from 'swr'
 import Cookies from 'js-cookie'
 import axios from 'axios'
@@ -28,6 +28,41 @@ export function useEvents() {
     isLoadingEvents: !error && !data,
     isErrorEvents: error
   }
+}
+
+export function useUser(userId) {
+    const config = {
+        headers: {
+            'Authorization': 'Token ' + Cookies.get("Token")
+        }
+    }
+    const { data, error } = useSWR([USER_DETAIL + userId, config], jsonFetcher)
+
+    return {
+        user: data,
+        isLoadingUser: !error && !data,
+        isErrorUser: error
+    }
+}
+
+export const getAttendance = async (userId, eventId) => {
+
+    const verifyAttendance = new URLSearchParams({
+        user: userId,
+        event: eventId,
+    })
+    const attendanceResponse = await fetch(`${ATTENDEES}?${verifyAttendance}`, {
+        headers: {
+            'Authorization': 'Token ' + Cookies.get("Token")
+        },
+        method: 'GET',
+    }).catch(err => console.log(err))
+
+    const attendanceData = await attendanceResponse.json()
+    if (attendanceData.length > 0) {
+        return attendanceData[0]
+    }
+    return null
 }
 
 export function post(url, data) {
