@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+const { getMessages, putMessage } = require('./dynamo');
 const Event = {};
 const Team = {};
 const User = {};
@@ -71,6 +73,16 @@ module.exports = {
   },
 
   async sendMessage(socket, data) {
+    const messageId = crypto.randomUUID();
+    data.messageId = messageId;
+    io.to(data.eventId).emit('newMessage', data);
+    putMessage(data);
+    return {
+      success: true
+    };
+  },
+
+  async sendMessageOld(socket, data) {
     try {
       let id = data.eventId;
       let eventdata = await Event.findOne({
@@ -172,75 +184,14 @@ module.exports = {
   },
 
   async joinRoom(socket, data) {
-    try {
-      let id = data.eventId;
-      let eventdata = await Event.findOne({
-        where: {
-          id: id,
-        },
-        include: [
-          {
-            model: User,
-            as: "hostuser",
-          },
-          // { model: Team, as: "awayTeamRef" },
-        ],
-      });
-      if (eventdata) {
-        console.log("eventdata.roomId", eventdata.roomId);
-        socket.join(eventdata.roomId);
+    // TODO check user token and id by calling /users/me endpoint on django app
+    socket.join(data.eventId)
 
-        let eventTime = await dateConvert(eventdata);
+    const messages = await getMessages(data.eventId)
 
-        let findHomeTeam = await Team.findOne({
-          where: {
-            id: eventdata.hometeam,
-          },
-        });
-        let findAwayTeam = await Team.findOne({
-          where: {
-            id: eventdata.awayteam,
-          },
-        });
-        //socket.emit("join", data);
-        // socket.broadcast.to(eventdata.id).emit("join", data);
-        // io.to(eventdata.id).emit("join", data);
-        let messagesData = await Message.findAll({
-          // raw: true,
-          where: { is_deleted: false, eventid: id },
-          order: [["id", "ASC"]],
-          include: [
-            {
-              model: User,
-              as: "user",
-            },
-            // { model: Team, as: "awayTeamRef" },
-          ],
-        })
-        return {
-          msg: "chat room detail",
-          data: {
-            event: eventdata,
-            homeTeam: findHomeTeam,
-            awayTeam: findAwayTeam,
-            messages: messagesData,
-            eventTime: eventTime,
-          },
-          statusCode: 200,
-        }
-      } else {
-        return {
-          msg: "No running event(s) found",
-          data: {},
-          statusCode: 201,
-        };
-      }
-    } catch (error) {
-      return {
-        msg: "something went wrong please try again",
-        data: {},
-        statusCode: 400,
-      };
+    return {
+      success: true,
+      messages: messages
     }
   },
 

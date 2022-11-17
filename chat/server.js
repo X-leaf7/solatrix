@@ -1,7 +1,7 @@
 const { Server } = require("socket.io");
 const clientSocket = require("./socket");
 
-const io = new Server({
+global.io = new Server({
   cors: {
     origin: "http://localhost",
     methods: ["GET", "POST"]

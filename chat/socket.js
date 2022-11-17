@@ -10,7 +10,7 @@ module.exports = function (socket) {
         response(await eventController.eventDetail(socket,data));
       });
 
-      socket.on("messages",async function(data, response) {
+      socket.on("sendMessage",async function(data, response) {
         response(await eventController.sendMessage(socket,data));
       });
 
