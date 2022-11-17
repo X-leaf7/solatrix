@@ -35,8 +35,14 @@ services:
     image: ss_chat
     build:
       context: ./chat
+    command: ['npm', 'run', 'dev']
     links:
       - django
+      - dynamodb
+    environment:
+      DYNAMODB_MESSAGE_TABLE: localMessages
+      AWS_ACCESS_KEY_ID: FakeKeyId
+      AWS_SECRET_ACCESS_KEY: FakeSecretAccessKey
     volumes:
       - ./chat:/app
       - otherexclude:/app/node_modules/
@@ -53,6 +59,10 @@ services:
       retries: 10
   redis:
     image: redis
+  dynamodb:
+    image: amazon/dynamodb-local
+    ports:
+      - "5000:8000"
 
 volumes:
   exclude:

@@ -38,6 +38,13 @@ $(ss_django)> docker exec -it split-side-django-1 /bin/bash
 ~# python manage.py loaddata cms
 ```
 
+6. Create DynamoDB table
+```sh
+~# export AWS_ACCESS_KEY_ID=FakeKeyId
+~# export AWS_SECRET_ACCESS_KEY=FakeSecretAccessKey
+~# aws dynamodb create-table --table-name localMessages --attribute-definitions AttributeName=eventId,AttributeType=S AttributeName=messageId,AttributeType=S --key-schema AttributeName=eventId,KeyType=HASH AttributeName=messageId,KeyType=RANGE --billing-mode PAY_PER_REQUEST --endpoint-url http://localhost:5000 --region ddblocal
+```
+
 Happy coding!
 
 
