@@ -113,14 +113,14 @@ function MyApp({ Component, pageProps }) {
     const [search, setSearch] = useState('');
     const [selectedTeam, setSelectedTeam] = useState({});
 
-    const checkLogin = React.useCallback((nextAction) => {
-        if (isLogin === false) {
-            Router.push('/login')
-        }
-        else {
+    const checkLogin = (nextAction) => {
+        if (Cookies.get('isLogin')) {
             nextAction()
         }
-    }, [isLogin]);
+        else {
+            Router.push('/login')
+        }
+    };
 
     React.useEffect(() => {
         if (Cookies.get('isLogin')) {
