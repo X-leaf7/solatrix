@@ -15,6 +15,10 @@ Parameters:
     Type: String
     Description: ECR Image URI for the Admin App
 
+  ChatImage:
+    Type: String
+    Description: ECR Image URI for the Chat Server
+
   Domain:
     Type: String
     Default: 'newprod.split-side.com'
@@ -60,31 +64,69 @@ Resources:
           ToPort: 8000
           SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
 
-  AdminService:
+  AdminTask:
     Type: AWS::CloudFormation::Stack
-    Properties: 
+    Properties:
+      TemplateURL: AdminTask.yaml
       Parameters:
         ServiceName: AdminBackend
         ClusterName: !Ref ClusterName
+        ExecutionRole: !Ref ExecutionRole
+        Image: !Ref AdminImage
+        RDSConnectionSecret: !GetAtt RDSCluster.Outputs.ConnectionSecret
+        S3BucketName: !Ref Bucket
+        Domain: !Ref Domain
+        
+  AdminService:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      TemplateURL: FargateService.yaml
+      Parameters:
+        ServiceName: AdminBackend
+        TaskDefinition: !GetAtt AdminTask.Outputs.TaskDefinition
         Cluster: !Ref Cluster
         VPC: !GetAtt VPC.Outputs.VPCId
         PrivateSubnet1: !GetAtt VPC.Outputs.PrivateSubnet0
         PrivateSubnet2: !GetAtt VPC.Outputs.PrivateSubnet1
         PublicSubnet1: !GetAtt VPC.Outputs.PublicSubnet0
         PublicSubnet2: !GetAtt VPC.Outputs.PublicSubnet1
-        ExecutionRole: !Ref ExecutionRole
-        TaskRole: !Ref TaskRole
         AutoScalingRole: !GetAtt AutoScalingRole.Arn
         LoadBalancerSecurityGroup: !Ref LoadBalancerSecurityGroup
         ContainerSecurityGroup: !Ref ContainerSecurityGroup
-        Image: !Ref AdminImage
         HealthCheckPath: "/health/"
         MaxContainers: 2
         AutoScalingTargetValue: 80
-        RDSConnectionSecret: !GetAtt RDSCluster.Outputs.ConnectionSecret
-        S3BucketName: !Ref Bucket
+
+  ChatTask:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ChatTask.yaml
+      Parameters:
+        ServiceName: ChatServer
+        ClusterName: !Ref ClusterName
+        ExecutionRole: !Ref ExecutionRole
+        Image: !Ref ChatImage
+        MessageTableName: !Ref MessageTable
         Domain: !Ref Domain
+
+  ChatService:
+    Type: AWS::CloudFormation::Stack
+    Properties:
       TemplateURL: FargateService.yaml
+      Parameters:
+        ServiceName: ChatServer
+        Cluster: !Ref Cluster
+        VPC: !GetAtt VPC.Outputs.VPCId
+        PrivateSubnet1: !GetAtt VPC.Outputs.PrivateSubnet0
+        PrivateSubnet2: !GetAtt VPC.Outputs.PrivateSubnet1
+        PublicSubnet1: !GetAtt VPC.Outputs.PublicSubnet0
+        PublicSubnet2: !GetAtt VPC.Outputs.PublicSubnet1
+        AutoScalingRole: !GetAtt AutoScalingRole.Arn
+        LoadBalancerSecurityGroup: !Ref LoadBalancerSecurityGroup
+        ContainerSecurityGroup: !Ref ContainerSecurityGroup
+        HealthCheckPath: "/health/"
+        MaxContainers: 2
+        AutoScalingTargetValue: 80
 
   RDSCluster:
     Type: AWS::CloudFormation::Stack
@@ -96,6 +138,21 @@ Resources:
         VPC: !GetAtt VPC.Outputs.VPCId
         ContainerSecurityGroup: !Ref ContainerSecurityGroup
       TemplateURL: RDS.yaml
+
+  MessageTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: eventId
+          AttributeType: S
+        - AttributeName: messageId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: eventId
+          KeyType: HASH
+        - AttributeName: messageId
+          KeyType: RANGE
 
   VPC:
     Type: AWS::CloudFormation::Stack
@@ -150,49 +207,6 @@ Resources:
               - Effect: Allow
                 Action: 'secretsmanager:GetSecretValue'
                 Resource: !GetAtt RDSCluster.Outputs.ConnectionSecret
-
-  TaskRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: ecs-tasks.amazonaws.com
-            Action: 'sts:AssumeRole'
-      Policies:
-        - PolicyName: AllowECSExec
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Resource: '*'
-                Action:
-                  - 'ssmmessages:CreateControlChannel'
-                  - 'ssmmessages:CreateDataChannel'
-                  - 'ssmmessages:OpenControlChannel'
-                  - 'ssmmessages:OpenDataChannel'
-        - PolicyName: AllowS3Access
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Resource:
-                  - !Sub "arn:aws:s3:::${Bucket}/*"
-                  - !Sub "arn:aws:s3:::${Bucket}"
-                Action: "s3:*"
-        - PolicyName: AllowSendEmails
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - 'ses:SendEmail'
-                  - 'ses:SendRawEmail'
-                Resource: '*'
-              - Effect: Allow
-                Action: 'ses:GetSendQuota'
-                Resource: '*'
 
   AutoScalingRole:
     Type: AWS::IAM::Role

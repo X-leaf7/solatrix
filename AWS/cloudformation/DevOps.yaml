@@ -43,6 +43,11 @@ Resources:
     Properties:
       RepositoryName: !Sub "admin-web-app-${GitBranch}"
 
+  ChatServerEcrRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub "chat-server-${GitBranch}"
+
   CodePipelineArtifactBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
@@ -118,6 +123,7 @@ Resources:
                  - s3:GetObjectVersion
              - Resource:
                  - !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${AdminAppEcrRepository}
+                 - !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ChatServerEcrRepository}
                Effect: Allow
                Action:
                  - ecr:GetDownloadUrlForLayer
@@ -265,6 +271,26 @@ Resources:
               OutputArtifacts:
                 - Name: AdminImageJSON
               RunOrder: 1
+            - Name: BuildChat
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref DockerBuild
+                PrimarySource: App
+                EnvironmentVariables: !Sub |
+                  [
+                    {"name": "REPOSITORY_URI", "value": "${ChatServerEcrRepository.RepositoryUri}"},
+                    {"name": "DOCKER_BUILD_PATH", "value": "chat/"}
+                  ]
+              InputArtifacts:
+                - Name: App
+                - Name: BuildOutput
+              OutputArtifacts:
+                - Name: ChatImageJSON
+              RunOrder: 1
         - Name: DeployApplicationStack
           Actions:
             - Name: UpdateCloudFourmation
@@ -276,6 +302,7 @@ Resources:
               InputArtifacts:
                 - Name: BuildOutput
                 - Name: AdminImageJSON
+                - Name: ChatImageJSON
               Configuration:
                 ActionMode: CREATE_UPDATE
                 StackName: !Sub "${GitSourceRepo}-${GitBranch}-app"
@@ -285,7 +312,8 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "ClusterName": "${GitSourceRepo}-${GitBranch}",
-                    "AdminImage": { "Fn::GetParam" : [ "AdminImageJSON", "imagedefinitions.json", "imageUri" ] }
+                    "AdminImage": { "Fn::GetParam" : [ "AdminImageJSON", "imagedefinitions.json", "imageUri" ] },
+                    "ChatImage": { "Fn::GetParam" : [ "ChatImageJSON", "imagedefinitions.json", "imageUri" ] }
                   }
 
   DeveloperAccessPolicy:
