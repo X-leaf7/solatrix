@@ -83,7 +83,6 @@ Resources:
         ServiceName: AdminBackend
         ClusterName: !Ref ClusterName
         ExecutionRole: !Ref ExecutionRole
-        LoadBalancerSecurityGroup: !Ref LoadBalancerSecurityGroup
         Image: !Ref AdminImage
         ContainerPort: !FindInMap [ ContainerConfig, Admin, Port ]
         RDSConnectionSecret: !GetAtt RDSCluster.Outputs.ConnectionSecret
@@ -119,7 +118,6 @@ Resources:
         ServiceName: ChatServer
         ClusterName: !Ref ClusterName
         ExecutionRole: !Ref ExecutionRole
-        LoadBalancerSecurityGroup: !Ref LoadBalancerSecurityGroup
         Image: !Ref ChatImage
         ContainerPort: !FindInMap [ ContainerConfig, Chat, Port ]
         MessageTableName: !Ref MessageTable
