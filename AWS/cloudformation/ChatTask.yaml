@@ -11,9 +11,10 @@ Parameters:
     Type: String
   ExecutionRole:
     Type: String
+  LoadBalancerSecurityGroup:
+    Type: String
   ContainerPort:
     Type: Number
-    Default: 8000
   MessageTableName:
     Type: String
   Domain:
@@ -77,6 +78,17 @@ Resources:
               awslogs-group: !Ref LogGroup
               awslogs-stream-prefix: ecs
 
+  ContainerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Join ['', [!Ref ClusterName, ContainerSecurityGroup]]
+      VpcId: !GetAtt VPC.Outputs.VPCId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: !Ref ContainerPort
+          ToPort: !Ref ContainerPort
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+
   LogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -110,3 +122,9 @@ Resources:
               - Effect: Allow
                 Resource: !Sub 'arn:${AWS::Partition}:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${MessageTableName}'
                 Action: "dynamodb:*"
+
+Outputs:
+  TaskDefinition:
+    Value: !Ref TaskDefinition
+  ContainerSecurityGroup:
+    Value: !Ref ContainerSecurityGroup

@@ -13,7 +13,8 @@ Parameters:
     Type: String
   ContainerPort:
     Type: Number
-    Default: 8000
+  LoadBalancerSecurityGroup:
+    Type: String
   RDSConnectionSecret:
     Type: String
   S3BucketName:
@@ -90,6 +91,17 @@ Resources:
               awslogs-group: !Ref LogGroup
               awslogs-stream-prefix: ecs
 
+  ContainerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Join ['', [!Ref ClusterName, ContainerSecurityGroup]]
+      VpcId: !GetAtt VPC.Outputs.VPCId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: !Ref ContainerPort
+          ToPort: !Ref ContainerPort
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+
   LogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
@@ -141,3 +153,5 @@ Resources:
 Outputs:
   TaskDefinition:
     Value: !Ref TaskDefinition
+  ContainerSecurityGroup:
+    Value: !Ref ContainerSecurityGroup
