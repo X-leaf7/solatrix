@@ -1,16 +1,26 @@
-const { Server } = require("socket.io");
+const http = require('http');
+const socketServer = require("socket.io");
 const clientSocket = require("./socket");
 
-global.io = new Server({
+const httpServer = http.createServer((request, res) => {
+  if (request.url === '/health/') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      health: 'Up and running!'
+    }));
+  }
+})
+
+global.io = socketServer(httpServer, {
   cors: {
     origin: "http://localhost",
     methods: ["GET", "POST"]
   }
-});
+})
 
 io.on('connection', (socket) => {
   console.log('a user connected');
   const client = clientSocket(socket);
 });
 
-io.listen(3000);
+httpServer.listen(3000)
