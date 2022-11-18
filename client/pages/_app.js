@@ -112,6 +112,16 @@ function MyApp({ Component, pageProps }) {
     const [isLogin, setIsLogin] = useState(false);
     const [search, setSearch] = useState('');
     const [selectedTeam, setSelectedTeam] = useState({});
+
+    const checkLogin = React.useCallback((nextAction) => {
+        if (isLogin === false) {
+            Router.push('/login')
+        }
+        else {
+            nextAction()
+        }
+    }, [isLogin]);
+
     React.useEffect(() => {
         if (Cookies.get('isLogin')) {
             setIsLogin(true);
@@ -134,7 +144,7 @@ function MyApp({ Component, pageProps }) {
     // }, [URL])
 
     return (
-        <AppContext.Provider value={{ isLogin, setIsLogin, search, setSearch, selectedTeam, setSelectedTeam }}>
+        <AppContext.Provider value={{ isLogin, setIsLogin, checkLogin, search, setSearch, selectedTeam, setSelectedTeam }}>
             <AuthContext.Provider value={authContext}>
                 <Layout>
                     <Component {...pageProps} />
