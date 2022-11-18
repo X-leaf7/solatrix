@@ -6,16 +6,20 @@ import Link from 'next/link'
 
 
 function EventCard({ event, setSelected, showJoin, showCreate }) {
-    const { isLogin } = useContext(AppContext);
+    const { checkLogin } = useContext(AppContext);
 
     const showJoinChat = async () => {
-        setSelected(event)
-        showJoin(true)
+        checkLogin(() => {
+            setSelected(event)
+            showJoin(true)
+        })
     }
 
     const showCreateChat = async () => {
-        setSelected(event)
-        showCreate(true)
+        checkLogin(() => {
+            setSelected(event)
+            showCreate(true)
+        })
     }
 
     return (
@@ -30,19 +34,12 @@ function EventCard({ event, setSelected, showJoin, showCreate }) {
                         <p className="text-center mt-2 mb-4">Hosted by:  {event.host.username}</p>
                         {/* <hr /> */}
                         <div className="d-flex justify-content-evenly ">
-                        {
-                             isLogin ?
-                             <>
-                                <Button className='create-chat' variant="outline-dark" onClick={showCreateChat}>
-                                    Create Chat
-                                </Button>
-                                <Button className='join-chat' variant="outline-dark" onClick={showJoinChat}>
-                                    Join Event Chat
-                                </Button>
-                             </>
-                             :
-                             <Link href="/login"><a className="btn btn-primary text-black btn-lg">Login to join the fun!</a></Link>
-                        }
+                        <Button className='create-chat' variant="outline-dark" onClick={showCreateChat}>
+                            Create Chat
+                        </Button>
+                        <Button className='join-chat' variant="outline-dark" onClick={showJoinChat}>
+                            Join Event Chat
+                        </Button>
                         </div>
                     </div>
                 </div>
