@@ -47,7 +47,7 @@ function JoinChatModal({show, selectedEvent, onClose}) {
             <Modal.Body>
                 <form id="post-form" method="POST" action="#">
                     <label><strong>Chat Room Name</strong></label>
-                    <p className="text-left mb-3">/{selectedEvent.host.username}/{selectedEvent.slug}</p>
+                    <p className="text-left mb-3">{selectedEvent.name}</p>
                     <label><strong>Which team are you cheering for?</strong></label>
                     <div>
                         <div className='pb-1'>
