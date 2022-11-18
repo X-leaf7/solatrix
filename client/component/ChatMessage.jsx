@@ -16,7 +16,7 @@ function ChatMessage({message, showProfile}) {
         <p id={message.messageId}>
             <b data-user={message.userId} onClick={showProfile}>
                 <img data-user={message.userId} src={profileImg} className="chathead" /> 
-                {user && <span> {user.username}: </span>}
+                {user && <span data-user={message.userId}> {user.username}: </span>}
             </b>
             <span>{message.message}</span>
         </p>

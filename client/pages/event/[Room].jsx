@@ -58,7 +58,7 @@ function Room() {
             const userData = Cookies.get('userInfo')
             const user = JSON.parse(userData)
 
-            const attendanceData = getAttendance(user.id, eventData.id)
+            const attendanceData = await getAttendance(user.id, eventData.id)
 
             if (attendanceData) {
                 setAttendance({
@@ -93,7 +93,8 @@ function Room() {
                         let homeMessages = []
                         let awayMessages = []
                         let hostMessages = []
-                        response.messages.forEach((message) => {
+                        const sortedMessages = response.messages.sort((a,b) => a.time - b.time)
+                        sortedMessages.forEach((message) => {
                             if (message.userId == eventData.host.id) {
                                 hostMessages.push(message)
                             }
@@ -107,6 +108,9 @@ function Room() {
                         setHostUserMessages(hostMessages)
                         setHomeTeamMessages(homeMessages)
                         setAwayTeamMessages(awayMessages)
+                        scrollToTop('hostMsgDiv')
+                        scrollToTop('homeMsgDiv')
+                        scrollToTop('awayMsgDiv')
                     }
                 } else {
                     swal("Error", "Unable to join the chat. Please try again.", "error")
@@ -145,12 +149,12 @@ function Room() {
                 scrollToTop('homeMsgDiv')
             } else if (newMessage.teamId == eventData.away_team.id) {
                 setAwayTeamMessages(awayTeamMessages => [...awayTeamMessages, newMessage])
-                scrollToTop('hostMsgDiv')
+                scrollToTop('awayMsgDiv')
             }
         }
     }, [eventData, hostUserMessages, homeTeamMessages, awayTeamMessages])
 
-    const onClickSendMessage = () => {
+    const onClickSendMessage = useCallback(() => {
         const message = document.getElementById('userMessage').value
 
         if (message.trim().length === 0) {
@@ -175,7 +179,8 @@ function Room() {
             eventId: eventData.id,
             userId: user.id,
             teamId: attendance.chosenTeam,
-            message: message
+            message: message,
+            time: Date.now()
         }
 
         socket.emit('sendMessage', sendMessageData, (response) => {
@@ -183,7 +188,7 @@ function Room() {
                 document.getElementById("userMessage").value = '';
             }
         })
-    }
+    }, [eventData, attendance])
 
     useEffect(async () => {
         if (eventData && !registeredListeners) {

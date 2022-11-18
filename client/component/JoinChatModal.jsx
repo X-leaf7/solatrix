@@ -25,7 +25,7 @@ function JoinChatModal({show, selectedEvent, onClose}) {
         const userData = Cookies.get('userInfo')
         const user = JSON.parse(userData)
 
-        const alreadyAttending = getAttendance(user.id, selectedEvent.id)
+        const alreadyAttending = await getAttendance(user.id, selectedEvent.id)
 
         if (alreadyAttending) {
             goToRoom()
