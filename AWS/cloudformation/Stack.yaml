@@ -60,6 +60,21 @@ Resources:
           ToPort: 80
           CidrIp: 0.0.0.0/0
 
+  ContainerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Join ['', [!Ref ClusterName, ContainerSecurityGroup]]
+      VpcId: !GetAtt VPC.Outputs.VPCId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: !FindInMap [ ContainerConfig, Admin, Port ]
+          ToPort: !FindInMap [ ContainerConfig, Admin, Port ]
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+        - IpProtocol: tcp
+          FromPort: !FindInMap [ ContainerConfig, Chat, Port ]
+          ToPort: !FindInMap [ ContainerConfig, Chat, Port ]
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+
   AdminTask:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -91,7 +106,7 @@ Resources:
         PublicSubnet2: !GetAtt VPC.Outputs.PublicSubnet1
         AutoScalingRole: !GetAtt AutoScalingRole.Arn
         LoadBalancerSecurityGroup: !Ref LoadBalancerSecurityGroup
-        ContainerSecurityGroup: !GetAtt AdminTask.Outputs.ContainerSecurityGroup
+        ContainerSecurityGroup: !Ref ContainerSecurityGroup
         HealthCheckPath: "/health/"
         MaxContainers: 2
         AutoScalingTargetValue: 80
@@ -126,7 +141,7 @@ Resources:
         PublicSubnet2: !GetAtt VPC.Outputs.PublicSubnet1
         AutoScalingRole: !GetAtt AutoScalingRole.Arn
         LoadBalancerSecurityGroup: !Ref LoadBalancerSecurityGroup
-        ContainerSecurityGroup: !GetAtt ChatTask.Outputs.ContainerSecurityGroup
+        ContainerSecurityGroup: !Ref ContainerSecurityGroup
         HealthCheckPath: "/health/"
         MaxContainers: 10
         AutoScalingTargetValue: 70
@@ -139,7 +154,7 @@ Resources:
         SubnetA: !GetAtt VPC.Outputs.PrivateSubnet0
         SubnetB: !GetAtt VPC.Outputs.PrivateSubnet1
         VPC: !GetAtt VPC.Outputs.VPCId
-        ContainerSecurityGroup: !GetAtt AdminTask.Outputs.ContainerSecurityGroup
+        ContainerSecurityGroup: !Ref ContainerSecurityGroup
       TemplateURL: RDS.yaml
 
   MessageTable:
