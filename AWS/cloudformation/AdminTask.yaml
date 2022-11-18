@@ -121,8 +121,8 @@ Resources:
             Statement:
               - Effect: Allow
                 Resource:
-                  - !Sub "arn:aws:s3:::${Bucket}/*"
-                  - !Sub "arn:aws:s3:::${Bucket}"
+                  - !Sub "arn:aws:s3:::${S3BucketName}/*"
+                  - !Sub "arn:aws:s3:::${S3BucketName}"
                 Action: "s3:*"
         - PolicyName: AllowSendEmails
           PolicyDocument:
