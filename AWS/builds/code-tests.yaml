@@ -25,6 +25,8 @@ phases:
       - cd client && npm ci && npm run build
 
 artifacts:
+  files:
+    - stack.yaml
   secondary-artifacts:
     cloudformation:
       name: Stack
