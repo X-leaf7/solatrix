@@ -43,6 +43,7 @@ services:
       DYNAMODB_MESSAGE_TABLE: localMessages
       AWS_ACCESS_KEY_ID: FakeKeyId
       AWS_SECRET_ACCESS_KEY: FakeSecretAccessKey
+      DEBUG: true
     volumes:
       - ./chat:/app
       - otherexclude:/app/node_modules/
