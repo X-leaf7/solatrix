@@ -16,6 +16,7 @@ class Event(SSNamedModel):
     is_private = models.BooleanField()
     lobby_start_time = models.DateTimeField()
     event_start_time = models.DateTimeField()
+    event_end_time = models.DateTimeField(blank=True, null=True)
     banner = models.ImageField(upload_to="banners", blank=True)
 
     def create_slug(self):
