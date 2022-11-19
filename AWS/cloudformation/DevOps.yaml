@@ -337,7 +337,7 @@ Resources:
               InputArtifacts:
                 - Name: BuildOutput
               Configuration:
-                BucketName: '#{StackOutputs.S3Bucket}'
+                BucketName: 'split-side-main-app-bucket-ki4uxmvsia3i'
                 Extract: true
 
 
