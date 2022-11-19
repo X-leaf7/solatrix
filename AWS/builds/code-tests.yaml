@@ -25,9 +25,16 @@ phases:
       - cd client && npm ci && npm run build
 
 artifacts:
-  files:
-    - stack.yaml
-    - client/out/**/*
+  secondary-artifacts:
+    cloudformation:
+      name: Stack
+      files:
+        - stack.yaml
+    client-build:
+      name: ClientBuild
+      files:
+        - '**/*'
+      base-directory: client/out
 
 cache:
   paths:

@@ -233,7 +233,8 @@ Resources:
               InputArtifacts:
                 - Name: App
               OutputArtifacts:
-                - Name: BuildOutput
+                - Name: Stack
+                - Name: ClientBuild
               RunOrder: 1
         - Name: UpdateDevOpsStack
           Actions:
@@ -276,7 +277,6 @@ Resources:
                   ]
               InputArtifacts:
                 - Name: App
-                - Name: BuildOutput
               OutputArtifacts:
                 - Name: AdminImageJSON
               RunOrder: 1
@@ -296,7 +296,6 @@ Resources:
                   ]
               InputArtifacts:
                 - Name: App
-                - Name: BuildOutput
               OutputArtifacts:
                 - Name: ChatImageJSON
               RunOrder: 1
@@ -311,7 +310,7 @@ Resources:
                 Provider: CloudFormation
                 Version: 1
               InputArtifacts:
-                - Name: BuildOutput
+                - Name: Stack
                 - Name: AdminImageJSON
                 - Name: ChatImageJSON
               OutputArtifacts:
@@ -321,7 +320,7 @@ Resources:
                 StackName: !Sub "${GitSourceRepo}-${GitBranch}-app"
                 Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 RoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/CloudFormationRole"
-                TemplatePath: BuildOutput::stack.yaml
+                TemplatePath: Stack::stack.yaml
                 OutputFileName: StackOutputs.json
                 ParameterOverrides: !Sub |
                   {
@@ -337,7 +336,7 @@ Resources:
                 Provider: S3
                 Version: 1
               InputArtifacts:
-                - Name: BuildOutput
+                - Name: ClientBuild
               Configuration:
                 BucketName: 'split-side-main-app-bucket-ki4uxmvsia3i'
                 Extract: true
