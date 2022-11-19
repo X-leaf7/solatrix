@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.text import slugify
@@ -18,6 +20,13 @@ class Event(SSNamedModel):
     event_start_time = models.DateTimeField()
     event_end_time = models.DateTimeField(blank=True, null=True)
     banner = models.ImageField(upload_to="banners", blank=True)
+
+    def save(self, *args, **kwargs):
+
+        if not self.event_end_time:
+            self.event_end_time = self.event_start_time + timedelta(hours=6)
+
+        super().save(*args, **kwargs)
 
     def create_slug(self):
         date_string = self.event_start_time.strftime("%Y-%m-%d")
