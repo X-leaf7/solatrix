@@ -28,12 +28,12 @@ artifacts:
   files:
     - stack.yaml
   secondary-artifacts:
-    cloudformation:
+    Stack:
       name: Stack
       artifactIdentifier: Stack
       files:
         - stack.yaml
-    client-build:
+    ClientBuild:
       name: ClientBuild
       artifactIdentifier: ClientBuild
       files:

@@ -149,13 +149,6 @@ Resources:
     Properties:
       Artifacts:
         Type: CODEPIPELINE
-      SecondaryArtifacts:
-        - Name: Stack
-          ArtifactIdentifier: Stack
-          Type: CODEPIPELINE
-        - Name: ClientBuild
-          ArtifactIdentifier: ClientBuild
-          Type: CODEPIPELINE
       Source:
         Type: CODEPIPELINE
         BuildSpec: AWS/builds/code-tests.yaml
