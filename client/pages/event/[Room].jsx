@@ -316,7 +316,9 @@ function Room() {
                 <div className="container-chat">
                 </div>
 
-                <ProfileModal show={showProfile} userId={selectedUser} onClose={handleCloseProfile} />
+                {
+                    selectedUser && <ProfileModal show={showProfile} userId={selectedUser} onClose={handleCloseProfile} />
+                }
                 {
                     eventData && <JoinChatModal show={showJoinChatModal} selectedEvent={eventData} onClose={handleCloseJoinChat} />
                 }
