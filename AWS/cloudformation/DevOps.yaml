@@ -298,10 +298,11 @@ Resources:
               OutputArtifacts:
                 - Name: ChatImageJSON
               RunOrder: 1
-        - Name: DeployApplicationStack
+        - Name: DeployApplication
           Actions:
             - Name: UpdateCloudFourmation
               Namespace: StackOutputs
+              RunOrder: 1
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -326,9 +327,8 @@ Resources:
                     "AdminImage": { "Fn::GetParam" : [ "AdminImageJSON", "imagedefinitions.json", "imageUri" ] },
                     "ChatImage": { "Fn::GetParam" : [ "ChatImageJSON", "imagedefinitions.json", "imageUri" ] }
                   }
-        - Name: DeployStaticSite
-          Actions:
             - Name: CreateS3Objects
+              RunOrder: 2
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
