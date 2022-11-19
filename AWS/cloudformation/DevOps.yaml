@@ -79,7 +79,9 @@ Resources:
                   - codebuild:StartBuild
                   - codebuild:BatchGetBuilds
                   - iam:PassRole
-              - Resource: !Sub arn:aws:s3:::${CodePipelineArtifactBucket}/*
+              - Resource:
+                  - !Sub arn:aws:s3:::${CodePipelineArtifactBucket}/*
+                  - !Sub arn:aws:s3:::${GitSourceRepo}-${GitBranch}-app-bucket-*/*
                 Effect: Allow
                 Action:
                   - s3:PutObject
