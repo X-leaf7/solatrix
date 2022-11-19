@@ -33,10 +33,13 @@ function Home() {
             <section id="events" className="py-4">
                 <div className="container text-center">
                     <div className="row text-center align-items-center">
-                        <div className="col-md-8">
-                            <h1 className="text-primary text-end display-4 mb-5 mt-5"><b>Schedule</b></h1>
+                        <div className="col-md-4"></div>
+                        <div className="col-md-4">
+                            <h1 className="text-primary display-4 mb-5 mt-5"><b>Schedule</b></h1>
                         </div>
-                        <SportSelect selected={selectedSport} setSelected={setSelectedSport} />
+                        <div className="col-md-4 customDropDown">
+                            <SportSelect selected={selectedSport} setSelected={setSelectedSport} />
+                        </div>
                     </div>
                 </div>
                 <EventList selectedSport={selectedSport} />
