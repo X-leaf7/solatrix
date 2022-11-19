@@ -301,7 +301,7 @@ Resources:
         - Name: DeployApplicationStack
           Actions:
             - Name: UpdateCloudFourmation
-              Namespace: stack
+              Namespace: StackOutputs
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -337,7 +337,7 @@ Resources:
               InputArtifacts:
                 - Name: BuildOutput
               Configuration:
-                BucketName: '#{stack.S3Bucket}'
+                BucketName: '#{StackOutputs.S3Bucket}'
                 Extract: true
 
 
