@@ -91,16 +91,20 @@ function Room() {
                         let hostMessages = []
                         const sortedMessages = response.messages.sort((a,b) => a.time - b.time)
                         sortedMessages.forEach((message) => {
-                            if (message.userId == eventData.host.id) {
+                            if (eventData.host && message.userId == eventData.host.id) {
                                 hostMessages.push(message)
                             }
                             else {
                                 userMessages.push(message)
                             }
                         })
-                        setHostUserMessages(hostMessages)
+
+                        if (eventData.host) {
+                            setHostUserMessages(hostMessages)
+                            scrollToTop('hostMsgDiv')
+                        }
+
                         setOtherUsersMessages(userMessages)
-                        scrollToTop('hostMsgDiv')
                         scrollToTop('userMsgDiv')
                     }
                 } else {
@@ -131,7 +135,7 @@ function Room() {
     }
 
     const handleNewMessage = useCallback((newMessage) => {
-        if (newMessage.userId == eventData.host.id) {
+        if (eventData.host && newMessage.userId == eventData.host.id) {
             setHostUserMessages(hostUserMessages => [...hostUserMessages, newMessage])
             scrollToTop('hostMsgDiv')
         } else {
@@ -258,15 +262,17 @@ function Room() {
                                     )}
 
                                 </div>
-                                <div className="hosted-first-chat-form">
-                                    <div className="hosted-heading-main">
-                                        <h4><b>Hosted:</b> {eventData.host.user_name}</h4>
-                                        <h4><b>Location:</b> {eventData.stadium.name}</h4>
+                                { eventData.host &&
+                                    <div className="hosted-first-chat-form">
+                                        <div className="hosted-heading-main">
+                                            <h4><b>Hosted:</b> {eventData.host.user_name}</h4>
+                                            <h4><b>Location:</b> {eventData.stadium.name}</h4>
+                                        </div>
+                                        <div className="hosted-first-chat-box" id="hostMsgDiv">
+                                            {hostUserMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls="host" />)}
+                                        </div>
                                     </div>
-                                    <div className="hosted-first-chat-box" id="hostMsgDiv">
-                                        {hostUserMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls="host" />)}
-                                    </div>
-                                </div>
+                                }
                                 <div className="hosted-first-chat-form">
                                     <div className="hosted-heading-main">
                                         <h4><b>Home Team:</b> {eventData.home_team.name}</h4>

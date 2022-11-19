@@ -43,8 +43,9 @@ function EventCard({ event, setSelected, showJoin, showCreate }) {
                         <p className="text-center my-2">{DateTime.fromISO(event.lobby_start_time).toLocaleString(dateFormat)}</p>
                         <p className="text-center my-2">Lobby Opens @ {DateTime.fromISO(event.lobby_start_time).toLocaleString(timeFormat)}</p>
                         <p className="text-center my-2">Event Starts @ {DateTime.fromISO(event.event_start_time).toLocaleString(timeFormat)}</p>
-                        <p className="text-center mt-2 mb-4">Hosted by:  {event.host.username}</p>
-                        {/* <hr /> */}
+                        {
+                            event.host && <p className="text-center mt-2 mb-4">Hosted by: {event.host.username}</p>
+                        }
                         <div className="d-flex justify-content-evenly ">
                         <Button className='create-chat' variant="outline-dark" onClick={showCreateChat}>
                             Create Chat

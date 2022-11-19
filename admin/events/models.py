@@ -14,12 +14,17 @@ class Event(SSNamedModel):
     stadium = models.ForeignKey(Stadium, on_delete=models.DO_NOTHING)
     home_team = models.ForeignKey(Team, on_delete=models.DO_NOTHING, related_name="home_events")
     away_team = models.ForeignKey(Team, on_delete=models.DO_NOTHING, related_name="away_events")
-    host = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING, related_name="hosted_events")
     is_private = models.BooleanField()
     lobby_start_time = models.DateTimeField()
     event_start_time = models.DateTimeField()
     event_end_time = models.DateTimeField(blank=True, null=True)
     banner = models.ImageField(upload_to="banners", blank=True)
+    host = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.DO_NOTHING,
+        related_name="hosted_events",
+        blank=True, null=True
+    )
 
     def save(self, *args, **kwargs):
 
@@ -32,7 +37,7 @@ class Event(SSNamedModel):
         date_string = self.event_start_time.strftime("%Y-%m-%d")
         return slugify(
             "-".join([
-                self.host.username,
+                self.host.username if self.host else "public",
                 self.home_team.name,
                 "vs",
                 self.away_team.name,
