@@ -12,7 +12,7 @@ class EventViewSet(viewsets.ModelViewSet):
     API endpoint that allows teams to be viewed.
     """
     queryset = Event.objects.all()\
-        .order_by('-event_start_time')\
+        .order_by('-lobby_start_time')\
         .filter(lobby_start_time__date__gte=date.today())
 
     serializer_class = EventSerializer
