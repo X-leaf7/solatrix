@@ -24,7 +24,7 @@ function Home() {
                             <p className="text-primary lead">Watching a game on TV?</p>
                             <small id="emailHelp" className="form-text text-muted">Visit the Events page to find a live chat experience
                                 and join in the conversation with fans from both sides</small>
-                            <Link href="/events"><a className="btn btn-secondary mt-3">Find Your Team & Join the Chat</a></Link>
+                            <Link href="/events"><a className="btn btn-warning mt-3">Find Your Team & Join the Chat</a></Link>
                         </div>
                     </div>
                 </div>

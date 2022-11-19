@@ -167,7 +167,7 @@ function Login() {
                                                             </div>
                                                         </div>
 
-                                                        <button className="btn btn-secondary w-100" type="submit">Login</button>
+                                                        <button className="btn btn-warning w-100" type="submit">Login</button>
                                                         <div className="row">
                                                             <div className="col-md-12 mt-3 mb-1 text-center">
                                                                 Don&apos;t have an account? <Link href="/signup"><a className="get-started-link"><strong>Get Started</strong></a></Link>

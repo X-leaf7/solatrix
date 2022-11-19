@@ -227,7 +227,7 @@ const Signup = () => {
                             
                         </div>
 
-                        <button type="submit" className="btn btn-secondary w-100 newClassAdd" >Sign-Up</button>
+                        <button type="submit" className="btn btn-warning w-100 newClassAdd" >Sign-Up</button>
                         <div className="row">
                           <div className="col-md-12 mt-3 mb-1 text-center">
                             Already have an account?{" "}
