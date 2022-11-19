@@ -4,7 +4,12 @@ const { marshall, unmarshall } = require("@aws-sdk/util-dynamodb");
 
 const MESSAGE_TABLE_NAME = process.env.DYNAMODB_MESSAGE_TABLE;
 
-const client = new DynamoDBClient({ endpoint: "http://dynamodb:8000", region: "ddblocal" });
+let dynamoConfig = {};
+if (process.env.DEBUG) {
+    dynamoConfig = { endpoint: "http://dynamodb:8000", region: "ddblocal" };
+}
+
+const client = new DynamoDBClient(dynamoConfig);
 
 module.exports = {
     async putMessage(messageData) {
