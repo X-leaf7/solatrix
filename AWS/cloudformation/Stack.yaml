@@ -235,3 +235,7 @@ Resources:
             Action: 'sts:AssumeRole'
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole'
+
+Outputs:
+  S3Bucket:
+    Value: !Ref Bucket

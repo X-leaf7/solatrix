@@ -301,6 +301,7 @@ Resources:
         - Name: DeployApplicationStack
           Actions:
             - Name: UpdateCloudFourmation
+              Namespace: stack
               ActionTypeId:
                 Category: Deploy
                 Owner: AWS
@@ -310,18 +311,35 @@ Resources:
                 - Name: BuildOutput
                 - Name: AdminImageJSON
                 - Name: ChatImageJSON
+              OutputArtifacts:
+                - Name: StackOutput
               Configuration:
                 ActionMode: CREATE_UPDATE
                 StackName: !Sub "${GitSourceRepo}-${GitBranch}-app"
                 Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 RoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/CloudFormationRole"
                 TemplatePath: BuildOutput::stack.yaml
+                OutputFileName: StackOutputs.json
                 ParameterOverrides: !Sub |
                   {
                     "ClusterName": "${GitSourceRepo}-${GitBranch}",
                     "AdminImage": { "Fn::GetParam" : [ "AdminImageJSON", "imagedefinitions.json", "imageUri" ] },
                     "ChatImage": { "Fn::GetParam" : [ "ChatImageJSON", "imagedefinitions.json", "imageUri" ] }
                   }
+        - Name: DeployStaticSite
+          Actions:
+            - Name: CreateS3Objects
+              ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Provider: S3
+                Version: 1
+              InputArtifacts:
+                - Name: BuildOutput
+              Configuration:
+                BucketName: '#{stack.S3Bucket}'
+                Extract: true
+
 
   DeveloperAccessPolicy:
     Type: AWS::IAM::ManagedPolicy
