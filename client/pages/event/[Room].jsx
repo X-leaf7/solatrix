@@ -4,6 +4,7 @@ import Router, { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import swal from 'sweetalert';
 import { io } from 'socket.io-client'
+import { DateTime, Interval } from 'luxon'
 import { ATTENDEES, URL, PROFILE_IMG, GET_EVENTS, SET_USER_TEAM, SOCKET_URL } from '/context/AppUrl'
 import { getAttendance } from '/context/api'
 import Head from 'next/head'
@@ -18,7 +19,7 @@ function Room() {
     const { isLogin } = useContext(AppContext);
     const [getJoinUserDetail, setJoinUserDetail] = useState(null)
     const [getEventTimer, setEventTimer] = useState('00:00:00')
-    const [getChatBox, setChatbox] = useState(false)
+    const [showTimer, setShowTimer] = useState(true)
     const [showProfile, setShowProfile] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [showJoinChatModal, setShowJoinChatModal] = useState(false);
@@ -64,9 +65,6 @@ function Room() {
                     id: attendanceData.id,
                     chosenTeam: attendanceData.chosen_team
                 })
-
-                setEventTimer('00:00:00')
-                setChatbox(true)
             } else {
                 // Give the user a chance to pick a side
                 setShowJoinChatModal(true)
@@ -182,17 +180,20 @@ function Room() {
         if (eventData && !registeredListeners) {
 
             socket.on('newMessage', handleNewMessage)
-            //socket.on('counter', (response) => {
-            //    if (response.eventId === parseInt(getSelectedEventData.id)) {
-            //        if (response.eventStart === false) {
-            //            setEventTimer(response.watingTime)
-            //            setChatbox(false)
-            //        } else {
-            //            setEventTimer('00:00:00')
-            //            setChatbox(true)
-            //        }
-            //    }
-            //})
+
+            const eventTimer = setInterval(() => {
+                const now = DateTime.now();
+                const startTime = DateTime.fromISO(eventData.event_start_time)
+                const timeLeft = Interval.fromDateTimes(now, startTime).toDuration(['hours', 'minutes', 'seconds'])
+                
+                if (timeLeft.invalid) {
+                    setShowTimer(false)
+                    clearInterval(eventTimer)
+                }
+                else {
+                    setEventTimer(timeLeft.toFormat("hh:mm:ss"))
+                }
+            }, 1000)
 
             //socket.on("thread", (response) => {
             //    const eventSelectData = Cookies.get('selectEventData')
@@ -240,13 +241,13 @@ function Room() {
 
                             <div className="room-chat-form mb-3">
                                 <div className="event-start-main">
-                                    {getChatBox === false ? (
+                                    {showTimer === true ? (
                                         <h3>Event Starts in… </h3>
                                     ) : (
                                         <h3></h3>
                                     )}
 
-                                    {getChatBox === false ? (
+                                    {showTimer === true ? (
                                         <div className="event-time-box">
                                             <p>{getEventTimer}</p>
                                         </div>
@@ -275,21 +276,12 @@ function Room() {
                                         {otherUsersMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls={message.teamId === eventData.home_team.id ? "home" : "away"} />)}
                                     </div>
                                 </div>
-                                {getChatBox === false ? (
-                                    <div className="input-group mb-3" style={{ 'opacity': '0.5', 'pointerEvents': 'none' }}>
-                                        <input type="text" className="form-control" placeholder="Start typing..." aria-label="Type chat message here" aria-describedby="basic-addon2" />
-                                        <div className="input-group-append">
-                                            <button className="btn btn-secondary" type="button" onClick={onClickSendMessage}>Post</button>
-                                        </div>
+                                <div className="input-group mb-3">
+                                    <input type="text" className="form-control" placeholder="Start typing..." aria-label="Type chat message here" aria-describedby="basic-addon2" id="userMessage" onKeyPress={handleKeyPress} />
+                                    <div className="input-group-append">
+                                        <button className="btn btn-secondary" type="button" onClick={onClickSendMessage}>Post</button>
                                     </div>
-                                ) : (
-                                    <div className="input-group mb-3">
-                                        <input type="text" className="form-control" placeholder="Start typing..." aria-label="Type chat message here" aria-describedby="basic-addon2" id="userMessage" onKeyPress={handleKeyPress} />
-                                        <div className="input-group-append">
-                                            <button className="btn btn-secondary" type="button" onClick={onClickSendMessage}>Post</button>
-                                        </div>
-                                    </div>
-                                )}
+                                </div>
                             </div>
 
                             <div className="p-3" id="display"></div>
