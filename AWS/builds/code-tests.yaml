@@ -30,10 +30,12 @@ artifacts:
   secondary-artifacts:
     cloudformation:
       name: Stack
+      artifactIdentifier: Stack
       files:
         - stack.yaml
     client-build:
       name: ClientBuild
+      artifactIdentifier: ClientBuild
       files:
         - '**/*'
       base-directory: client/out
