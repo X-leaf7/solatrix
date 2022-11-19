@@ -3,7 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../styles/all.scss"
-import "../styles/style.css"
+import "../styles/style.scss"
 import AppContext, { AuthContext } from "../context/AppContext";
 import Layout from '../layout/default'
 import Cookies from 'js-cookie'

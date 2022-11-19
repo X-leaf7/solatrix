@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { DEFAULT_PROFILE_IMG } from '/context/AppUrl'
 import { useUser } from '/context/api'
 
-function ChatMessage({message, showProfile}) {
+function ChatMessage({message, showProfile, cls}) {
     const { user, isLoadingUser, isErrorUser } = useUser(message.userId)
     const [profileImg, setProfileImg] = useState(DEFAULT_PROFILE_IMG)
 
@@ -13,7 +13,7 @@ function ChatMessage({message, showProfile}) {
     }, [user]);
 
     return (
-        <p id={message.messageId}>
+        <p id={message.messageId} className={"chat-msg-" + cls}>
             <b data-user={message.userId} onClick={showProfile}>
                 <img data-user={message.userId} src={profileImg} className="chathead" /> 
                 {user && <span data-user={message.userId}> {user.username}: </span>}

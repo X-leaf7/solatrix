@@ -26,8 +26,7 @@ function Room() {
     const [attendance, setAttendance] = useState(null);
     const [registeredListeners, doneRegisteredListeners] = useState(false);
 
-    const [homeTeamMessages, setHomeTeamMessages] = useState([]);
-    const [awayTeamMessages, setAwayTeamMessages] = useState([]);
+    const [otherUsersMessages, setOtherUsersMessages] = useState([]);
     const [hostUserMessages, setHostUserMessages] = useState([]);
 
     useEffect(() => {
@@ -90,27 +89,21 @@ function Room() {
             socket.emit("join", joinEventData, (response) => {
                 if (response.success) {
                     if (response.messages) {
-                        let homeMessages = []
-                        let awayMessages = []
+                        let userMessages = []
                         let hostMessages = []
                         const sortedMessages = response.messages.sort((a,b) => a.time - b.time)
                         sortedMessages.forEach((message) => {
                             if (message.userId == eventData.host.id) {
                                 hostMessages.push(message)
                             }
-                            else if (message.teamId == eventData.home_team.id) {
-                                homeMessages.push(message)
-                            }
                             else {
-                                awayMessages.push(message)
+                                userMessages.push(message)
                             }
                         })
                         setHostUserMessages(hostMessages)
-                        setHomeTeamMessages(homeMessages)
-                        setAwayTeamMessages(awayMessages)
+                        setOtherUsersMessages(userMessages)
                         scrollToTop('hostMsgDiv')
-                        scrollToTop('homeMsgDiv')
-                        scrollToTop('awayMsgDiv')
+                        scrollToTop('userMsgDiv')
                     }
                 } else {
                     swal("Error", "Unable to join the chat. Please try again.", "error")
@@ -144,15 +137,10 @@ function Room() {
             setHostUserMessages(hostUserMessages => [...hostUserMessages, newMessage])
             scrollToTop('hostMsgDiv')
         } else {
-            if (newMessage.teamId == eventData.home_team.id) {
-                setHomeTeamMessages(homeTeamMessages => [...homeTeamMessages, newMessage])
-                scrollToTop('homeMsgDiv')
-            } else if (newMessage.teamId == eventData.away_team.id) {
-                setAwayTeamMessages(awayTeamMessages => [...awayTeamMessages, newMessage])
-                scrollToTop('awayMsgDiv')
-            }
+            setOtherUsersMessages(awayTeamMessages => [...awayTeamMessages, newMessage])
+            scrollToTop('userMsgDiv')
         }
-    }, [eventData, hostUserMessages, homeTeamMessages, awayTeamMessages])
+    }, [eventData, hostUserMessages, otherUsersMessages])
 
     const onClickSendMessage = useCallback(() => {
         const message = document.getElementById('userMessage').value
@@ -275,21 +263,16 @@ function Room() {
                                         <h4><b>Location:</b> {eventData.stadium.name}</h4>
                                     </div>
                                     <div className="hosted-first-chat-box" id="hostMsgDiv">
-                                        {hostUserMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} />)}
+                                        {hostUserMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls="host" />)}
                                     </div>
                                 </div>
-                                <div className="hosted-second-chat-form">
-                                    <div className="team-chat-box-main">
-                                        <div className="team-heading"><b>Away Team:</b> {eventData.away_team.name}</div>
-                                        <div className="team-chat-box" id="awayMsgDiv">
-                                            {awayTeamMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId}/>)}
-                                        </div>
+                                <div className="hosted-first-chat-form">
+                                    <div className="hosted-heading-main">
+                                        <h4><b>Home Team:</b> {eventData.home_team.name}</h4>
+                                        <h4><b>Away Team:</b> {eventData.away_team.name}</h4>
                                     </div>
-                                    <div className="team-chat-box-main right">
-                                        <div className="team-heading"><b>Home Team:</b> {eventData.home_team.name}</div>
-                                        <div className="team-chat-box" id="homeMsgDiv">
-                                            {homeTeamMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId}/>)}
-                                        </div>
+                                    <div className="hosted-first-chat-box" id="userMsgDiv">
+                                        {otherUsersMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls={message.teamId === eventData.home_team.id ? "home" : "away"} />)}
                                     </div>
                                 </div>
                                 {getChatBox === false ? (
