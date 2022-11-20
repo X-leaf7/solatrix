@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react'
+import Router from 'next/router'
 import { Button } from 'react-bootstrap'
 import { DateTime } from 'luxon'
+import Cookies from 'js-cookie'
 import AppContext from '../context/AppContext'
+import { getAttendance } from '/context/api'
+
 
 
 function EventCard({ event, setSelected, showJoin, showCreate }) {
@@ -19,17 +23,40 @@ function EventCard({ event, setSelected, showJoin, showCreate }) {
         timezoneName: 'short'
     }
 
+    function goToRoom() {
+        Router.push({
+            pathname: '/event/[Room]',
+            query: { Room: event.slug },
+        })
+    }
+
+    const checkAttendance = async (nextAction) => {
+        const userInfo = JSON.parse(Cookies.get("userInfo"))
+        const alreadyAttending = await getAttendance(userInfo.id, event.id)
+
+        if (alreadyAttending) {
+            goToRoom()
+        }
+        else{
+            nextAction()
+        }
+    }
+
     const showJoinChat = async () => {
         checkLogin(() => {
-            setSelected(event)
-            showJoin(true)
+            checkAttendance(() => {
+                setSelected(event)
+                showJoin(true)
+            })
         })
     }
 
     const showCreateChat = async () => {
         checkLogin(() => {
-            setSelected(event)
-            showCreate(true)
+            checkAttendance(() => {
+                setSelected(event)
+                showCreate(true)
+            })
         })
     }
 

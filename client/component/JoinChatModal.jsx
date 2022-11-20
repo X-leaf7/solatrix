@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import Router from 'next/router'
 import { Button, Modal } from 'react-bootstrap'
+import { Formik, Form, Field } from "formik"
 import Cookies from 'js-cookie'
 import { ATTENDEES } from '/context/AppUrl'
-import { getAttendance, post } from '/context/api'
+import { post } from '/context/api'
 
 function JoinChatModal({show, selectedEvent, onClose}) {
 
-    const [getTeamId, setTeamId] = useState(null)
+    const [teamId, setTeamId] = useState(null)
+    const [noTeamError, setNoTeamError] = useState(null)
 
     function getRadioButtonValue(e) {
         const { value } = e.target
@@ -21,23 +23,20 @@ function JoinChatModal({show, selectedEvent, onClose}) {
         })
     }
 
-    const joinRoom = async () => {
-        const userData = Cookies.get('userInfo')
-        const user = JSON.parse(userData)
-
-        const alreadyAttending = await getAttendance(user.id, selectedEvent.id)
-
-        if (alreadyAttending) {
-            goToRoom()
+    const joinRoom = useCallback(async () => {
+        if (!teamId) {
+            setNoTeamError(true)
             return
         }
+        const userData = Cookies.get('userInfo')
+        const user = JSON.parse(userData)
 
         post(ATTENDEES, {
             'user': user.id,
             'event': selectedEvent.id,
-            'chosen_team': getTeamId
+            'chosen_team': teamId
         }).then(goToRoom);
-    }
+    }, [teamId])
 
     return (
         <Modal centered id={selectedEvent.id} show={show} onHide={onClose}>
@@ -49,6 +48,7 @@ function JoinChatModal({show, selectedEvent, onClose}) {
                     <label><strong>Chat Room Name</strong></label>
                     <p className="text-left mb-3">{selectedEvent.name}</p>
                     <label><strong>Which team are you cheering for?</strong></label>
+                    {noTeamError && <p className="error-msg">Please choose a side.</p>}
                     <div>
                         <div className='pb-1'>
                             <input type="radio" name="user_team_selection" id="user_team_selection" value={selectedEvent.home_team.id} onChange={getRadioButtonValue} />
