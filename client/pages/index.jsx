@@ -21,9 +21,10 @@ function Home() {
                             <h1 className="text-primary display-4 mt-1 mb-3">
                                 Real-Time Chat for the World of Sports
                             </h1>
-                            <p className="text-primary lead">Watching a game on TV?</p>
-                            <small id="emailHelp" className="form-text text-muted">Visit the Events page to find a live chat experience
-                                and join in the conversation with fans from both sides</small>
+                            <p className="text-primary lead">Watching a game on TV or Online?</p>
+                            <small id="emailHelp" className="form-text text-muted">
+                                Now, you can join in the conversation with fans from both sides by entering the public event room, or creating a private chat for up-to 12 guests.
+                            </small>
                             <Link href="/events"><a className="btn btn-warning mt-3">Find Your Team & Join the Chat</a></Link>
                         </div>
                     </div>
@@ -35,7 +36,7 @@ function Home() {
                     <div className="row text-center align-items-center">
                         <div className="col-md-4"></div>
                         <div className="col-md-4">
-                            <h1 className="text-primary display-4 mb-5 mt-5"><b>Schedule</b></h1>
+                            <h1 className="schedule-header display-4 mb-5 mt-5"><b>Schedule</b></h1>
                         </div>
                         <div className="col-md-4 customDropDown">
                             <SportSelect selected={selectedSport} setSelected={setSelectedSport} />
@@ -57,15 +58,15 @@ function Home() {
                     <div className="row text-center">
                         <div className="col-md-4">
                             <h4>Create Account</h4>
-                            <p className="text-primary">Create a free account and login to<br /> participate in chat.</p>
+                            <p className="text-secondary">Create a free account and login to<br /> participate in chat.</p>
                         </div>
                         <div className="col-md-4">
                             <h4>Search Events</h4>
-                            <p className="text-primary">Find your team or search popular hosts<br /> from the world of sports.</p>
+                            <p className="text-secondary">Find your team or search popular hosts<br /> from the world of sports.</p>
                         </div>
                         <div className="col-md-4">
                             <h4>Join Chat, Pick a Side</h4>
-                            <p className="text-primary">Select an event and choose the side your<br /> cheering for as you join in chat.</p>
+                            <p className="text-secondary">Select an event and choose the side your<br /> cheering for as you join in chat.</p>
                         </div>
                     </div>
                 </div>

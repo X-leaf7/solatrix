@@ -106,7 +106,7 @@ to avoid use of important */
     content: "";
 
     width: 100%;
-    background: rgb(234, 234, 234);
+    background: #020202;
 }
 
 #about {
@@ -121,7 +121,7 @@ to avoid use of important */
     position: relative;
     overflow: hidden;
     min-height: 200px;
-    background: #eaeaea;
+    background: #020202;
 }
 
 #showcase-inner.showcase-search {
@@ -296,6 +296,10 @@ to avoid use of important */
     padding: 0;
 }
 
+.schedule-header {
+    color: #020202;
+}
+
 /* deactivate Account Modal */
 
 .deActivateAccountModal .modal-body {
@@ -395,7 +399,8 @@ button.join-chat {
 }
 
 .text-primary {
-    color: #0c0c0c !important;
+    color: #FFF !important;
+    font-weight: 700;
 }
 
 .btn-secondary {
