@@ -92,7 +92,7 @@ Resources:
           HeadersConfig:
             HeaderBehavior: none
           QueryStringsConfig:
-            QueryStringBehavior: none
+            QueryStringBehavior: all
 
   IndexCachePolicy:
     Type: AWS::CloudFront::CachePolicy
@@ -128,7 +128,7 @@ Resources:
           HeadersConfig:
             HeaderBehavior: none
           QueryStringsConfig:
-            QueryStringBehavior: none
+            QueryStringBehavior: all
 
   SpaRewrite:
     Type: AWS::CloudFront::Function
@@ -171,6 +171,13 @@ Resources:
             CachedMethods: [GET, HEAD, OPTIONS]
             CachePolicyId: !Ref AuthCachePolicy
             PathPattern: '/api/auth/*'
+            TargetOriginId: django-backend
+            ViewerProtocolPolicy: redirect-to-https
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
+          - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            CachePolicyId: !Ref AuthCachePolicy
+            PathPattern: '/api/attendees/*'
             TargetOriginId: django-backend
             ViewerProtocolPolicy: redirect-to-https
             OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
