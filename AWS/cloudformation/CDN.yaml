@@ -128,7 +128,7 @@ Resources:
           HeadersConfig:
             HeaderBehavior: none
           QueryStringsConfig:
-            QueryStringBehavior: all
+            QueryStringBehavior: none
 
   SpaRewrite:
     Type: AWS::CloudFront::Function
