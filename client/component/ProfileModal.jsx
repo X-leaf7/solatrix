@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Modal } from 'react-bootstrap'
+import { Avatar } from "@material-ui/core";
 import { useUser } from '/context/api'
 
 function ProfileModal({show, userId, onClose}) {
@@ -12,7 +13,7 @@ function ProfileModal({show, userId, onClose}) {
             <Modal show={show} onHide={onClose} >
                 <Modal.Body>
                     <div className="user-details-main">
-                        <img src={user.profile_image} alt="" />
+                        <Avatar src={user.profile_image} alt={user.username} style={{ height: '150px', width: '150px', margin: 'auto' }} />
                         <h3>{user.username}</h3>
                         <span>{user.city}, {user.state}</span>
                         <p>{user.about}</p>
