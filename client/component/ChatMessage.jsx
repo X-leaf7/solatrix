@@ -14,15 +14,20 @@ function ChatMessage({message, showProfile, cls}) {
     }, [user]);
 
     return (
-        <div className={"d-flex flex-row " + cls} onClick={showProfile}>
-            <Avatar src={profileImg} alt={user.username} style={{width: '25px', height: '25px', marginRight: '5px'}} />
-            <p id={message.messageId}>
-                <b data-user={message.userId} >
-                    {user && <span data-user={message.userId}> {user.username}: </span>}
-                </b>
-                <span>{message.message}</span>
-            </p>
-        </div>
+        <>
+        {
+            user &&
+            <div className={"d-flex flex-row " + cls} onClick={showProfile}>
+                <Avatar src={profileImg} alt={user.username} style={{width: '25px', height: '25px', marginRight: '5px'}} />
+                <p id={message.messageId}>
+                    <b data-user={message.userId} >
+                        {user && <span data-user={message.userId}> {user.username}: </span>}
+                    </b>
+                    <span>{message.message}</span>
+                </p>
+            </div>
+        }
+        </>
     )
 }
 
