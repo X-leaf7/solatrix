@@ -81,8 +81,8 @@ Resources:
     Properties:
       CachePolicyConfig:
         Comment: Caching Policy for Admin Django Backend
-        DefaultTTL: 3600
-        MaxTTL: 86400
+        DefaultTTL: 300
+        MaxTTL: 300
         MinTTL: 300
         Name: !Sub "${ClusterName}-Backend"
         ParametersInCacheKeyAndForwardedToOrigin:
