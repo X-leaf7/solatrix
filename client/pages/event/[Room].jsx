@@ -47,8 +47,8 @@ function Room() {
                 console.log(err)
                 swal("Error", "Unable to load Event. Please check the event URL and try again.", "error")
             })
-            const eventData = await eventResponse.json();
-            setEventData(eventData)
+            const eventResponseData = await eventResponse.json();
+            setEventData(eventResponseData)
         }
     }, [router])
 
@@ -263,23 +263,23 @@ function Room() {
 
                                 </div>
                                 { eventData.host &&
-                                    <div className="hosted-first-chat-form">
-                                        <div className="hosted-heading-main">
-                                            <h4><b>Hosted:</b> {eventData.host.user_name}</h4>
+                                    <div className="chat-form">
+                                        <div className="chat-heading-main">
+                                            <h4><b>Host:</b> {eventData.host.username}</h4>
                                             <h4><b>Location:</b> {eventData.stadium.name}</h4>
                                         </div>
-                                        <div className="hosted-first-chat-box" id="hostMsgDiv">
+                                        <div className="chat-box" id="hostMsgDiv">
                                             {hostUserMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls="host" />)}
                                         </div>
                                     </div>
                                 }
-                                <div className="hosted-first-chat-form">
-                                    <div className="hosted-heading-main">
+                                <div className="chat-form">
+                                    <div className="chat-heading-main">
                                         <h4><b>Home Team:</b> {eventData.home_team.name}</h4>
                                         <h4><b>Away Team:</b> {eventData.away_team.name}</h4>
                                     </div>
-                                    <div className="hosted-first-chat-box" id="userMsgDiv">
-                                        {otherUsersMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls={message.teamId === eventData.home_team.id ? "home" : "away"} />)}
+                                    <div className="chat-box large" id="userMsgDiv">
+                                        {otherUsersMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls={message.teamId === eventData.home_team.id ? "justify-content-start" : "justify-content-end"} />)}
                                     </div>
                                 </div>
                                 <div className="input-group mb-3">

@@ -310,23 +310,14 @@ to avoid use of important */
 .event-start-main .event-time-box img{width: 100%;height: 100%;object-fit: contain;}
 .event-start-main .event-time-box p{ color: #000; font-size: 24px; margin: 0; font-weight: 600;}
 
-.hosted-first-chat-form{width: 100%;display: inline-block;margin-bottom: 20px;}
-.hosted-first-chat-form .hosted-heading-main{ display: flex; justify-content: space-between;}
-.hosted-first-chat-form .hosted-heading-main h4{ color: #000; font-size: 16px; margin: 0 0 5px 0;}
-.hosted-first-chat-form .hosted-first-chat-box{ background: #f7f7f9; height: 120px; width: 100%; display: inline-block; border: 1px solid #ced4da; border-radius: .25rem; padding: 10px; overflow-y: scroll;}
-.hosted-first-chat-form .hosted-first-chat-box p{ font-size: 16px; color: #000;max-width: 400px;width: 100%;}
-.hosted-first-chat-form .hosted-first-chat-box .chat-msg-away{ float: right; clear: right}
+.chat-form{width: 100%;display: inline-block;margin-bottom: 20px;}
+.chat-form .chat-heading-main{ display: flex; justify-content: space-between;}
+.chat-form .chat-heading-main h4{ color: #000; font-size: 16px; margin: 0 0 5px 0;}
+.chat-form .chat-box{ background: #f7f7f9; height: 200px; width: 100%; display: inline-block; border: 1px solid #ced4da; border-radius: .25rem; padding: 10px; overflow-y: scroll;}
+.chat-form .chat-box.large{ height: 300px }
+.chat-form .chat-box p{ font-size: 16px; color: #000;max-width: 400px;width: 100%;}
+.chat-form .hosted-chat-box .chat-msg-away{ float: right; clear: right}
 img.chathead {height: 2ex; width: auto;}
-
-.hosted-second-chat-form{display: flex;justify-content: space-between;}
-.hosted-second-chat-form span{color: #000;font-size: 16px;}
-.hosted-second-chat-form .team-chat-box-main{margin-bottom: 20px; width: 49%;}
-.hosted-second-chat-form .team-chat-box-main .team-heading{ color: #000; font-size: 16px; margin: 0 0 5px 0;}
-.hosted-second-chat-form .team-chat-box-main.right .team-heading{ text-align: right;}
-.hosted-second-chat-form .team-chat-box{ background: #f7f7f9; height: 180px; width: 100%; display: inline-block; border: 1px solid #ced4da; border-radius: .25rem; padding: 10px; overflow-y: scroll;}
-.hosted-second-chat-form .team-chat-box p{ font-size: 16px; color: #000;max-width: 400px;width: 100%;}
-.hosted-second-chat-form .team-chat-box p b{ cursor: pointer;}
-.hosted-second-chat-form .team-chat-box-main.right .team-chat-box p{ float: left;}
 
 /* popup css start */
 
