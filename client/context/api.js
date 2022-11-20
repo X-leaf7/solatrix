@@ -36,7 +36,7 @@ export function useUser(userId) {
             'Authorization': 'Token ' + Cookies.get("Token")
         }
     }
-    const { data, error } = useSWR([USER_DETAIL + userId, config], jsonFetcher)
+    const { data, error } = useSWR([USER_DETAIL + userId + '/', config], jsonFetcher)
 
     return {
         user: data,
