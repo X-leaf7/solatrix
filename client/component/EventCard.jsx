@@ -20,7 +20,7 @@ function EventCard({ event, setSelected, showJoin, showCreate }) {
     const timeFormat = {
         hour: 'numeric',
         minute: 'numeric',
-        timezoneName: 'short'
+        timeZoneName: 'short'
     }
 
     function goToRoom() {
