@@ -16,8 +16,6 @@ let socket = io(SOCKET_URL)
 function Room() {
 
     const router = useRouter()
-    const { isLogin } = useContext(AppContext);
-    const [getJoinUserDetail, setJoinUserDetail] = useState(null)
     const [getEventTimer, setEventTimer] = useState('00:00:00')
     const [showTimer, setShowTimer] = useState(true)
     const [showProfile, setShowProfile] = useState(false);
@@ -25,7 +23,6 @@ function Room() {
     const [showJoinChatModal, setShowJoinChatModal] = useState(false);
     const [eventData, setEventData] = useState(null);
     const [attendance, setAttendance] = useState(null);
-    const [registeredListeners, doneRegisteredListeners] = useState(false);
 
     const [otherUsersMessages, setOtherUsersMessages] = useState([]);
     const [hostUserMessages, setHostUserMessages] = useState([]);
@@ -180,8 +177,8 @@ function Room() {
         })
     }, [eventData, attendance])
 
-    useEffect(async () => {
-        if (eventData && !registeredListeners) {
+    useEffect(() => {
+        if (eventData) {
 
             socket.on('newMessage', handleNewMessage)
 
@@ -221,10 +218,16 @@ function Room() {
             //        document.getElementById(response.data.id).remove();
             //    }
             //})
-            doneRegisteredListeners(true)
+
+            return () => {
+                // Clean up so that the page doesn't leak async effects
+                console.log("Cleanup event listeners")
+                clearInterval(eventTimer)
+                socket.off('newMessage', handleNewMessage)
+            }
         }
 
-    }, [eventData, registeredListeners])
+    }, [eventData])
 
 
     const handleKeyPress = (event) => {
