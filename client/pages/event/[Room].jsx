@@ -221,7 +221,6 @@ function Room() {
 
             return () => {
                 // Clean up so that the page doesn't leak async effects
-                console.log("Cleanup event listeners")
                 clearInterval(eventTimer)
                 socket.off('newMessage', handleNewMessage)
             }
