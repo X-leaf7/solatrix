@@ -61,11 +61,17 @@ services:
   redis:
     image: redis
   dynamodb:
+    user: root
     image: amazon/dynamodb-local
     ports:
       - "5000:8000"
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/
+    volumes:
+     - dynamodb_data:/home/dynamodblocal/data
 
 volumes:
   exclude:
 
   otherexclude:
+
+  dynamodb_data:
