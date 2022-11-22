@@ -13,21 +13,19 @@ function ChatMessage({message, showProfile, cls}) {
         }
     }, [user]);
 
-    const avatar = <Avatar src={profileImg} alt={user.username} style={{width: '25px', height: '25px'}} className={cls} />
-
     return (
         <>
         {
             user &&
             <div className={"d-flex flex-row " + cls} onClick={()=> {showProfile(user.id)}}>
-                {cls === 'home' && avatar}
+                {cls === 'home' && <Avatar src={profileImg} alt={user.username} style={{width: '25px', height: '25px'}} className={cls} />}
                 <p id={message.messageId}>
                     <b data-user={message.userId} >
                         {user && <span data-user={message.userId}> {user.username}: </span>}
                     </b>
                     <span>{message.message}</span>
                 </p>
-                {cls === 'away' && avatar}
+                {cls === 'away' && <Avatar src={profileImg} alt={user.username} style={{width: '25px', height: '25px'}} className={cls} />}
             </div>
         }
         </>
