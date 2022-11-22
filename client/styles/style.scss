@@ -319,8 +319,11 @@ to avoid use of important */
 .chat-form .chat-heading-main h4{ color: #000; font-size: 16px; margin: 0 0 5px 0;}
 .chat-form .chat-box{ background: #f7f7f9; height: 200px; width: 100%; display: inline-block; border: 1px solid #ced4da; border-radius: .25rem; padding: 10px; overflow-y: scroll;}
 .chat-form .chat-box.large{ height: 300px }
-.chat-form .chat-box p{ font-size: 16px; color: #000;max-width: 400px;width: 100%;}
-.chat-form .hosted-chat-box .chat-msg-away{ float: right; clear: right}
+.chat-form .chat-box p{ font-size: 16px; color: #000;max-width: 75%;}
+.chat-form .chat-box .flex-row.home{ justify-content: flex-start!important;}
+.chat-form .chat-box .flex-row.away{ justify-content: flex-end!important;}
+.chat-form .chat-box .MuiAvatar-root.home{ margin-right: 5px;}
+.chat-form .chat-box .MuiAvatar-root.away{ margin-left: 5px;}
 img.chathead {height: 2ex; width: auto;}
 
 /* popup css start */

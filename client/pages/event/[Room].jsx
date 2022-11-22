@@ -281,7 +281,7 @@ function Room() {
                                         <h4><b>Away Team:</b> {eventData.away_team.name}</h4>
                                     </div>
                                     <div className="chat-box large" id="userMsgDiv">
-                                        {otherUsersMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls={message.teamId === eventData.home_team.id ? "justify-content-start" : "justify-content-end"} />)}
+                                        {otherUsersMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls={message.teamId === eventData.home_team.id ? "home" : "away"} />)}
                                     </div>
                                 </div>
                                 <div className="input-group mb-3">
