@@ -15,7 +15,13 @@ function ProfileModal({show, userId, onClose}) {
                     <div className="user-details-main">
                         <Avatar src={user.profile_image} alt={user.username} style={{ height: '150px', width: '150px', margin: 'auto' }} />
                         <h3>{user.username}</h3>
-                        <span>{user.city}, {user.state}</span>
+                        {
+                            user.city && user.state ? <span>{user.city}, {user.state}</span> : (
+                                user.city ? <span>{user.city}</span> : (
+                                    user.state ? <span>{user.state}</span> : <></>
+                                )
+                            )
+                        }
                         <p>{user.about}</p>
                     </div>
                 </Modal.Body>
