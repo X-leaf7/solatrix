@@ -185,7 +185,7 @@ LANGUAGES = [
     ('en-us', 'English')
 ]
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Los_Angeles'
 
 USE_I18N = True
 
