@@ -49,6 +49,41 @@ function Room() {
         }
     }, [router])
 
+    const joinRoom = useCallback(() => {
+        const userData = Cookies.get('userInfo')
+        const user = JSON.parse(userData)
+
+        var joinEventData = {
+            eventId: eventData.id,
+            userId: user.id,
+            token: Cookies.get("Token")
+        }
+        socket.emit("join", joinEventData, (response) => {
+            if (response.success) {
+                if (response.messages) {
+                    let userMessages = []
+                    let hostMessages = []
+                    const sortedMessages = response.messages.sort((a,b) => a.time - b.time)
+                    sortedMessages.forEach((message) => {
+                        if (eventData.host && message.userId == eventData.host.id) {
+                            hostMessages.push(message)
+                        }
+                        else {
+                            userMessages.push(message)
+                        }
+                    })
+
+                    if (eventData.host) {
+                        setHostUserMessages(hostMessages)
+                    }
+                    setOtherUsersMessages(userMessages)
+                }
+            } else {
+                swal("Error", "Unable to join the chat. Please try again.", "error")
+            }
+        })
+    }, [eventData])
+
     useEffect(async () => {
         // Once we have eventData, verify attendance
         if (eventData) {
@@ -62,54 +97,13 @@ function Room() {
                     id: attendanceData.id,
                     chosenTeam: attendanceData.chosen_team
                 })
+                joinRoom()
             } else {
                 // Give the user a chance to pick a side
                 setShowJoinChatModal(true)
             }
         }
     }, [eventData])
-
-
-    useEffect(async () => {
-        // Once we have verified attendance and loaded event data, we can join the room
-        if (attendance && eventData) {
-            const userData = Cookies.get('userInfo')
-            const user = JSON.parse(userData)
-
-            var joinEventData = {
-                eventId: eventData.id,
-                userId: user.id,
-                token: Cookies.get("Token")
-            }
-            socket.emit("join", joinEventData, (response) => {
-                if (response.success) {
-                    if (response.messages) {
-                        let userMessages = []
-                        let hostMessages = []
-                        const sortedMessages = response.messages.sort((a,b) => a.time - b.time)
-                        sortedMessages.forEach((message) => {
-                            if (eventData.host && message.userId == eventData.host.id) {
-                                hostMessages.push(message)
-                            }
-                            else {
-                                userMessages.push(message)
-                            }
-                        })
-
-                        if (eventData.host) {
-                            setHostUserMessages(hostMessages)
-                            scrollToTop('hostMsgDiv')
-                        }
-
-                        setOtherUsersMessages(userMessages)
-                        scrollToTop('userMsgDiv')
-                    }
-                } else {
-                    swal("Error", "Unable to join the chat. Please try again.", "error")
-                }
-            })
-        }
-    }, [attendance, eventData])
 
     const handleShowProfile = async (userId) => {
         setSelectedUser(userId)
@@ -125,18 +119,42 @@ function Room() {
         setShowJoinChatModal(false)
     }
 
+    function handleDisconnect (reason) {
+        console.log("WS disconnect: " + reason)
+        if (reason === 'io server disconnect') {
+          // the disconnection was initiated by the server, we need to reconnect manually
+          socket.connect();
+        }
+        // else the socket will automatically try to reconnect
+    }
+
     function scrollToTop(elementId) {
         var el = document.getElementById(elementId);
-        el.scrollTop = el.scrollHeight;
+        if (el) {
+            // Sometimes the element doesn't exist yet, wait until it does
+            el.scrollTop = el.scrollHeight;
+        }
     }
+
+    useEffect(async () => {
+        // Any time host messages are updated, scroll the chat box
+        if (hostUserMessages) {
+            scrollToTop('hostMsgDiv')
+        }
+    }, [hostUserMessages])
+
+    useEffect(async () => {
+        // Any time other user messages are updated, scroll the chat box
+        if (otherUsersMessages) {
+            scrollToTop('userMsgDiv')
+        }
+    }, [otherUsersMessages])
 
     const handleNewMessage = useCallback((newMessage) => {
         if (eventData.host && newMessage.userId == eventData.host.id) {
             setHostUserMessages(hostUserMessages => [...hostUserMessages, newMessage])
-            scrollToTop('hostMsgDiv')
         } else {
             setOtherUsersMessages(awayTeamMessages => [...awayTeamMessages, newMessage])
-            scrollToTop('userMsgDiv')
         }
     }, [eventData, hostUserMessages, otherUsersMessages])
 
@@ -180,6 +198,9 @@ function Room() {
         if (eventData) {
 
             socket.on('newMessage', handleNewMessage)
+
+            socket.on('disconnect', handleDisconnect);
+            socket.on('reconnect', joinRoom)
 
             const eventTimer = setInterval(() => {
                 const now = DateTime.now();
