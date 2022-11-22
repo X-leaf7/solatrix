@@ -19,7 +19,7 @@ function ChatMessage({message, showProfile, cls}) {
         <>
         {
             user &&
-            <div className={"d-flex flex-row " + cls} onClick={showProfile}>
+            <div className={"d-flex flex-row " + cls} onClick={()=> {showProfile(user.id)}}>
                 {cls === 'home' && avatar}
                 <p id={message.messageId}>
                     <b data-user={message.userId} >

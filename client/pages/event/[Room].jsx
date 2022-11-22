@@ -111,9 +111,8 @@ function Room() {
         }
     }, [attendance, eventData])
 
-    const handleShowProfile = async (event) => {
-        const { user } = event.target.dataset;
-        setSelectedUser(user)
+    const handleShowProfile = async (userId) => {
+        setSelectedUser(userId)
         setShowProfile(true)
     }
 
