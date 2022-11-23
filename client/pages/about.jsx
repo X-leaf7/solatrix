@@ -56,7 +56,6 @@ function About() {
                         <section id="work" className="bg-dark text-white text-center">
                             <h2 className="display-4">Start Chatting</h2>
                             <h4>Check out the upcoming events to see what&apos;s going on in the world of sports</h4>
-                            <hr />
                             <Link href="/events"><a className="btn btn-primary text-black btn-lg">View Events</a></Link>
                         </section>
 
@@ -66,15 +65,15 @@ function About() {
                                 <div className="row text-center">
                                     <div className="col-md-4">
                                         <h4>Aly Wagner</h4>
-                                        <p className="text-primary">Co-Founder</p>
+                                        <p className="text-secondary">Co-Founder</p>
                                     </div>
                                     <div className="col-md-4">
                                         <h4>Michael Cohen</h4>
-                                        <p className="text-primary">Co-Founder</p>
+                                        <p className="text-secondary">Co-Founder</p>
                                     </div>
                                     <div className="col-md-4">
                                         <h4>Eric Prouty</h4>
-                                        <p className="text-primary">Co-Founder</p>
+                                        <p className="text-secondary">Co-Founder</p>
                                     </div>
                                 </div>
                             </div>
