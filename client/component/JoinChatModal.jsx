@@ -21,6 +21,7 @@ function JoinChatModal({show, selectedEvent, onClose}) {
             pathname: '/event/[Room]',
             query: { Room: selectedEvent.slug },
         })
+        onClose()
     }
 
     const joinRoom = useCallback(async () => {

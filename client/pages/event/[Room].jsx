@@ -6,7 +6,7 @@ import swal from 'sweetalert';
 import { io } from 'socket.io-client'
 import { DateTime, Interval } from 'luxon'
 import { ATTENDEES, URL, PROFILE_IMG, GET_EVENTS, SET_USER_TEAM, SOCKET_URL } from '/context/AppUrl'
-import { getAttendance } from '/context/api'
+import { getAttendance, post } from '/context/api'
 import Head from 'next/head'
 import ProfileModal from '/component/ProfileModal'
 import JoinChatModal from '/component/JoinChatModal'
@@ -93,14 +93,26 @@ function Room() {
             const attendanceData = await getAttendance(user.id, eventData.id)
 
             if (attendanceData) {
-                setAttendance({
-                    id: attendanceData.id,
-                    chosenTeam: attendanceData.chosen_team
-                })
+                setAttendance(attendanceData)
                 joinRoom()
             } else {
-                // Give the user a chance to pick a side
-                setShowJoinChatModal(true)
+                // Host goes straight into room, choose home team for them
+                if (user.id === eventData.host.id) {
+                    post(ATTENDEES, {
+                        'user': user.id,
+                        'event': eventData.id,
+                        'chosen_team': eventData.home_team.id
+                    }).then((response) => {
+                        if (response.status == 201) {
+                            setAttendance(response.data)
+                            joinRoom()
+                        }
+                    });
+                }
+                else {
+                    // Give the user a chance to pick a side
+                    setShowJoinChatModal(true)
+                }
             }
         }
     }, [eventData])
@@ -182,7 +194,7 @@ function Room() {
         var sendMessageData = {
             eventId: eventData.id,
             userId: user.id,
-            teamId: attendance.chosenTeam,
+            teamId: attendance.chosen_team,
             message: message,
             time: Date.now()
         }
