@@ -1,8 +1,12 @@
 from django.contrib.auth import get_user_model
+from django.db.models import Q
 from rest_framework import serializers
 
 from sports.serializers import SportSerializer, TeamSerializer, StadiumSerializer
 from .models import Event, Attendee
+
+
+MAX_ALLOWED_ATTENDEES = 12
 
 
 class HostSerializer(serializers.ModelSerializer):
@@ -55,3 +59,18 @@ class AttendeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attendee
         fields = ['user', 'event', 'chosen_team', 'id']
+
+    def validate(self, data):
+        """
+        Check private events for attendance threshold
+        """
+        event_id = data['event'].id
+        event = Event.objects.get(pk=event_id)
+
+        if event.is_private:
+            # Check that private events only have allowed attendees
+            non_host_attendees = event.attendees.filter(~Q(user=event.host.id)).all()
+            if len(non_host_attendees) >= MAX_ALLOWED_ATTENDEES:
+                raise serializers.ValidationError("Maximum Allowed Attendees")
+
+        return data
