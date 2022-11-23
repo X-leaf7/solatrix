@@ -48,7 +48,7 @@ class Event(SSNamedModel):
 
 class Attendee(SSBaseModel):
     user = models.ForeignKey(get_user_model(), on_delete=models.DO_NOTHING, related_name="attendance")
-    event = models.ForeignKey(Event, on_delete=models.DO_NOTHING, related_name="attendees")
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name="attendees")
     chosen_team = models.ForeignKey(Team, on_delete=models.DO_NOTHING, related_name="fans")
 
     def __str__(self):
