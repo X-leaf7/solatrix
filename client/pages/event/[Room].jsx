@@ -291,7 +291,7 @@ function Room() {
                                             <h4><b>Location:</b> {eventData.stadium.name}</h4>
                                         </div>
                                         <div className="chat-box" id="hostMsgDiv">
-                                            {hostUserMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls="host" />)}
+                                            {hostUserMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls="home" />)}
                                         </div>
                                     </div>
                                 }
