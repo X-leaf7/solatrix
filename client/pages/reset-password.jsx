@@ -87,7 +87,7 @@ function ResetPassword() {
                                                     />
                                                     <p className="error-msg">{errors.email && touched.email && errors.email}</p>
                                                 </div>
-                                                <input type="submit" disabled={isSubmitting} className="btn btn-secondary w-100" value="Reset Password" />
+                                                <input type="submit" disabled={isSubmitting} className="btn btn-warning w-100" value="Reset Password" />
                                                 <div className="row">
                                                     <div className="col-md-12 mt-3 mb-1 text-center">
                                                         Remember your password? <Link href="/login"><a className="get-started-link"><strong>Login</strong></a></Link>
