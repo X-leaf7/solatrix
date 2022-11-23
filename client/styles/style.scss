@@ -23,7 +23,7 @@ img {
 }
 
 .logo {
-    width: 100px;
+    width: 130px;
 }
 
 .navbar {
@@ -582,6 +582,8 @@ header .form-inline .form-control { min-width: 200px; }
 .fa-clone:before{font-family: fontawesome;}
 .fa-regular.fa-check{font-style: unset;}
 .fa-check:before{font-family: fontawesome;}
+.fa-search:before{font-family: fontawesome;}
+.fa-regular.fa-search{font-style: unset;}
 
 @media (max-width: 767px) {
     .listing-heading { display: block !important; width: 100%; }

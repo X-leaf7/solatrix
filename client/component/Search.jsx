@@ -79,7 +79,9 @@ function Search() {
             <div className='search-field'>
                 <input className="form-control me-sm-2" type="text"  value={search} onChange={handleChange} placeholder="Search Team or Host..." />
             </div>
-            <button id="search-button" className="btn btn-warning my-2 ml-1 me-3 my-sm-0" type="submit">Search</button>
+            <button id="search-button" className="btn btn-warning" type="submit">
+                <i className="fa-regular fa-search"></i>
+            </button>
         </form>
     )
 }
