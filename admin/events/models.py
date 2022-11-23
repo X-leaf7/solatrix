@@ -1,4 +1,5 @@
 from datetime import timedelta
+import uuid
 
 from django.db import models
 from django.contrib.auth import get_user_model
@@ -35,15 +36,20 @@ class Event(SSNamedModel):
 
     def create_slug(self):
         date_string = self.event_start_time.strftime("%Y-%m-%d")
-        return slugify(
-            "-".join([
-                self.host.username if self.host else "public",
-                self.home_team.name,
-                "vs",
-                self.away_team.name,
-                date_string
-            ])
-        )
+
+        if self.is_private:
+            self.id = uuid.uuid4()
+            return slugify(f'{self.host.id}-{self.id}')
+        else:
+            return slugify(
+                "-".join([
+                    self.host.username if self.host else "public",
+                    self.home_team.name,
+                    "vs",
+                    self.away_team.name,
+                    date_string
+                ])
+            )
 
 
 class Attendee(SSBaseModel):
