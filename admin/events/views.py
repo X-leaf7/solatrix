@@ -1,25 +1,47 @@
 from datetime import date
 
+from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework import permissions
 
 from .models import Event, Attendee
-from .serializers import EventSerializer, AttendeeSerializer
+from .serializers import EventSerializer, AttendeeSerializer, CopyEventSerializer
 
 
-class EventViewSet(viewsets.ModelViewSet):
+class EventViewSet(viewsets.ReadOnlyModelViewSet):
     """
     API endpoint that allows teams to be viewed.
     """
-    queryset = Event.objects.all()\
-        .order_by('lobby_start_time')\
-        .filter(lobby_start_time__date__gte=date.today())
 
     serializer_class = EventSerializer
 
     lookup_field = 'slug'
 
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    def get_queryset(self):
+        queryset = Event.objects.all()\
+            .order_by('lobby_start_time')\
+            .filter(lobby_start_time__date__gte=date.today())
+
+        if self.action == 'list':
+            if self.request.user.is_authenticated:
+                # If authenticated, get user events
+                queryset = queryset.filter(host=self.request.user)
+            else:
+                # Otherwise, only show public events
+                queryset = queryset.filter(is_private=False)
+
+            queryset = queryset.prefetch_related('host', 'home_team', 'away_team', 'sport', 'stadium')
+
+        return queryset
+
+
+class CopyEventView(generics.CreateAPIView):
+
+    serializer_class = CopyEventSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(host=self.request.user)
 
 
 class AttendeeViewSet(viewsets.ModelViewSet):

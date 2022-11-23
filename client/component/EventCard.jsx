@@ -53,10 +53,8 @@ function EventCard({ event, setSelected, showJoin, showCreate }) {
 
     const showCreateChat = async () => {
         checkLogin(() => {
-            checkAttendance(() => {
-                setSelected(event)
-                showCreate(true)
-            })
+            setSelected(event)
+            showCreate(true)
         })
     }
 

@@ -4,6 +4,7 @@ from rest_framework import serializers
 from sports.serializers import SportSerializer, TeamSerializer, StadiumSerializer
 from .models import Event, Attendee
 
+
 class HostSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -24,8 +25,29 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             'name', 'sport', 'host',
             'event_start_time', 'lobby_start_time', 'banner',
             'home_team', 'away_team', 'stadium',
-            'is_private', 'slug', 'id'
+            'slug', 'id'
         ]
+
+
+class CopyEventSerializer(serializers.Serializer):
+    source_event_id = serializers.UUIDField()
+    new_event = EventSerializer(required=False)
+
+    def save(self, host):
+        source_event_id = self.validated_data['source_event_id']
+        event = Event.objects.get(pk=source_event_id)
+
+        # Copy source event, changing a few key fields
+        old_name = event.name
+        event._state.adding = True
+        event.id = None
+        event.host = host
+        event.name = old_name + f' ({host.username})'
+        event.is_private = True
+
+        event.save()
+
+        self.validated_data['new_event'] = event
 
 
 class AttendeeSerializer(serializers.ModelSerializer):

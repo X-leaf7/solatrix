@@ -1,15 +1,25 @@
 import React, { useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
+import { COPY_EVENT } from '/context/AppUrl'
+import { post } from '/context/api'
 
 function CreateChatModal({show, selectedEvent, onClose}) {
 
     const handleClickCreateChat = async () => {
-        const wrapper = document.createElement('div')
-        wrapper.innerHTML = "<div><p> <b> https://split-side.com/</b> <i class='ms-3 fa-regular fa-clone'></i></p> <p>You can find this link in your Account/Events page as well</p></div>"
-        swal({
-            title : "Success",
-            content: wrapper,
-            icon: "success"
+        post(COPY_EVENT, {source_event_id: selectedEvent.id}).then((response) => {
+            if (response && response.status == 201) {
+                const eventUrl = `${location.protocol}//${location.host}/event/${response.data.new_event.slug}/`
+                const wrapper = document.createElement('div')
+                wrapper.innerHTML = `<div><p> <b><a href="${eventUrl}">${eventUrl}</a></b> <i class='ms-3 fa-regular fa-clone'></i></p> <p>Share this link with your friends! You can find this link in your Account page as well.</p></div>`
+                swal({
+                    title : "Success",
+                    content: wrapper,
+                    icon: "success"
+                })
+            }
+            else {
+                swal("Error", "There was a problem creating your private room. Check your Account page to see if you already have one for this event.", "error")
+            }
         })
     }
 

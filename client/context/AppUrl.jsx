@@ -47,3 +47,4 @@ export const CURRENT_USER_DETAIL = `${URL}/api/auth/users/me/`
 export const ATTENDEES = `${URL}/api/attendees/`
 export const USER_DETAIL = `${URL}/api/profiles/`
 export const DEFAULT_PROFILE_IMG = `${URL}/img/user_profile_default.png`
+export const COPY_EVENT = `${URL}/api/copy-event/`

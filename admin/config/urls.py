@@ -22,14 +22,14 @@ from django.urls import include, path, re_path
 from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
 
-from events.views import EventViewSet, AttendeeViewSet
+from events.views import EventViewSet, AttendeeViewSet, CopyEventView
 from sports.views import LeagueViewSet, SportViewSet, StadiumViewSet, TeamViewSet
 from users.views import UserViewSet
 
 
 router = routers.DefaultRouter()
 router.register(r'attendees', AttendeeViewSet)
-router.register(r'events', EventViewSet)
+router.register(r'events', EventViewSet, basename='events')
 router.register(r'leagues', LeagueViewSet)
 router.register(r'teams', TeamViewSet)
 router.register(r'stadiums', StadiumViewSet)
@@ -40,6 +40,7 @@ urlpatterns = [
     path('health/', include('health_check.urls')),
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/copy-event/', CopyEventView.as_view()),
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.authtoken')),
     re_path(r'^cms/', include('cms.urls'))
