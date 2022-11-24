@@ -38,11 +38,13 @@ $(ss_django)> docker exec -it split-side-django-1 /bin/bash
 ~# python manage.py loaddata cms
 ```
 
-6. Create DynamoDB table
+6. [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+
+7. Create Local DynamoDB Table for Chat messages
 ```sh
-~# export AWS_ACCESS_KEY_ID=FakeKeyId
-~# export AWS_SECRET_ACCESS_KEY=FakeSecretAccessKey
-~# aws dynamodb create-table --table-name localMessages --attribute-definitions AttributeName=eventId,AttributeType=S AttributeName=messageId,AttributeType=S --key-schema AttributeName=eventId,KeyType=HASH AttributeName=messageId,KeyType=RANGE --billing-mode PAY_PER_REQUEST --endpoint-url http://localhost:5000 --region ddblocal
+$(ss_django)> export AWS_ACCESS_KEY_ID=FakeKeyId
+$(ss_django)> export AWS_SECRET_ACCESS_KEY=FakeSecretAccessKey
+$(ss_django)> aws dynamodb create-table --table-name localMessages --attribute-definitions AttributeName=eventId,AttributeType=S AttributeName=messageId,AttributeType=S --key-schema AttributeName=eventId,KeyType=HASH AttributeName=messageId,KeyType=RANGE --billing-mode PAY_PER_REQUEST --endpoint-url http://localhost:5000 --region ddblocal
 ```
 
 Happy coding!
