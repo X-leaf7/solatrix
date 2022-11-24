@@ -113,12 +113,16 @@ function MyApp({ Component, pageProps }) {
     const [search, setSearch] = useState('');
     const [selectedTeam, setSelectedTeam] = useState({});
 
-    const checkLogin = (nextAction) => {
+    const checkLogin = (nextAction, postLoginRedirect) => {
         if (Cookies.get('isLogin')) {
             nextAction()
         }
         else {
-            Router.push('/login')
+            let loginRoute = '/login'
+            if (postLoginRedirect) {
+                loginRoute = loginRoute + '?next=' + postLoginRedirect
+            }
+            Router.push(loginRoute)
         }
     };
 

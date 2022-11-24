@@ -1,4 +1,4 @@
-import React, { useState, createRef, useEffect } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import Link from 'next/link'
 import { Formik, Form, Field } from "formik";
 import swal from 'sweetalert';
@@ -30,12 +30,46 @@ function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loader, setLoader] = useState(false);
-    const [getModel, setModel] = useState(false);
+    const [redirect, setRedirect] = useState(null);
 
     const handlePasswordShow = () => {
         setIsPasswordShown(!isPasswordShown);
-        setModel(true)
     }
+
+    const handleLogin = useCallback(async (values) => {
+
+        if (values.remember) {
+            Cookies.set('email', values.email);
+        }
+
+        const response = await fetch(LOGIN, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(values),
+        })
+            .then(data => data)
+            .catch(err => console.log(err))
+
+        if (response.status === 200) {
+            const data = await response.json();
+            Cookies.set('userInfo', JSON.stringify(data.user))
+            Cookies.set('Token', data.auth_token)
+            swal("Success", "You are now logged in.", "success");
+            if (redirect) {
+                Router.push(redirect)
+            }
+            else {
+                Router.push('/')
+            }
+            signIn();
+        } else if (response.status === 400) {
+            console.log("Got an error!");
+            swal("Error", "There was an error logging you in. Please check your username and password and try again.", "error");
+        }
+
+    }, [redirect])
 
     useEffect(() => {
         if (Cookies.get('isLogin')) {
@@ -47,13 +81,11 @@ function Login() {
         }
         setLoader(true)
     }, [email, password])
+
     useEffect(() => {
-        if (getModel === false) {
-            if (router.query) {
-                if (router.query.isFirstLogin === 'true') {
-                    swal("Success", "Your account is now active. Please login.", "success");
-                    setModel(true)
-                }
+        if (router.query) {
+            if (router.query.next) {
+                setRedirect(router.query.next)
             }
         }
     }, [router.query]);
@@ -85,38 +117,7 @@ function Login() {
                                                 validationSchema={loginSchema}
                                                 validateOnChange={false}
                                                 validateOnBlur={false}
-                                                onSubmit={async (values) => {
-
-                                                    if (values.remember) {
-                                                        Cookies.set('email', values.email);
-                                                    }
-
-                                                    const response = await fetch(LOGIN, {
-                                                        method: 'POST',
-                                                        headers: {
-                                                            'Content-Type': 'application/json'
-                                                        },
-                                                        body: JSON.stringify(values),
-                                                    })
-                                                        .then(data => data)
-                                                        .catch(err => console.log(err))
-
-                                                    if (response.status === 200) {
-
-
-                                                        const data = await response.json();
-                                                        Cookies.set('userInfo', JSON.stringify(data.user))
-                                                        Cookies.set('Token', data.auth_token)
-                                                        swal("Success", "You are now logged in.", "success");
-                                                        Router.push('/')
-                                                        signIn();
-                                                    } else if (response.status === 400) {
-                                                        console.log("Got an error!");
-                                                        swal("Error", "There was an error logging you in. Please check your username and password and try again.", "error");
-                                                    }
-
-
-                                                }}
+                                                onSubmit={handleLogin}
                                             >
                                                 {({ values, errors, touched, handleChange, handleBlur }) => (
                                                     <Form className="login">
