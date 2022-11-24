@@ -315,7 +315,7 @@ function Room() {
                                 <div className="input-group mb-3">
                                     <input type="text" className="form-control" placeholder="Start typing..." aria-label="Type chat message here" aria-describedby="basic-addon2" id="userMessage" onKeyPress={handleKeyPress} />
                                     <div className="input-group-append">
-                                        <button className="btn btn-secondary" type="button" onClick={onClickSendMessage}>Post</button>
+                                        <button className="btn btn-warning" type="button" onClick={onClickSendMessage}>Post</button>
                                     </div>
                                 </div>
                             </div>
