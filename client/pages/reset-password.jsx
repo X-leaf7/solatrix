@@ -2,8 +2,7 @@ import React, { useEffect } from 'react'
 import Link from 'next/link'
 import Cookies from 'js-cookie'
 import Router from 'next/router'
-import { Formik, Field } from 'formik';
-import axios from 'axios'
+import { Formik } from 'formik';
 import swal from 'sweetalert';
 import { REQUEST_RESET_PASSWORD } from '/context/AppUrl'
 import Head from 'next/head'

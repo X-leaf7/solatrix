@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
-import EventList from '../component/EventList';
+import EventList from '../component/EventList'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 

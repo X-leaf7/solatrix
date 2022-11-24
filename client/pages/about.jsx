@@ -1,6 +1,5 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
-import Cookies from 'js-cookie'
 import Head from 'next/head'
 import { getCMSContent } from '../context/api'
 

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react'
 import AppContext from '/context/AppContext'
-import Router, { useRouter } from 'next/router'
+import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import swal from 'sweetalert';
 import { io } from 'socket.io-client'
 import { DateTime, Interval } from 'luxon'
-import { ATTENDEES, URL, PROFILE_IMG, GET_EVENTS, SET_USER_TEAM, SOCKET_URL } from '/context/AppUrl'
+import { ATTENDEES, GET_EVENTS, SOCKET_URL } from '/context/AppUrl'
 import { getAttendance, post } from '/context/api'
 import Head from 'next/head'
 import ProfileModal from '/component/ProfileModal'

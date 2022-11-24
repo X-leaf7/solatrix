@@ -11,8 +11,6 @@ import axios from 'axios';
 import Head from 'next/head';
 import Accordion from 'react-bootstrap/Accordion';
 import Table from 'react-bootstrap/Table';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAtom } from '@fortawesome/free-solid-svg-icons';
 
 import { URL, CURRENT_USER_DETAIL, DEACTIVATE, CHANGE_PASSWORD } from '/context/AppUrl'
 const editAccount = Yup.object().shape({

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { getCMSContent } from '/context/api'
 import Head from 'next/head'

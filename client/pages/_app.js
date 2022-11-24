@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,9 +9,8 @@ import Layout from '../layout/default'
 import Cookies from 'js-cookie'
 import Router from 'next/router'
 import swal from 'sweetalert';
-import socketClient from "socket.io-client";
 import { useRouter } from 'next/router'
-import { LOGOUT, URL } from '/context/AppUrl'
+import { LOGOUT } from '/context/AppUrl'
 
 function MyApp({ Component, pageProps }) {
 

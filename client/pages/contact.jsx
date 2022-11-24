@@ -1,7 +1,6 @@
-import React, { useState, useContext }  from 'react'
+import React, { useState }  from 'react'
 import Link from 'next/link'
 import { getCMSContent } from '/context/api'
-import { GET_DETAILS } from '/context/AppUrl'
 import Head from 'next/head'
 
 function Contact() {

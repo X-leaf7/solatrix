@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react'
 import AppContext from "../context/AppContext";
 import Router, { useRouter } from 'next/router';
-import Link from 'next/link';
 
     
 function Search() {
