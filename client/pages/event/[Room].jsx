@@ -14,6 +14,7 @@ import ChatMessage from '/component/ChatMessage'
 let socket = io(SOCKET_URL)
 
 function Room() {
+    const { checkLogin } = useContext(AppContext)
 
     const router = useRouter()
     const [getEventTimer, setEventTimer] = useState('00:00:00')
@@ -26,14 +27,6 @@ function Room() {
 
     const [otherUsersMessages, setOtherUsersMessages] = useState([]);
     const [hostUserMessages, setHostUserMessages] = useState([]);
-
-    useEffect(() => {
-        // Make sure we are logged in
-        if (!Cookies.get("Token")) {
-            Router.push('/login')
-            return
-        }
-    }, []);
 
     useEffect(async () => {
         // Once the router has loaded the room name, fetch event details
@@ -84,38 +77,41 @@ function Room() {
         })
     }, [eventData])
 
-    useEffect(async () => {
-        // Once we have eventData, verify attendance
-        if (eventData) {
-            const userData = Cookies.get('userInfo')
-            const user = JSON.parse(userData)
+    const verifyAttendance = useCallback(async () => {
+        const userData = Cookies.get('userInfo')
+        const user = JSON.parse(userData)
 
-            const attendanceData = await getAttendance(user.id, eventData.id)
+        const attendanceData = await getAttendance(user.id, eventData.id)
 
-            if (attendanceData) {
-                setAttendance(attendanceData)
-                joinRoom()
-            } else {
-                // Host goes straight into room, choose home team for them
-                if (user.id === eventData.host.id) {
-                    post(ATTENDEES, {
-                        'user': user.id,
-                        'event': eventData.id,
-                        'chosen_team': eventData.home_team.id
-                    }).then((response) => {
-                        if (response.status == 201) {
-                            setAttendance(response.data)
-                            joinRoom()
-                        }
-                    });
-                }
-                else {
-                    // Give the user a chance to pick a side
-                    setShowJoinChatModal(true)
-                }
+        if (attendanceData) {
+            setAttendance(attendanceData)
+            joinRoom()
+        } else {
+            // Host goes straight into room, choose home team for them
+            if (user.id === eventData.host.id) {
+                post(ATTENDEES, {
+                    'user': user.id,
+                    'event': eventData.id,
+                    'chosen_team': eventData.home_team.id
+                }).then((response) => {
+                    if (response.status == 201) {
+                        setAttendance(response.data)
+                        joinRoom()
+                    }
+                });
+            }
+            else {
+                // Give the user a chance to pick a side
+                setShowJoinChatModal(true)
             }
         }
     }, [eventData])
+
+    useEffect(() => {
+        if (eventData) {
+            checkLogin(verifyAttendance, `/event/${eventData.slug}/`)
+        }
+    }, [eventData]);
 
     const handleShowProfile = async (userId) => {
         setSelectedUser(userId)
