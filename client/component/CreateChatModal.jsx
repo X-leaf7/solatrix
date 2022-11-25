@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
 import { Button, Modal } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { COPY_EVENT } from '/context/AppUrl'
 import { post } from '/context/api'

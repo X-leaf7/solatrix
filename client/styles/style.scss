@@ -584,6 +584,8 @@ header .form-inline .form-control { min-width: 200px; }
 .fa-check:before{font-family: fontawesome;}
 .fa-search:before{font-family: fontawesome;}
 .fa-regular.fa-search{font-style: unset;}
+.fa-trash:before{font-family: fontawesome;}
+.fa-regular.fa-trash{font-style: unset;}
 
 @media (max-width: 767px) {
     .listing-heading { display: block !important; width: 100%; }

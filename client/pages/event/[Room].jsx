@@ -58,6 +58,10 @@ function Room() {
                     let hostMessages = []
                     const sortedMessages = response.messages.sort((a,b) => a.time - b.time)
                     sortedMessages.forEach((message) => {
+                        if (message.redacted) {
+                            // Don't show redacted messages
+                            return
+                        }
                         if (eventData.host && message.userId == eventData.host.id) {
                             hostMessages.push(message)
                         }
@@ -127,6 +131,14 @@ function Room() {
         setShowJoinChatModal(false)
     }
 
+    function handleDeleteMessage(message) {
+        socket.emit('deleteMessage', message, (response) => {
+            if (response.success) {
+                console.log("Removing message: " + message.id)
+            }
+        })
+    }
+
     function handleDisconnect (reason) {
         console.log("WS disconnect: " + reason)
         if (reason === 'io server disconnect') {
@@ -165,6 +177,13 @@ function Room() {
             setOtherUsersMessages(awayTeamMessages => [...awayTeamMessages, newMessage])
         }
     }, [eventData, hostUserMessages, otherUsersMessages])
+
+    const handleRemoveMessage = (message) => {
+        const messageEl = document.getElementById(message.messageId)
+        if (messageEl) {
+            messageEl.parentNode.removeChild(messageEl)
+        }
+    }
 
     const onClickSendMessage = useCallback(() => {
         const message = document.getElementById('userMessage').value
@@ -206,6 +225,7 @@ function Room() {
         if (eventData) {
 
             socket.on('newMessage', handleNewMessage)
+            socket.on('removeMessage', handleRemoveMessage)
 
             socket.on('disconnect', handleDisconnect);
             socket.on('reconnect', joinRoom)
@@ -299,7 +319,7 @@ function Room() {
                                             <h4><b>Location:</b> {eventData.stadium.name}</h4>
                                         </div>
                                         <div className="chat-box" id="hostMsgDiv">
-                                            {hostUserMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls="home" />)}
+                                            {hostUserMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} deleteMessage={handleDeleteMessage} key={message.messageId} cls="home" />)}
                                         </div>
                                     </div>
                                 }
@@ -309,7 +329,7 @@ function Room() {
                                         <h4><b>Away Team:</b> {eventData.away_team.name}</h4>
                                     </div>
                                     <div className="chat-box large" id="userMsgDiv">
-                                        {otherUsersMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} key={message.messageId} cls={message.teamId === eventData.home_team.id ? "home" : "away"} />)}
+                                        {otherUsersMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} deleteMessage={handleDeleteMessage} key={message.messageId} cls={message.teamId === eventData.home_team.id ? "home" : "away"} />)}
                                     </div>
                                 </div>
                                 <div className="input-group mb-3">

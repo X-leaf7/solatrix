@@ -125,6 +125,11 @@ function MyApp({ Component, pageProps }) {
         }
     };
 
+    const isStaff = () => {
+        const userInfo = JSON.parse(Cookies.get('userInfo'))
+        return userInfo.is_staff
+    }
+
     React.useEffect(() => {
         if (Cookies.get('isLogin')) {
             setIsLogin(true);
@@ -147,7 +152,7 @@ function MyApp({ Component, pageProps }) {
     // }, [URL])
 
     return (
-        <AppContext.Provider value={{ isLogin, setIsLogin, checkLogin, search, setSearch, selectedTeam, setSelectedTeam }}>
+        <AppContext.Provider value={{ isLogin, setIsLogin, checkLogin, isStaff, search, setSearch, selectedTeam, setSelectedTeam }}>
             <AuthContext.Provider value={authContext}>
                 <Layout>
                     <Component {...pageProps} />
