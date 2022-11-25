@@ -151,9 +151,7 @@ function Room() {
     }
 
     function scrollToTop(elementId) {
-        debugger
         window.requestAnimationFrame(function() {
-            debugger
             var el = document.getElementById(elementId);
             if (el) {
                 // Sometimes the element doesn't exist yet, wait until it does
