@@ -5,14 +5,17 @@ import swal from 'sweetalert';
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Button } from 'react-bootstrap';
-import AvatarPicker from "../component/AvatarPicker";
+import AvatarPicker from '/component/AvatarPicker'
 import Cookies from 'js-cookie'
+import { DateTime } from 'luxon'
 import axios from 'axios';
 import Head from 'next/head';
-import Accordion from 'react-bootstrap/Accordion';
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 import Table from 'react-bootstrap/Table';
 
-import { URL, CURRENT_USER_DETAIL, DEACTIVATE, CHANGE_PASSWORD } from '/context/AppUrl'
+import { URL, CURRENT_USER_DETAIL, DEACTIVATE, CHANGE_PASSWORD, GET_EVENTS } from '/context/AppUrl'
+
 const editAccount = Yup.object().shape({
     userName: Yup.string()
         .max(16, "Username must be 4-16 characters with letters, numbers or underscores only")
@@ -64,8 +67,19 @@ function EditAccount() {
     const [avatarImage, setAvatarImage] = useState();
     const [token, setToken] = useState(null);
     const [image, setImages] = useState('/img/user_profile_default.png');
+    const [events, setEvents] = useState([])
 
+    const dateFormat = {
+        month: 'numeric',
+        day: 'numeric',
+        year: 'numeric'
+    }
 
+    const timeFormat = {
+        hour: 'numeric',
+        minute: 'numeric',
+        timeZoneName: 'short'
+    }
 
     const handleImageChange = (imageFile) => {
         setAvatarImage(imageFile);
@@ -93,7 +107,6 @@ function EditAccount() {
             const token = Cookies.get('Token')
             const userData = Cookies.get('userInfo')
             setToken(token)
-            console.log("userData =>", userData)
             const user = JSON.parse(userData)
 
 
@@ -114,6 +127,22 @@ function EditAccount() {
                 })
                 .catch((error) => {
                     console.log("Somethink is wrong. please try again get profile api.");
+                    setData(JSON.parse(userData))
+                });
+
+            let eventListConfig = {
+                method: 'get',
+                url: GET_EVENTS,
+                headers: {
+                    'Authorization': 'Token ' + token
+                },
+            };
+            axios(eventListConfig)
+                .then((response) => {
+                    setEvents(response.data)
+                })
+                .catch((error) => {
+                    console.log("Could not fetch events");
                     setData(JSON.parse(userData))
                 });
         }
@@ -260,205 +289,161 @@ function EditAccount() {
                     <div className="container">
                         <div className="row">
                             <div className="col-md-8 mx-auto">
-                                <Accordion defaultActiveKey="0">
-                                    <Accordion.Item eventKey="0">
-                                        <Accordion.Header>Profile</Accordion.Header>
-                                        {
-                                            data &&
-                                            <Accordion.Body>
-                                                <div className="card-body">
-
-                                                    <Formik
-                                                        initialValues={{
-                                                            userImage: null,
-                                                            userName: data.username,
-                                                            firstName: data.first_name,
-                                                            lastName: data.last_name,
-                                                            email: data.email,
-                                                            city: data.city,
-                                                            state: data.state,
-                                                            zipCode: data.zip_code,
-                                                            about: data.about
-
-                                                        }}
-                                                        validationSchema={editAccount}
-                                                        validateOnChange={false}
-                                                        validateOnBlur={false}
-                                                        onSubmit={async (values) => {
-
-                                                            dataChange(values);
-                                                            if (values.newPassword && values.confirmPassword) {
-                                                                const password = values.newPassword
-                                                                changePassword(password);
-                                                            }
-                                                        }}
-                                                    >
-                                                        {({ values, errors, touched, isSubmitting, setFieldValue }) => (
-                                                            <Form className="editAccount">
-                                                                <div className="profile-upload">
-
-                                                                    <AvatarPicker
-                                                                        handleChangeImage={handleImageChange}
-                                                                        avatarImage={avatarImage}
-                                                                        inputFile={image}
-                                                                    />
-
-                                                                </div>
-                                                                <div className="form-group">
-                                                                    <label>Username</label>
-                                                                    <Field
-                                                                        type="text"
-                                                                        className="form-control"
-                                                                        name="userName"
-                                                                    />
-                                                                    {errors.userName && (<p className="error-msg">{errors.userName}</p>)}
-                                                                </div>
-                                                                <div className="form-group">
-                                                                    <label>First Name</label>
-                                                                    <Field
-                                                                        type="text"
-                                                                        className="form-control"
-                                                                        name="firstName"
-                                                                        onKeyPress={handleKeyPressname}
-                                                                    />
-                                                                    {errors.firstName && (<p className="error-msg">{errors.firstName}</p>)}
-                                                                </div>
-                                                                <div className="form-group">
-                                                                    <label>Last Name</label>
-                                                                    <Field
-                                                                        type="text"
-                                                                        className="form-control"
-                                                                        name="lastName"
-                                                                        onKeyPress={handleKeyPressname}
-                                                                    />
-                                                                    {errors.lastName && (<p className="error-msg">{errors.lastName}</p>)}
-                                                                </div>
-                                                                <div className="form-group">
-                                                                    <label>Email</label>
-                                                                    <Field
-                                                                        type="email"
-                                                                        className="form-control"
-                                                                        name="email"
-                                                                    />
-                                                                    {errors.email && touched.email ? (<p className="error-msg">{errors.email}</p>) : null}
-                                                                </div>
-                                                                <div className="form-group">
-                                                                    <label>City</label>
-                                                                    <Field
-                                                                        type="text"
-                                                                        className="form-control"
-                                                                        name="city"
-                                                                    />
-                                                                    {errors.city && touched.city ? (<p className="error-msg">{errors.city}</p>) : null}
-                                                                </div>
-                                                                <div className="form-group">
-                                                                    <label>State</label>
-                                                                    <Field
-                                                                        type="text"
-                                                                        className="form-control"
-                                                                        name="state"
-                                                                    />
-                                                                    {errors.state && touched.state ? (<p className="error-msg">{errors.state}</p>) : null}
-                                                                </div>
-                                                                <div className="form-group">
-                                                                    <label>Zip Code</label>
-                                                                    <Field
-                                                                        type="text"
-                                                                        className="form-control"
-                                                                        name="zipCode"
-                                                                        maxLength={5}
-                                                                    />
-                                                                    {errors.zipCode && touched.zipCode ? (<p className="error-msg">{errors.zipCode}</p>) : null}
-                                                                </div>
-                                                                <div className="form-group">
-                                                                    <label>About</label>
-                                                                    <Field
-                                                                        as="textarea"
-                                                                        className="form-control"
-                                                                        name="about"
-                                                                    />
-                                                                    {errors.about && touched.about ? (<p className="error-msg">{errors.about}</p>) : null}
-                                                                </div>
-                                                                <Field className="btn btn-success w-100" type="submit" value="Save" />
-                                                                <div className="logoutDeactive">
-                                                                    <div onClick={logOut}><a>Logout</a></div>
-                                                                    <Button onClick={deactivateAccount}>Deactivate Account</Button>
-                                                                </div>
-                                                            </Form>
-                                                        )}
-                                                    </Formik>
-
-                                                </div>
-                                            </Accordion.Body>
+                                <Tabs defaultActiveKey="profile" >
+                                    <Tab eventKey="profile" title="Profile">
+                                        { data &&
+                                            <div className="card-body">
+                                                <Formik
+                                                    initialValues={{
+                                                        userImage: null,
+                                                        userName: data.username,
+                                                        firstName: data.first_name,
+                                                        lastName: data.last_name,
+                                                        email: data.email,
+                                                        city: data.city,
+                                                        state: data.state,
+                                                        zipCode: data.zip_code,
+                                                        about: data.about
+                                                    }}
+                                                    validationSchema={editAccount}
+                                                    validateOnChange={false}
+                                                    validateOnBlur={false}
+                                                    onSubmit={async (values) => {
+                                                        dataChange(values);
+                                                        if (values.newPassword && values.confirmPassword) {
+                                                            const password = values.newPassword
+                                                            changePassword(password);
+                                                        }
+                                                    }}
+                                                >
+                                                    {({ values, errors, touched, isSubmitting, setFieldValue }) => (
+                                                        <Form className="editAccount">
+                                                            <div className="profile-upload">
+                                                                <AvatarPicker
+                                                                    handleChangeImage={handleImageChange}
+                                                                    avatarImage={avatarImage}
+                                                                    inputFile={image}
+                                                                />
+                                                            </div>
+                                                            <div className="form-group">
+                                                                <label>Username</label>
+                                                                <Field
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    name="userName"
+                                                                />
+                                                                {errors.userName && (<p className="error-msg">{errors.userName}</p>)}
+                                                            </div>
+                                                            <div className="form-group">
+                                                                <label>First Name</label>
+                                                                <Field
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    name="firstName"
+                                                                    onKeyPress={handleKeyPressname}
+                                                                />
+                                                                {errors.firstName && (<p className="error-msg">{errors.firstName}</p>)}
+                                                            </div>
+                                                            <div className="form-group">
+                                                                <label>Last Name</label>
+                                                                <Field
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    name="lastName"
+                                                                    onKeyPress={handleKeyPressname}
+                                                                />
+                                                                {errors.lastName && (<p className="error-msg">{errors.lastName}</p>)}
+                                                            </div>
+                                                            <div className="form-group">
+                                                                <label>Email</label>
+                                                                <Field
+                                                                    type="email"
+                                                                    className="form-control"
+                                                                    name="email"
+                                                                />
+                                                                {errors.email && touched.email ? (<p className="error-msg">{errors.email}</p>) : null}
+                                                            </div>
+                                                            <div className="form-group">
+                                                                <label>City</label>
+                                                                <Field
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    name="city"
+                                                                />
+                                                                {errors.city && touched.city ? (<p className="error-msg">{errors.city}</p>) : null}
+                                                            </div>
+                                                            <div className="form-group">
+                                                                <label>State</label>
+                                                                <Field
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    name="state"
+                                                                />
+                                                                {errors.state && touched.state ? (<p className="error-msg">{errors.state}</p>) : null}
+                                                            </div>
+                                                            <div className="form-group">
+                                                                <label>Zip Code</label>
+                                                                <Field
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    name="zipCode"
+                                                                    maxLength={5}
+                                                                />
+                                                                {errors.zipCode && touched.zipCode ? (<p className="error-msg">{errors.zipCode}</p>) : null}
+                                                            </div>
+                                                            <div className="form-group">
+                                                                <label>About</label>
+                                                                <Field
+                                                                    as="textarea"
+                                                                    className="form-control"
+                                                                    name="about"
+                                                                />
+                                                                {errors.about && touched.about ? (<p className="error-msg">{errors.about}</p>) : null}
+                                                            </div>
+                                                            <Field className="btn btn-success w-100" type="submit" value="Save" />
+                                                            <div className="logoutDeactive">
+                                                                <div onClick={logOut}><a>Logout</a></div>
+                                                                <Button onClick={deactivateAccount}>Deactivate Account</Button>
+                                                            </div>
+                                                        </Form>
+                                                    )}
+                                                </Formik>
+                                            </div>
                                         }
-                                    </Accordion.Item>
-                                    <Accordion.Item eventKey="1">
-                                        <Accordion.Header>Event</Accordion.Header>
-                                        <Accordion.Body>
-                                            <Table borderless>
-                                                <thead>
-                                                    <tr>
-                                                        <td>Start Date</td>
-                                                        <td>Start Time</td>
-                                                        <td>Home Team</td>
-                                                        <td>Away Team</td>
-                                                        <td>Link</td>
-                                                        <td>Copy Link</td>
-                                                        <td>Actions</td>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr>
-                                                        <td>MM/DD/YYYY</td>
-                                                        <td>12:30pm PT</td>
-                                                        <td>Max. of 16 chars..</td>
-                                                        <td>Max. of 16 chars..</td>
-                                                        <th>Go to Chat</th>
-                                                        <td><font-awesome-icon icon="fa-regular fa-clone" /></td>
-                                                        <td>Delete</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>MM/DD/YYYY</td>
-                                                        <td>12:30pm PT</td>
-                                                        <td>Max. of 16 chars..</td>
-                                                        <td>Max. of 16 chars..</td>
-                                                        <th>Go to Chat</th>
-                                                        <td><font-awesome-icon icon="fa-regular fa-clone" /></td>
-                                                        <td>Delete</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>MM/DD/YYYY</td>
-                                                        <td>12:30pm PT</td>
-                                                        <td>Max. of 16 chars..</td>
-                                                        <td>Max. of 16 chars..</td>
-                                                        <th>Go to Chat</th>
-                                                        <td><font-awesome-icon icon="fa-regular fa-clone" /></td>
-                                                        <td>Delete</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>MM/DD/YYYY</td>
-                                                        <td>12:30pm PT</td>
-                                                        <td>Max. of 16 chars..</td>
-                                                        <td>Max. of 16 chars..</td>
-                                                        <th>Go to Chat</th>
-                                                        <td><font-awesome-icon icon="fa-regular fa-clone" /></td>
-                                                        <td>Delete</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>MM/DD/YYYY</td>
-                                                        <td>12:30pm PT</td>
-                                                        <td>Max. of 16 chars..</td>
-                                                        <td>Max. of 16 chars..</td>
-                                                        <th>Go to Chat</th>
-                                                        <td><font-awesome-icon icon="fa-regular fa-clone" /></td>
-                                                        <td>Delete</td>
-                                                    </tr>
-                                                </tbody>
-                                            </Table>
-                                        </Accordion.Body>
-                                    </Accordion.Item>
-                                </Accordion>
-
+                                    </Tab>
+                                    <Tab eventKey="events" title="Private Events">
+                                        <Table borderless>
+                                            <thead>
+                                                <tr>
+                                                    <td>Event Date</td>
+                                                    <td>Lobby Open Time</td>
+                                                    <td>Event Start Time</td>
+                                                    <td>Home Team</td>
+                                                    <td>Away Team</td>
+                                                    <td>Link</td>
+                                                    <td>Copy Link</td>
+                                                    <td>Delete</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    events.map(event =>
+                                                        <tr>
+                                                            <td>{DateTime.fromISO(event.lobby_start_time).toLocaleString(dateFormat)}</td>
+                                                            <td>{DateTime.fromISO(event.lobby_start_time).toLocaleString(timeFormat)}</td>
+                                                            <td>{DateTime.fromISO(event.event_start_time).toLocaleString(timeFormat)}</td>
+                                                            <td>{event.home_team.name}</td>
+                                                            <td>{event.away_team.name}</td>
+                                                            <td><a href={`${location.protocol}//${location.host}/event/${event.slug}/`}>Room Link</a></td>
+                                                            <td><i className="fa-regular fa-clone"></i></td>
+                                                            <td><i className="fa-regular fa-trash"></i></td>
+                                                        </tr>
+                                                    )
+                                                }
+                                            </tbody>
+                                        </Table>
+                                    </Tab>
+                                </Tabs>
                             </div>
                         </div>
                     </div>
