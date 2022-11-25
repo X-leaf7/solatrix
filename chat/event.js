@@ -82,104 +82,22 @@ module.exports = {
     };
   },
 
-  async sendMessageOld(socket, data) {
+  async deleteMessage(socket, data) {
     try {
-      let id = data.eventId;
-      let eventdata = await Event.findOne({
-        where: {
-          id: id,
-          is_active: true,
-          is_deleted: false
-        },
-      });
-      if (eventdata) {
-        let type = '';
-        if (data.type) {
-          type = data.type
-        } else {
-          let homeuser = eventdata.homeuser;
-          type = 'away';
-          if (homeuser.includes(data.userid)) {
-            type = 'home';
-          }
-        }
-
-        if (eventdata.host == data.userid) {
-          data.sendertype = 'host';
-        }
-        // if (type == '') {
-        //   let homeuser = eventdata.homeuser;
-        //   type = 'away';
-        //   if (homeuser.includes(data.userid)) {
-        //     type = 'home';
-        //   }
-        // }
-
-        let message = await Message.create({
-          eventid: eventdata.id,
-          userid: data.userid,
-          type: type,
-          sendertype: data.sendertype,
-          message: data.message,
-          is_deleted: false,
-        });
-        let messagesData = await Message.findOne({
-          // raw: true,
-          where: { id: message.id },
-          order: [["id", "DESC"]],
-          include: [
-            {
-              model: User,
-              as: "user",
-            },
-            {
-              model: Event,
-              as: "event",
-              attributes: ['host']
-            },
-            // { model: Team, as: "awayTeamRef" },
-          ],
-        });
-        //socket.emit("thread", messagesData);
-        let objData = {
-          msg: "chat room detail",
-          data: messagesData,
-          statusCode: 200,
-        };
-        io.to(eventdata.roomId).emit("thread", objData);
-        //socket.broadcast.emit("thread", messagesData);
-        return {
-          msg: "chat room detail",
-          data: messagesData,
-          statusCode: 200,
-        }
-      } else {
-        let deActiveEvent = await Event.findOne({
-          where: {
-            id: id
-          },
-        });
-        let objData = {
-          msg: "Event Deactivated",
-          data: {},
-          statusCode: 201,
-        };
-        io.to(deActiveEvent.roomId).emit("thread", objData);
-        return {
-          msg: "Event Deactivated",
-          data: {},
-          statusCode: 201,
-        };
-      }
+      io.to(data.eventId).emit('removeMessage', data);
+      data.redacted = true
+      putMessage(data)
     } catch (error) {
-
-      console.log(error)
-
       return {
-        msg: "something went wrong please try again",
-        data: {},
-        statusCode: 400,
+        success: false,
+        msg: error,
+        data: data,
       };
+    }
+
+    return {
+      success: true,
+      message: data
     }
   },
 
@@ -316,59 +234,6 @@ module.exports = {
     }
   },
 
-  async deleteMessage(socket, data) {
-    try {
-      let eventId = data.eventId;
-      let id = data.id;
-
-      console.log("data",data)
-
-      let messageData = await Message.findOne({
-        where: {
-          id: id,
-          eventid: eventId
-        },
-      });
-
-      console.log("messageData",messageData)
-
-      if (messageData) {
-        await Message.update(
-          {
-            is_deleted: true,
-          },
-          {
-            where: { id: id },
-            returning: true,
-          }
-        )
-        let result = {
-          msg: "Message deleted successfully",
-          data: { id: messageData.id },
-          statusCode: 200,
-        };
-
-        console.log(result)
-
-        //socket.emit("thread", messagesData);
-        io.emit("removeMessage", result);
-        //socket.broadcast.emit("thread", messagesData);
-      } else {
-        return {
-          msg: "No running event(s) found",
-          data: {},
-          statusCode: 201,
-        };
-      }
-    } catch (error) {
-      return {
-        msg: "something went wrong please try again",
-        data: {},
-        statusCode: 400,
-      };
-    }
-  },
-
   async getAllEvents(req, res) {
     let AllEvents = await Event.findAll({
       where: { is_active: true, is_deleted: false },
@@ -381,79 +246,3 @@ module.exports = {
     }
   },
 };
-var b = [];
-async function eventTimer(eventid) {
-  //console.log('eventdata:', eventdata);
-  let eventdata = await Event.findOne({
-    where: {
-      id: eventid,
-    },
-  })
-
-  // var endTime = eventdata.joinTime + ':01';
-  // var startTime = moment(new Date(), 'DD-MM-YYYY hh:mm:ss');
-  // var endDate = moment(`${eventdata.joinDate} ${endTime}`, 'DD-MM-YYYY hh:mm:ss');
-  // //if (endDate >= startTime) {
-  //   console.log('startTime:' + startTime);
-  //   console.log('endDate:' + endDate);
-
-  //   var secondsDiff = endDate.diff(startTime, 'seconds');
-  //   console.log('Seconds:' + secondsDiff);
-  if (b["var" + eventdata.roomId]) {
-    clearInterval(b["var" + eventdata.roomId]);
-  }
-  b["var" + eventdata.roomId] = setInterval(async function () {
-    let eventTime = await dateConvert(eventdata);
-    io.to(eventdata.roomId).emit('counter', eventTime);
-    //secondsDiff--
-
-    if (eventTime.watingTime == 0) {
-      io.to(eventdata.roomId).emit('counter', eventTime);
-      //clearInterval(WinnerCountdown);
-      clearInterval(b["var" + eventdata.roomId]);
-    }
-  }, 1000);
-  // } else {
-
-  // }
-
-}
-async function dateConvert(eventdata) {
-  var startTime = "09:00:00";
-  var endTime = eventdata.createTime + ':00';
-  //var todayDate = moment(new Date()).format("YYYY-MM-DD HH:mm:ss"); //Instead of today date, We can pass whatever date        
-
-  var startDate = new Date(`${todayDate}`);
-  var endDate = new Date(`${eventdata.createDate} ${endTime}`);
-  if (endDate >= startDate) {
-    var timeDiff = Math.abs(startDate.getTime() - endDate.getTime());
-
-    var hh = Math.floor(timeDiff / 1000 / 60 / 60);
-    //console.log('AAAAAAAAAAA', hh);
-    //hh = ('0' + hh).slice(-2)
-    hh = (hh < 10) ? ('0' + hh) : hh;
-
-    timeDiff -= hh * 1000 * 60 * 60;
-    var mm = Math.floor(timeDiff / 1000 / 60);
-    mm = ('0' + mm).slice(-2)
-
-    timeDiff -= mm * 1000 * 60;
-    var ss = Math.floor(timeDiff / 1000);
-    ss = ('0' + ss).slice(-2)
-
-    var watingTime = hh + ":" + mm + ":" + ss;
-    return {
-      roomId: eventdata.roomId,
-      eventId: eventdata.id,
-      eventStart: false,
-      watingTime: watingTime,
-    }
-  } else {
-    return {
-      roomId: eventdata.roomId,
-      eventId: eventdata.id,
-      eventStart: true,
-      watingTime: 0,
-    }
-  }
-}

@@ -22,7 +22,7 @@ module.exports = function (socket) {
         response(await eventController.leaveRoom(socket,data));
       });
 
-      socket.on("messagesDelete",async function(data, response) {
+      socket.on("deleteMessage",async function(data, response) {
         response(await eventController.deleteMessage(socket,data));
       });
 
