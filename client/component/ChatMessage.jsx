@@ -3,6 +3,7 @@ import { Avatar } from "@material-ui/core";
 import { DEFAULT_PROFILE_IMG } from '/context/AppUrl'
 import { useUser } from '/context/api'
 import AppContext from '/context/AppContext'
+import swal from 'sweetalert'
 
 function ChatMessage({message, showProfile, deleteMessage, cls}) {
     const { isStaff } = useContext(AppContext)
@@ -16,7 +17,17 @@ function ChatMessage({message, showProfile, deleteMessage, cls}) {
     }, [user])
 
     const callDeleteMessage = (clickEvent) => {
-        deleteMessage(message)
+        swal({
+            title: "Delete Message?",
+            text: `Are you sure you want to delete this message?\n${user.username}: ${message.message}`,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((confirm) => {
+            if (confirm) {
+                deleteMessage(message)
+            }
+        })
 
         // prevent profile modal from also triggering
         clickEvent.stopPropagation()
