@@ -1,21 +1,19 @@
 from djoser.conf import settings
-from djoser.serializers import UserSerializer
 from rest_framework import serializers
 
 from users.models import User
 
 
-class TokenPlusUserSerializer(serializers.ModelSerializer):
-    auth_token = serializers.CharField(source="key")
-    user = UserSerializer()
+class LoginUserSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = settings.TOKEN_MODEL
-        fields = ("auth_token", "user")
-
+        model = User
+        fields = (
+            "username", "first_name", "last_name", "email",
+            "is_staff", "id"
+        )
 
 class FullUserSerializer(serializers.ModelSerializer):
-
 
     class Meta:
         model = User
@@ -24,3 +22,12 @@ class FullUserSerializer(serializers.ModelSerializer):
             "city", "state", "zip_code", "about",
             "profile_image", "id"
         )
+
+        
+class TokenPlusUserSerializer(serializers.ModelSerializer):
+    auth_token = serializers.CharField(source="key")
+    user = LoginUserSerializer()
+
+    class Meta:
+        model = settings.TOKEN_MODEL
+        fields = ("auth_token", "user")
