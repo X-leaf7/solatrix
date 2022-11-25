@@ -43,8 +43,8 @@ function CreateChatModal({show, selectedEvent, onClose}) {
                                         </b>
                                         <CopyToClipboard text={eventUrl} onCopy={() => setCopied(true)}>
                                             <span className="fa-stack">
-                                                <i className='fa-clone fa-stack-1x'></i>
-                                                { copied && <i className='fa-check fa-stack-2x' style={{ color: 'green' }}></i>}
+                                                <i className='fa-regular fa-clone fa-stack-1x'></i>
+                                                { copied && <i className='fa-regular fa-check fa-stack-2x' style={{ color: 'green' }}></i>}
                                             </span>
                                         </CopyToClipboard>
                                     </p>
