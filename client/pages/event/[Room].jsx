@@ -72,8 +72,10 @@ function Room() {
 
                     if (eventData.host) {
                         setHostUserMessages(hostMessages)
+                        scrollToTop('hostMsgDiv')
                     }
                     setOtherUsersMessages(userMessages)
+                    scrollToTop('userMsgDiv')
                 }
             } else {
                 swal("Error", "Unable to join the chat. Please try again.", "error")
@@ -149,32 +151,24 @@ function Room() {
     }
 
     function scrollToTop(elementId) {
-        var el = document.getElementById(elementId);
-        if (el) {
-            // Sometimes the element doesn't exist yet, wait until it does
-            el.scrollTop = el.scrollHeight;
-        }
+        debugger
+        window.requestAnimationFrame(function() {
+            debugger
+            var el = document.getElementById(elementId);
+            if (el) {
+                // Sometimes the element doesn't exist yet, wait until it does
+                el.scrollTop = el.scrollHeight;
+            }
+        });
     }
-
-    useEffect(async () => {
-        // Any time host messages are updated, scroll the chat box
-        if (hostUserMessages) {
-            scrollToTop('hostMsgDiv')
-        }
-    }, [hostUserMessages])
-
-    useEffect(async () => {
-        // Any time other user messages are updated, scroll the chat box
-        if (otherUsersMessages) {
-            scrollToTop('userMsgDiv')
-        }
-    }, [otherUsersMessages])
 
     const handleNewMessage = useCallback((newMessage) => {
         if (eventData.host && newMessage.userId == eventData.host.id) {
             setHostUserMessages(hostUserMessages => [...hostUserMessages, newMessage])
+            scrollToTop('hostMsgDiv')
         } else {
             setOtherUsersMessages(awayTeamMessages => [...awayTeamMessages, newMessage])
+            scrollToTop('userMsgDiv')
         }
     }, [eventData, hostUserMessages, otherUsersMessages])
 
