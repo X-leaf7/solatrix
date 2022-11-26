@@ -20,8 +20,14 @@ export function getCMSContent(name, setter) {
     });
 }
 
-export function useEvents() {
-    const { data, error } = useSWR(GET_EVENTS, jsonFetcher)
+export function useEvents(token) {
+    let options = {}
+    if (token) {
+        options.headers = {
+            'Authorization': 'Token ' + token
+        }
+    }
+    const { data, error } = useSWR([GET_EVENTS, options], jsonFetcher)
 
   return {
     events: data,

@@ -9,11 +9,12 @@ import JoinChatModal from './JoinChatModal'
 
 import AppContext from '../context/AppContext'
 import { useEvents } from '../context/api'
+import Cookies from 'js-cookie'
 
 
-function EventList({ searchFilter, selectedSport }) {
+function EventList({ searchFilter, selectedSport, user }) {
     const { isLogin, search, setSelectedTeam } = useContext(AppContext)
-    const { events, isLoadingEvents, isErrorEvents } = useEvents()
+    const { events, isLoadingEvents, isErrorEvents } = useEvents(user && Cookies.get("Token"))
     const [shouldShowCreateChat, setShowCreateChat] = useState(null)
     const [shouldShowJoinChat, setShowJoinChat] = useState(null)
     const [selectedEvent, setSelectedEvent] = useState(null)
@@ -92,7 +93,8 @@ function EventList({ searchFilter, selectedSport }) {
                                     setSelected={setSelectedEvent}
                                     showJoin={setShowJoinChat}
                                     showCreate={setShowCreateChat}
-                                    key={index}>
+                                    key={index}
+                                    user={user}>
                                 </EventCard>
                     })
                 }

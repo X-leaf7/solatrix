@@ -6,6 +6,7 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Button } from 'react-bootstrap';
 import AvatarPicker from '/component/AvatarPicker'
+import EventList from '/component/EventList'
 import Cookies from 'js-cookie'
 import { DateTime } from 'luxon'
 import axios from 'axios';
@@ -60,14 +61,13 @@ const editAccount = Yup.object().shape({
 function EditAccount() {
     const { isLogin } = React.useContext(AppContext);
 
-    const [data, setData] = useState(null)
+    const [userData, setUserData] = useState(null)
     const { flushCookie, signOut } = useContext(AuthContext);
     const [isPasswordShown, setIsPasswordShown] = useState(false);
     const [password, setPassword] = useState('');
     const [avatarImage, setAvatarImage] = useState();
     const [token, setToken] = useState(null);
-    const [image, setImages] = useState('/img/user_profile_default.png');
-    const [events, setEvents] = useState([])
+    const [image, setImage] = useState('/img/user_profile_default.png');
 
     const dateFormat = {
         month: 'numeric',
@@ -103,7 +103,7 @@ function EditAccount() {
 
     React.useEffect(async () => {
         if (isLogin) {
-            setData("");
+            setUserData("");
             const token = Cookies.get('Token')
             const userData = Cookies.get('userInfo')
             setToken(token)
@@ -120,30 +120,14 @@ function EditAccount() {
             axios(config)
                 .then((response) => {
                     if (response.data.profile_image != null) {
-                        setImages(response.data.profile_image)
+                        setImage(response.data.profile_image)
                     }
                     console.log("Response =>", response.data);
-                    setData(response.data)
+                    setUserData(response.data)
                 })
                 .catch((error) => {
                     console.log("Somethink is wrong. please try again get profile api.");
-                    setData(JSON.parse(userData))
-                });
-
-            let eventListConfig = {
-                method: 'get',
-                url: GET_EVENTS,
-                headers: {
-                    'Authorization': 'Token ' + token
-                },
-            };
-            axios(eventListConfig)
-                .then((response) => {
-                    setEvents(response.data)
-                })
-                .catch((error) => {
-                    console.log("Could not fetch events");
-                    setData(JSON.parse(userData))
+                    setUserData(JSON.parse(userData))
                 });
         }
         else {
@@ -246,7 +230,7 @@ function EditAccount() {
 
         axios(config)
             .then((response) => {
-                setData(response.data);
+                setUserData(response.data);
                 Cookies.set('userInfo', JSON.stringify(response.data))
                 swal("Success", "Your profile has been successfully updated.", "success");
             })
@@ -288,163 +272,134 @@ function EditAccount() {
                 <section id="login" className="bg-light py-5">
                     <div className="container">
                         <div className="row">
-                            <div className="col-md-8 mx-auto">
-                                <Tabs defaultActiveKey="profile" >
-                                    <Tab eventKey="profile" title="Profile">
-                                        { data &&
-                                            <div className="card-body">
-                                                <Formik
-                                                    initialValues={{
-                                                        userImage: null,
-                                                        userName: data.username,
-                                                        firstName: data.first_name,
-                                                        lastName: data.last_name,
-                                                        email: data.email,
-                                                        city: data.city,
-                                                        state: data.state,
-                                                        zipCode: data.zip_code,
-                                                        about: data.about
-                                                    }}
-                                                    validationSchema={editAccount}
-                                                    validateOnChange={false}
-                                                    validateOnBlur={false}
-                                                    onSubmit={async (values) => {
-                                                        dataChange(values);
-                                                        if (values.newPassword && values.confirmPassword) {
-                                                            const password = values.newPassword
-                                                            changePassword(password);
-                                                        }
-                                                    }}
-                                                >
-                                                    {({ values, errors, touched, isSubmitting, setFieldValue }) => (
-                                                        <Form className="editAccount">
-                                                            <div className="profile-upload">
-                                                                <AvatarPicker
-                                                                    handleChangeImage={handleImageChange}
-                                                                    avatarImage={avatarImage}
-                                                                    inputFile={image}
-                                                                />
-                                                            </div>
-                                                            <div className="form-group">
-                                                                <label>Username</label>
-                                                                <Field
-                                                                    type="text"
-                                                                    className="form-control"
-                                                                    name="userName"
-                                                                />
-                                                                {errors.userName && (<p className="error-msg">{errors.userName}</p>)}
-                                                            </div>
-                                                            <div className="form-group">
-                                                                <label>First Name</label>
-                                                                <Field
-                                                                    type="text"
-                                                                    className="form-control"
-                                                                    name="firstName"
-                                                                    onKeyPress={handleKeyPressname}
-                                                                />
-                                                                {errors.firstName && (<p className="error-msg">{errors.firstName}</p>)}
-                                                            </div>
-                                                            <div className="form-group">
-                                                                <label>Last Name</label>
-                                                                <Field
-                                                                    type="text"
-                                                                    className="form-control"
-                                                                    name="lastName"
-                                                                    onKeyPress={handleKeyPressname}
-                                                                />
-                                                                {errors.lastName && (<p className="error-msg">{errors.lastName}</p>)}
-                                                            </div>
-                                                            <div className="form-group">
-                                                                <label>Email</label>
-                                                                <Field
-                                                                    type="email"
-                                                                    className="form-control"
-                                                                    name="email"
-                                                                />
-                                                                {errors.email && touched.email ? (<p className="error-msg">{errors.email}</p>) : null}
-                                                            </div>
-                                                            <div className="form-group">
-                                                                <label>City</label>
-                                                                <Field
-                                                                    type="text"
-                                                                    className="form-control"
-                                                                    name="city"
-                                                                />
-                                                                {errors.city && touched.city ? (<p className="error-msg">{errors.city}</p>) : null}
-                                                            </div>
-                                                            <div className="form-group">
-                                                                <label>State</label>
-                                                                <Field
-                                                                    type="text"
-                                                                    className="form-control"
-                                                                    name="state"
-                                                                />
-                                                                {errors.state && touched.state ? (<p className="error-msg">{errors.state}</p>) : null}
-                                                            </div>
-                                                            <div className="form-group">
-                                                                <label>Zip Code</label>
-                                                                <Field
-                                                                    type="text"
-                                                                    className="form-control"
-                                                                    name="zipCode"
-                                                                    maxLength={5}
-                                                                />
-                                                                {errors.zipCode && touched.zipCode ? (<p className="error-msg">{errors.zipCode}</p>) : null}
-                                                            </div>
-                                                            <div className="form-group">
-                                                                <label>About</label>
-                                                                <Field
-                                                                    as="textarea"
-                                                                    className="form-control"
-                                                                    name="about"
-                                                                />
-                                                                {errors.about && touched.about ? (<p className="error-msg">{errors.about}</p>) : null}
-                                                            </div>
-                                                            <Field className="btn btn-success w-100" type="submit" value="Save" />
-                                                            <div className="logoutDeactive">
-                                                                <div onClick={logOut}><a>Logout</a></div>
-                                                                <Button onClick={deactivateAccount}>Deactivate Account</Button>
-                                                            </div>
-                                                        </Form>
-                                                    )}
-                                                </Formik>
-                                            </div>
-                                        }
-                                    </Tab>
-                                    <Tab eventKey="events" title="Private Events">
-                                        <Table borderless>
-                                            <thead>
-                                                <tr>
-                                                    <td>Event Date</td>
-                                                    <td>Lobby Open Time</td>
-                                                    <td>Event Start Time</td>
-                                                    <td>Home Team</td>
-                                                    <td>Away Team</td>
-                                                    <td>Link</td>
-                                                    <td>Copy Link</td>
-                                                    <td>Delete</td>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {
-                                                    events.map(event =>
-                                                        <tr>
-                                                            <td>{DateTime.fromISO(event.lobby_start_time).toLocaleString(dateFormat)}</td>
-                                                            <td>{DateTime.fromISO(event.lobby_start_time).toLocaleString(timeFormat)}</td>
-                                                            <td>{DateTime.fromISO(event.event_start_time).toLocaleString(timeFormat)}</td>
-                                                            <td>{event.home_team.name}</td>
-                                                            <td>{event.away_team.name}</td>
-                                                            <td><a href={`${location.protocol}//${location.host}/event/${event.slug}/`}>Room Link</a></td>
-                                                            <td><i className="fa-regular fa-clone"></i></td>
-                                                            <td><i className="fa-regular fa-trash"></i></td>
-                                                        </tr>
-                                                    )
-                                                }
-                                            </tbody>
-                                        </Table>
-                                    </Tab>
-                                </Tabs>
-                            </div>
+                            <Tabs defaultActiveKey="profile" >
+                                <Tab eventKey="profile" title="Profile">
+                                    { userData &&
+                                        <div className="card-body">
+                                            <Formik
+                                                initialValues={{
+                                                    userImage: null,
+                                                    userName: userData.username,
+                                                    firstName: userData.first_name,
+                                                    lastName: userData.last_name,
+                                                    email: userData.email,
+                                                    city: userData.city,
+                                                    state: userData.state,
+                                                    zipCode: userData.zip_code,
+                                                    about: userData.about
+                                                }}
+                                                validationSchema={editAccount}
+                                                validateOnChange={false}
+                                                validateOnBlur={false}
+                                                onSubmit={async (values) => {
+                                                    dataChange(values);
+                                                    if (values.newPassword && values.confirmPassword) {
+                                                        const password = values.newPassword
+                                                        changePassword(password);
+                                                    }
+                                                }}
+                                            >
+                                                {({ values, errors, touched, isSubmitting, setFieldValue }) => (
+                                                    <Form className="editAccount">
+                                                        <div className="profile-upload">
+                                                            <AvatarPicker
+                                                                handleChangeImage={handleImageChange}
+                                                                avatarImage={avatarImage}
+                                                                inputFile={image}
+                                                            />
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label>Username</label>
+                                                            <Field
+                                                                type="text"
+                                                                className="form-control"
+                                                                name="userName"
+                                                            />
+                                                            {errors.userName && (<p className="error-msg">{errors.userName}</p>)}
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label>First Name</label>
+                                                            <Field
+                                                                type="text"
+                                                                className="form-control"
+                                                                name="firstName"
+                                                                onKeyPress={handleKeyPressname}
+                                                            />
+                                                            {errors.firstName && (<p className="error-msg">{errors.firstName}</p>)}
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label>Last Name</label>
+                                                            <Field
+                                                                type="text"
+                                                                className="form-control"
+                                                                name="lastName"
+                                                                onKeyPress={handleKeyPressname}
+                                                            />
+                                                            {errors.lastName && (<p className="error-msg">{errors.lastName}</p>)}
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label>Email</label>
+                                                            <Field
+                                                                type="email"
+                                                                className="form-control"
+                                                                name="email"
+                                                            />
+                                                            {errors.email && touched.email ? (<p className="error-msg">{errors.email}</p>) : null}
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label>City</label>
+                                                            <Field
+                                                                type="text"
+                                                                className="form-control"
+                                                                name="city"
+                                                            />
+                                                            {errors.city && touched.city ? (<p className="error-msg">{errors.city}</p>) : null}
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label>State</label>
+                                                            <Field
+                                                                type="text"
+                                                                className="form-control"
+                                                                name="state"
+                                                            />
+                                                            {errors.state && touched.state ? (<p className="error-msg">{errors.state}</p>) : null}
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label>Zip Code</label>
+                                                            <Field
+                                                                type="text"
+                                                                className="form-control"
+                                                                name="zipCode"
+                                                                maxLength={5}
+                                                            />
+                                                            {errors.zipCode && touched.zipCode ? (<p className="error-msg">{errors.zipCode}</p>) : null}
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label>About</label>
+                                                            <Field
+                                                                as="textarea"
+                                                                className="form-control"
+                                                                name="about"
+                                                            />
+                                                            {errors.about && touched.about ? (<p className="error-msg">{errors.about}</p>) : null}
+                                                        </div>
+                                                        <Field className="btn btn-success w-100" type="submit" value="Save" />
+                                                        <div className="logoutDeactive">
+                                                            <div onClick={logOut}><a>Logout</a></div>
+                                                            <Button onClick={deactivateAccount}>Deactivate Account</Button>
+                                                        </div>
+                                                    </Form>
+                                                )}
+                                            </Formik>
+                                        </div>
+                                    }
+                                </Tab>
+                                <Tab eventKey="events" title="Private Events">
+                                    <div className="mt-2">
+                                        { userData && <EventList user={userData} /> }
+                                    </div>
+                                </Tab>
+                            </Tabs>
                         </div>
                     </div>
                 </section>
