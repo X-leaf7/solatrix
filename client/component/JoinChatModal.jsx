@@ -36,7 +36,17 @@ function JoinChatModal({show, selectedEvent, onClose}) {
             'user': user.id,
             'event': selectedEvent.id,
             'chosen_team': teamId
-        }).then(goToRoom);
+        }, (error) => {
+            const maxAttendees = (
+                error.response &&
+                error.response.data &&
+                error.response.data.non_field_errors &&
+                error.response.data.non_field_errors[0]
+            )
+            if (maxAttendees == 'Maximum Allowed Attendees') {
+                Router.push('/')
+            }
+        }).then(goToRoom)
     }, [teamId])
 
     return (

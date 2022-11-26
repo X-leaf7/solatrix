@@ -71,7 +71,7 @@ export const getAttendance = async (userId, eventId) => {
     return null
 }
 
-export function post(url, data) {
+export function post(url, data, onError) {
 
     let config = {
         method: 'post',
@@ -92,6 +92,9 @@ export function post(url, data) {
         }
         else {
             swal("Error", "There was a problem with your request. Please check your information and try again.", "error")
+        }
+        if (onError) {
+            onError(error)
         }
     });
 }
