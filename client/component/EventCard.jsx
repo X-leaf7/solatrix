@@ -73,7 +73,7 @@ function EventCard({ event, setSelected, showJoin, showCreate, user }) {
                         }
                         <div className="d-flex justify-content-evenly ">
                         {
-                            !user || user.id !== event.host.id &&
+                            (!user || user.id !== event.host.id) &&
                             <Button className='create-chat' variant="outline-dark" onClick={showCreateChat}>
                                 Create Chat
                             </Button>
