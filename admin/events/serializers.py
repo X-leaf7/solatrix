@@ -71,6 +71,6 @@ class AttendeeSerializer(serializers.ModelSerializer):
             # Check that private events only have allowed attendees
             non_host_attendees = event.attendees.filter(~Q(user=event.host.id)).all()
             if len(non_host_attendees) >= MAX_ALLOWED_ATTENDEES:
-                raise serializers.ValidationError("Maximum Allowed Attendees")
+                raise serializers.ValidationError("MAX_ATTENDEES")
 
         return data
