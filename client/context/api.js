@@ -87,9 +87,6 @@ export function post(url, data, onError) {
         if (error.response && error.response.status && error.response.status == 401) {
             console.log("Need to re-login")
         }
-        if (error.response && error.response.data && error.response.data.non_field_errors) {
-            swal("Error", error.response.data.non_field_errors.join("/n"), "error")
-        }
         else {
             swal("Error", "There was a problem with your request. Please check your information and try again.", "error")
         }

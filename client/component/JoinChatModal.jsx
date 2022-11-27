@@ -37,13 +37,14 @@ function JoinChatModal({show, selectedEvent, onClose}) {
             'event': selectedEvent.id,
             'chosen_team': teamId
         }, (error) => {
-            const maxAttendees = (
+            const errorMessage = (
                 error.response &&
                 error.response.data &&
                 error.response.data.non_field_errors &&
                 error.response.data.non_field_errors[0]
             )
-            if (maxAttendees == 'Maximum Allowed Attendees') {
+            if (errorMessage == 'MAX_ATTENDEES') {
+                swal("Error", "Maximum of 12 guests in chat.", "error")
                 Router.push('/')
             }
         }).then(goToRoom)
