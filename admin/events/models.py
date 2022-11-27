@@ -38,7 +38,8 @@ class Event(SSNamedModel):
         date_string = self.event_start_time.strftime("%Y-%m-%d")
 
         if self.is_private:
-            self.id = uuid.uuid4()
+            if not self.id:
+                self.id = uuid.uuid4()
             return slugify(f'{self.host.id}-{self.id}')
         else:
             return slugify(
