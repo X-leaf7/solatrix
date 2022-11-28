@@ -5,16 +5,29 @@ import { useUser } from '/context/api'
 import AppContext from '/context/AppContext'
 import swal from 'sweetalert'
 
-function ChatMessage({message, showProfile, deleteMessage, cls}) {
+function ChatMessage({message, eventData, showUserProfile, deleteMessage }) {
     const { isStaff } = useContext(AppContext)
     const { user, isLoadingUser, isErrorUser } = useUser(message.userId)
     const [profileImg, setProfileImg] = useState(DEFAULT_PROFILE_IMG)
+    const [messageType, setMessageType] = useState(null)
 
     useEffect(() => {
         if (user && user.profile_image) {
             setProfileImg(user.profile_image)
         }
     }, [user])
+
+    useEffect(() => {
+        if (message.userId == eventData.host.id) {
+            setMessageType('host')
+        }
+        else if (message.teamId == eventData.home_team.id) {
+            setMessageType('home')
+        }
+        else {
+            setMessageType('away')
+        }
+    }, [message, eventData])
 
     const callDeleteMessage = (clickEvent) => {
         swal({
@@ -39,8 +52,8 @@ function ChatMessage({message, showProfile, deleteMessage, cls}) {
         <>
         {
             user &&
-            <div className={"d-flex flex-row " + cls} onClick={()=> {showProfile(user.id)}} id={message.messageId}>
-                {cls === 'home' && <Avatar src={profileImg} alt={user.username} style={{width: '25px', height: '25px'}} className={cls} />}
+            <div className={"d-flex flex-row " + messageType} onClick={()=> {showUserProfile(user.id)}} id={message.messageId}>
+                {(messageType === 'home' || messageType == 'host') && <Avatar src={profileImg} alt={user.username} style={{width: '25px', height: '25px'}} className={messageType} />}
                 <p>
                     <b data-user={message.userId} >
                         {user && <span data-user={message.userId}> {user.username}: </span>}
@@ -48,7 +61,7 @@ function ChatMessage({message, showProfile, deleteMessage, cls}) {
                     <span>{message.message}</span>
                     {isStaff() && <i className="fa-regular fa-trash" style={{color: 'red', marginLeft: '5px'}} onClick={callDeleteMessage}></i>}
                 </p>
-                {cls === 'away' && <Avatar src={profileImg} alt={user.username} style={{width: '25px', height: '25px'}} className={cls} />}
+                {messageType === 'away' && <Avatar src={profileImg} alt={user.username} style={{width: '25px', height: '25px'}} className={messageType} />}
             </div>
         }
         </>

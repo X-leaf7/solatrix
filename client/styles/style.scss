@@ -322,8 +322,10 @@ to avoid use of important */
 .chat-form .chat-box p{ font-size: 16px; color: #000; width: 50%; overflow-wrap: break-word;}
 .chat-form #hostMsgDiv p{ width: 100%}
 .chat-form .chat-box .flex-row.home{ justify-content: flex-start!important;}
+.chat-form .chat-box .flex-row.host{ justify-content: flex-start!important;}
 .chat-form .chat-box .flex-row.away{ justify-content: flex-end!important;}
 .chat-form .chat-box .MuiAvatar-root.home{ margin-right: 5px;}
+.chat-form .chat-box .MuiAvatar-root.host{ margin-right: 5px;}
 .chat-form .chat-box .MuiAvatar-root.away{ margin-left: 5px;}
 img.chathead {height: 2ex; width: auto;}
 

@@ -4,22 +4,22 @@ import { useRouter } from 'next/router'
 import Cookies from 'js-cookie'
 import swal from 'sweetalert';
 import { io } from 'socket.io-client'
-import { DateTime, Interval } from 'luxon'
 import { ATTENDEES, GET_EVENTS, SOCKET_URL } from '/context/AppUrl'
 import { getAttendance, post } from '/context/api'
 import Head from 'next/head'
 import ProfileModal from '/component/ProfileModal'
 import JoinChatModal from '/component/JoinChatModal'
+import ChatBox from '/component/ChatBox'
 import ChatMessage from '/component/ChatMessage'
+import EventTimer from '/component/EventTimer'
+
 let socket = io(SOCKET_URL)
 
 function Room() {
     const { checkLogin } = useContext(AppContext)
 
     const router = useRouter()
-    const [getEventTimer, setEventTimer] = useState('00:00:00')
-    const [showTimer, setShowTimer] = useState(true)
-    const [showProfile, setShowProfile] = useState(false);
+
     const [selectedUser, setSelectedUser] = useState(null);
     const [showJoinChatModal, setShowJoinChatModal] = useState(false);
     const [eventData, setEventData] = useState(null);
@@ -72,10 +72,8 @@ function Room() {
 
                     if (eventData.host) {
                         setHostUserMessages(hostMessages)
-                        scrollToTop('hostMsgDiv')
                     }
                     setOtherUsersMessages(userMessages)
-                    scrollToTop('userMsgDiv')
                 }
             } else {
                 swal("Error", "Unable to join the chat. Please try again.", "error")
@@ -119,13 +117,7 @@ function Room() {
         }
     }, [eventData]);
 
-    const handleShowProfile = async (userId) => {
-        setSelectedUser(userId)
-        setShowProfile(true)
-    }
-
     function handleCloseProfile() {
-        setShowProfile(false)
         setSelectedUser(null)
     }
 
@@ -136,7 +128,7 @@ function Room() {
     function handleDeleteMessage(message) {
         socket.emit('deleteMessage', message, (response) => {
             if (response.success) {
-                console.log("Removing message: " + message.id)
+                console.log("Removing message: " + message.messageId)
             }
         })
     }
@@ -150,32 +142,18 @@ function Room() {
         // else the socket will automatically try to reconnect
     }
 
-    function scrollToTop(elementId) {
-        window.requestAnimationFrame(function() {
-            var el = document.getElementById(elementId);
-            if (el) {
-                // Sometimes the element doesn't exist yet, wait until it does
-                el.scrollTop = el.scrollHeight;
-            }
-        });
-    }
-
     const handleNewMessage = useCallback((newMessage) => {
         if (eventData.host && newMessage.userId == eventData.host.id) {
             setHostUserMessages(hostUserMessages => [...hostUserMessages, newMessage])
-            scrollToTop('hostMsgDiv')
         } else {
-            setOtherUsersMessages(awayTeamMessages => [...awayTeamMessages, newMessage])
-            scrollToTop('userMsgDiv')
+            setOtherUsersMessages(otherUsersMessages => [...otherUsersMessages, newMessage])
         }
     }, [eventData, hostUserMessages, otherUsersMessages])
 
-    const handleRemoveMessage = (message) => {
-        const messageEl = document.getElementById(message.messageId)
-        if (messageEl) {
-            messageEl.parentNode.removeChild(messageEl)
-        }
-    }
+    const handleRemoveMessage = useCallback((deleteMessage) => {
+        setHostUserMessages(hostUserMessages => [...hostUserMessages].filter(message => message.messageId !== deleteMessage.messageId))
+        setOtherUsersMessages(otherUsersMessages => [...otherUsersMessages].filter(message => message.messageId !== deleteMessage.messageId))
+    }, [hostUserMessages, otherUsersMessages])
 
     const onClickSendMessage = useCallback(() => {
         const message = document.getElementById('userMessage').value
@@ -222,20 +200,6 @@ function Room() {
             socket.on('disconnect', handleDisconnect);
             socket.on('reconnect', joinRoom)
 
-            const eventTimer = setInterval(() => {
-                const now = DateTime.now();
-                const startTime = DateTime.fromISO(eventData.event_start_time)
-                const timeLeft = Interval.fromDateTimes(now, startTime).toDuration(['hours', 'minutes', 'seconds'])
-                
-                if (timeLeft.invalid) {
-                    setShowTimer(false)
-                    clearInterval(eventTimer)
-                }
-                else {
-                    setEventTimer(timeLeft.toFormat("hh:mm:ss"))
-                }
-            }, 1000)
-
             //socket.on("thread", (response) => {
             //    const eventSelectData = Cookies.get('selectEventData')
             //    const getEventData = JSON.parse(eventSelectData)
@@ -261,7 +225,6 @@ function Room() {
 
             return () => {
                 // Clean up so that the page doesn't leak async effects
-                clearInterval(eventTimer)
                 socket.off('newMessage', handleNewMessage)
             }
         }
@@ -286,33 +249,17 @@ function Room() {
                         eventData && <>
 
                             <div className="room-chat-form mb-3">
-                                <div className="event-start-main">
-                                    {showTimer === true ? (
-                                        <h3>Event Starts in… </h3>
-                                    ) : (
-                                        <h3></h3>
-                                    )}
+                                <EventTimer eventData={eventData} />
 
-                                    {showTimer === true ? (
-                                        <div className="event-time-box">
-                                            <p>{getEventTimer}</p>
-                                        </div>
-                                    ) : (
-                                        <div className="event-time-box" style={{ 'border': 'none' }}>
-                                            <img src={eventData.banner} alt="" />
-                                        </div>
-                                    )}
-
-                                </div>
                                 { eventData.host &&
                                     <div className="chat-form">
                                         <div className="chat-heading-main">
                                             <h4><b>Host:</b> {eventData.host.username}</h4>
                                             <h4><b>Location:</b> {eventData.stadium.name}</h4>
                                         </div>
-                                        <div className="chat-box" id="hostMsgDiv">
-                                            {hostUserMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} deleteMessage={handleDeleteMessage} key={message.messageId} cls="home" />)}
-                                        </div>
+                                        <ChatBox>
+                                            {hostUserMessages.map(message => <ChatMessage message={message} eventData={eventData} showUserProfile={setSelectedUser} deleteMessage={handleDeleteMessage} key={message.messageId} />)}
+                                        </ChatBox>
                                     </div>
                                 }
                                 <div className="chat-form">
@@ -320,9 +267,9 @@ function Room() {
                                         <h4><b>Home Team:</b> {eventData.home_team.name}</h4>
                                         <h4><b>Away Team:</b> {eventData.away_team.name}</h4>
                                     </div>
-                                    <div className="chat-box large" id="userMsgDiv">
-                                        {otherUsersMessages.map(message => <ChatMessage message={message} showProfile={handleShowProfile} deleteMessage={handleDeleteMessage} key={message.messageId} cls={message.teamId === eventData.home_team.id ? "home" : "away"} />)}
-                                    </div>
+                                    <ChatBox cls="large">
+                                        {otherUsersMessages.map(message => <ChatMessage message={message} eventData={eventData} showUserProfile={setSelectedUser} deleteMessage={handleDeleteMessage} key={message.messageId} />)}
+                                    </ChatBox>
                                 </div>
                                 <div className="input-group mb-3">
                                     <input type="text" className="form-control" placeholder="Start typing..." aria-label="Type chat message here" aria-describedby="basic-addon2" id="userMessage" onKeyPress={handleKeyPress} />
@@ -340,7 +287,7 @@ function Room() {
                 </div>
 
                 {
-                    selectedUser && <ProfileModal show={showProfile} userId={selectedUser} onClose={handleCloseProfile} />
+                    selectedUser && <ProfileModal show={true} userId={selectedUser} onClose={handleCloseProfile} />
                 }
                 {
                     eventData && <JoinChatModal show={showJoinChatModal} selectedEvent={eventData} onClose={handleCloseJoinChat} />
