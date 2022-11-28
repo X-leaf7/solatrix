@@ -5,14 +5,23 @@ function ChatBox({children, cls}) {
     const scrollContainer = useRef(null)
 
     useEffect(() => {
-        const loadedChildren = scrollContainer.current.childElementCount
-        const childCount = React.Children.count(children)
-        if (loadedChildren > 0 && childCount == loadedChildren) {
-            window.requestAnimationFrame(function() {
-                if (scrollContainer.current) {
-                    scrollContainer.current.scrollTop = scrollContainer.current.scrollHeight;
-                }
-            });
+        const checkLoaded = setInterval(() => {
+            const loadedChildren = scrollContainer.current.childElementCount
+            const childCount = React.Children.count(children)
+
+            if (loadedChildren > 0 && childCount == loadedChildren) {
+                window.requestAnimationFrame(function() {
+                    if (scrollContainer.current) {
+                        scrollContainer.current.scrollTop = scrollContainer.current.scrollHeight;
+                    }
+                });
+                clearInterval(checkLoaded)
+            }
+        }, 100)
+
+        return () => {
+            // Clean up so that the page doesn't leak async effects
+            clearInterval(checkLoaded)
         }
     }, [scrollContainer, children])
 
