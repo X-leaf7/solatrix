@@ -10,9 +10,10 @@ import JoinChatModal from './JoinChatModal'
 import AppContext from '../context/AppContext'
 import { useEvents } from '../context/api'
 import Cookies from 'js-cookie'
+import { DateTime } from 'luxon'
 
 
-function EventList({ searchFilter, selectedSport, user }) {
+function EventList({ searchFilter, selectedSport, selectedDay, user }) {
     const { isLogin, search, setSelectedTeam } = useContext(AppContext)
     const { events, isLoadingEvents, isErrorEvents } = useEvents(user && Cookies.get("Token"))
     const [shouldShowCreateChat, setShowCreateChat] = useState(null)
@@ -58,6 +59,14 @@ function EventList({ searchFilter, selectedSport, user }) {
             filters.push(eventItem => eventItem.sport.id == selectedSport)
         }
 
+        if (selectedDay) {
+            const selectedDayStart = selectedDay.startOf("day")
+            filters.push((eventItem) => {
+                let eventStartDay = DateTime.fromISO(eventItem.lobby_start_time).startOf("day")
+                return eventStartDay.ts == selectedDayStart.ts
+            })
+        }
+
         if (search) {
             filters.push(eventItem =>
                 eventItem.away_team.name.toLowerCase().includes(lowerSearch) ||
@@ -70,7 +79,7 @@ function EventList({ searchFilter, selectedSport, user }) {
         filters.forEach(filter => results = results.filter(filter))
 
         setFilteredEvents(results)
-    }, [events, search, selectedSport])
+    }, [events, search, selectedSport, selectedDay])
 
     useEffect(() => {
         if (filteredEvents) {

@@ -3,10 +3,13 @@ import Link from 'next/link'
 import EventList from '../component/EventList'
 import SportSelect from '../component/SportSelect'
 import Head from 'next/head'
+import DaySelect from '../component/DaySelect'
 
 function Home() {
     
     const [selectedSport, setSelectedSport] = useState();
+    const [selectedDay, setSelectedDay] = useState();
+
 
     return (
         <>
@@ -42,8 +45,11 @@ function Home() {
                             <SportSelect selected={selectedSport} setSelected={setSelectedSport} />
                         </div>
                     </div>
+                    <div className="d-flex flex-row justify-content-center mb-5">
+                        <DaySelect selected={selectedDay} setSelected={setSelectedDay} />
+                    </div>
                 </div>
-                <EventList selectedSport={selectedSport} />
+                <EventList selectedSport={selectedSport} selectedDay={selectedDay} />
             </section>
 
             <section id="work" className="bg-dark text-white text-center mt-5">

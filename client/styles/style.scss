@@ -18,6 +18,10 @@ body {
     padding: 1.5rem;
 }
 
+.warning {
+    color: #ffc107;
+}
+
 img {
     width: 100%;
 }
@@ -605,4 +609,8 @@ header .form-inline .form-control { min-width: 200px; }
             }
         }
     }
+}
+
+.daySelector .selected {
+    color: darkred;
 }
