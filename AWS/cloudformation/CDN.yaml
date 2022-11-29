@@ -90,7 +90,9 @@ Resources:
             CookieBehavior: none
           EnableAcceptEncodingGzip: false
           HeadersConfig:
-            HeaderBehavior: none
+            HeaderBehavior: whitelist
+            Headers:
+              - Authorization
           QueryStringsConfig:
             QueryStringBehavior: all
 
