@@ -22,7 +22,7 @@ function Home() {
                     <div className="home-search p-5">
                         <div className="overlay p-5">
                             <h1 className="text-primary display-4 mt-1 mb-3">
-                                Real-Time Chat for the World of Sports
+                                Real-Time Chat for the Sports World
                             </h1>
                             <p className="text-primary lead">Watching a game on TV or Online?</p>
                             <small id="emailHelp" className="form-text text-muted">
