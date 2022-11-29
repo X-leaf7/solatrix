@@ -3,18 +3,20 @@ from datetime import date
 from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework import status
+from rest_framework.response import Response
 
 from .models import Event, Attendee
 from .serializers import EventSerializer, AttendeeSerializer, CopyEventSerializer
 
 
-class EventViewSet(viewsets.ReadOnlyModelViewSet):
+class EventViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows teams to be viewed.
     """
 
     serializer_class = EventSerializer
-
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     lookup_field = 'slug'
 
     def get_queryset(self):
@@ -33,6 +35,13 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.prefetch_related('host', 'home_team', 'away_team', 'sport', 'stadium')
 
         return queryset
+
+    def perform_destroy(self, instance):
+        # Only allow the owner to delete their events
+        if self.request.user.id == instance.host.id:
+            instance.delete()
+        else:
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
 
 class CopyEventView(generics.CreateAPIView):
