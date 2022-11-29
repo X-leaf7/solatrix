@@ -8,7 +8,7 @@ import { getAttendance } from '/context/api'
 
 
 
-function EventCard({ event, setSelected, showJoin, showCreate, user }) {
+function EventCard({ event, setSelected, showJoin, showCreate }) {
     const { checkLogin } = useContext(AppContext);
 
     const dateFormat = {
@@ -71,12 +71,9 @@ function EventCard({ event, setSelected, showJoin, showCreate, user }) {
                             event.host && <p className="text-center mt-2 mb-4">Hosted by: {event.host.username}</p>
                         }
                         <div className="d-flex justify-content-evenly ">
-                        {
-                            (!user || user.id !== event.host.id) &&
-                            <Button className='create-chat' variant="outline-dark" onClick={showCreateChat}>
-                                Create Chat
-                            </Button>
-                        }
+                        <Button className='create-chat' variant="outline-dark" onClick={showCreateChat}>
+                            Create Chat
+                        </Button>
                         <Button className='join-chat' variant="outline-dark" onClick={showJoinChat}>
                             Join Chat
                         </Button>

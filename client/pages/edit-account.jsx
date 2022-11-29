@@ -1,19 +1,20 @@
 import React, { useState, useContext } from 'react'
-import AppContext, { AuthContext } from "../context/AppContext";
+import { AuthContext } from "../context/AppContext";
 import Router from 'next/router'
 import swal from 'sweetalert';
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { Button } from 'react-bootstrap';
 import AvatarPicker from '/component/AvatarPicker'
-import EventList from '/component/EventList'
+import EventTableRow from '/component/EventTableRow'
 import Cookies from 'js-cookie'
-import { DateTime } from 'luxon'
 import axios from 'axios';
 import Head from 'next/head';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Table from 'react-bootstrap/Table';
+
+import { useEvents } from '/context/api'
 
 import { URL, CURRENT_USER_DETAIL, DEACTIVATE, CHANGE_PASSWORD, GET_EVENTS } from '/context/AppUrl'
 
@@ -59,8 +60,6 @@ const editAccount = Yup.object().shape({
         .nullable()
 });
 function EditAccount() {
-    const { isLogin } = React.useContext(AppContext);
-
     const [userData, setUserData] = useState(null)
     const { flushCookie, signOut } = useContext(AuthContext);
     const [isPasswordShown, setIsPasswordShown] = useState(false);
@@ -68,18 +67,7 @@ function EditAccount() {
     const [avatarImage, setAvatarImage] = useState();
     const [token, setToken] = useState(null);
     const [image, setImage] = useState('/img/user_profile_default.png');
-
-    const dateFormat = {
-        month: 'numeric',
-        day: 'numeric',
-        year: 'numeric'
-    }
-
-    const timeFormat = {
-        hour: 'numeric',
-        minute: 'numeric',
-        timeZoneName: 'short'
-    }
+    const { events, isLoadingEvents, isErrorEvents } = useEvents(Cookies.get("Token"))
 
     const handleImageChange = (imageFile) => {
         setAvatarImage(imageFile);
@@ -102,7 +90,7 @@ function EditAccount() {
     }
 
     React.useEffect(async () => {
-        if (isLogin) {
+        if (Cookies.get("isLogin")) {
             setUserData("");
             const token = Cookies.get('Token')
             const userData = Cookies.get('userInfo')
@@ -273,7 +261,7 @@ function EditAccount() {
                     <div className="container">
                         <div className="row">
                             <Tabs defaultActiveKey="profile" >
-                                <Tab eventKey="profile" title="Profile">
+                                <Tab eventKey="profile" title="Profile" id="user-profile">
                                     { userData &&
                                         <div className="card-body">
                                             <Formik
@@ -394,10 +382,25 @@ function EditAccount() {
                                         </div>
                                     }
                                 </Tab>
-                                <Tab eventKey="events" title="Private Events">
-                                    <div className="mt-2">
-                                        { userData && <EventList user={userData} /> }
-                                    </div>
+                                <Tab eventKey="events" title="Private Events" id="user-events">
+                                    <Table borderless responsive="md" className="no-wrap">
+                                        <thead>
+                                            <tr>
+                                                <td>Event Date</td>
+                                                <td>Event Time</td>
+                                                <td>Home Team</td>
+                                                <td>Away Team</td>
+                                                <td>Link</td>
+                                                <td>Copy Link</td>
+                                                <td>Delete</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                events && events.map(event => <EventTableRow event={event} key={event.id} />)
+                                            }
+                                        </tbody>
+                                    </Table>
                                 </Tab>
                             </Tabs>
                         </div>

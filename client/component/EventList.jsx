@@ -9,13 +9,12 @@ import JoinChatModal from './JoinChatModal'
 
 import AppContext from '../context/AppContext'
 import { useEvents } from '../context/api'
-import Cookies from 'js-cookie'
 import { DateTime } from 'luxon'
 
 
-function EventList({ searchFilter, selectedSport, selectedDay, user }) {
+function EventList({ searchFilter, selectedSport, selectedDay }) {
     const { isLogin, search, setSelectedTeam } = useContext(AppContext)
-    const { events, isLoadingEvents, isErrorEvents } = useEvents(user && Cookies.get("Token"))
+    const { events, isLoadingEvents, isErrorEvents } = useEvents()
     const [shouldShowCreateChat, setShowCreateChat] = useState(null)
     const [shouldShowJoinChat, setShowJoinChat] = useState(null)
     const [selectedEvent, setSelectedEvent] = useState(null)
@@ -102,8 +101,7 @@ function EventList({ searchFilter, selectedSport, selectedDay, user }) {
                                     setSelected={setSelectedEvent}
                                     showJoin={setShowJoinChat}
                                     showCreate={setShowCreateChat}
-                                    key={index}
-                                    user={user}>
+                                    key={index}>
                                 </EventCard>
                     })
                 }
