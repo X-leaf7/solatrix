@@ -6,7 +6,7 @@ import Tooltip from 'react-bootstrap/Tooltip'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { GET_EVENTS } from '/context/AppUrl'
 
-function EventTableRow({event}) {
+function EventTableRow({event, onDeleteEvent}) {
 
     const [showCopied, setShowCopied] = useState(false);
     const copyTarget = useRef(null);
@@ -50,6 +50,7 @@ function EventTableRow({event}) {
                     swal("Error", "Unable to Delete Event. Please check the event URL and try again.", "error")
                 }).then(() => {
                     swal("Success", "Event Deleted", "success")
+                    onDeleteEvent()
                 })
             }
         })

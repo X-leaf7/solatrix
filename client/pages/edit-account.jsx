@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useCallback } from 'react'
 import { AuthContext } from "../context/AppContext";
 import Router from 'next/router'
 import swal from 'sweetalert';
@@ -10,6 +10,7 @@ import EventTableRow from '/component/EventTableRow'
 import Cookies from 'js-cookie'
 import axios from 'axios';
 import Head from 'next/head';
+import Link from "next/link"
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import Table from 'react-bootstrap/Table';
@@ -67,7 +68,7 @@ function EditAccount() {
     const [avatarImage, setAvatarImage] = useState();
     const [token, setToken] = useState(null);
     const [image, setImage] = useState('/img/user_profile_default.png');
-    const { events, isLoadingEvents, isErrorEvents } = useEvents(Cookies.get("Token"))
+    const { events, isLoadingEvents, mutate } = useEvents(Cookies.get("Token"))
 
     const handleImageChange = (imageFile) => {
         setAvatarImage(imageFile);
@@ -126,6 +127,11 @@ function EditAccount() {
 
     const logOut = () => {
         signOut();
+    }
+
+    const onDeleteEvent =  () => {
+        // Let the /events/ endpoint know it needs to refresh
+        mutate()
     }
 
     function handleKeyPress(e) {
@@ -383,24 +389,31 @@ function EditAccount() {
                                     }
                                 </Tab>
                                 <Tab eventKey="events" title="Private Events" id="user-events">
-                                    <Table borderless responsive="md" className="no-wrap">
-                                        <thead>
-                                            <tr>
-                                                <td>Event Date</td>
-                                                <td>Event Time</td>
-                                                <td>Home Team</td>
-                                                <td>Away Team</td>
-                                                <td>Link</td>
-                                                <td>Copy Link</td>
-                                                <td>Delete</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {
-                                                events && events.map(event => <EventTableRow event={event} key={event.id} />)
-                                            }
-                                        </tbody>
-                                    </Table>
+                                    {
+                                        (!isLoadingEvents && events.length > 0) ?
+                                        <Table borderless responsive="md" className="no-wrap">
+                                            <thead>
+                                                <tr>
+                                                    <td>Event Date</td>
+                                                    <td>Event Time</td>
+                                                    <td>Home Team</td>
+                                                    <td>Away Team</td>
+                                                    <td>Link</td>
+                                                    <td>Copy Link</td>
+                                                    <td>Delete</td>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {
+                                                    (!isLoadingEvents && events.length > 0) && events.map(event => <EventTableRow event={event} key={event.id} onDeleteEvent={onDeleteEvent} />)
+                                                }
+                                            </tbody>
+                                        </Table>
+                                        :
+                                        <div className="text-center mt-4">
+                                            You don't have any private chats coming up. Check out the <Link href="/events">Events Page</Link> to find an upcoming event and create your own chat!
+                                        </div>
+                                    }
                                 </Tab>
                             </Tabs>
                         </div>

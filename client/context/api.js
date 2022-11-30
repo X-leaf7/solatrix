@@ -27,12 +27,13 @@ export function useEvents(token) {
             'Authorization': 'Token ' + token
         }
     }
-    const { data, error } = useSWR([GET_EVENTS, options], jsonFetcher)
+    const { data, error, mutate } = useSWR([GET_EVENTS, options], jsonFetcher)
 
   return {
     events: data,
     isLoadingEvents: !error && !data,
-    isErrorEvents: error
+    isErrorEvents: error,
+    mutate: mutate
   }
 }
 
