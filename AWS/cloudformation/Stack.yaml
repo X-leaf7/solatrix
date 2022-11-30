@@ -152,6 +152,7 @@ Resources:
       TemplateURL: RedisCluster.yaml
       Parameters:
         ClusterName: !Ref ClusterName
+        VPC: !GetAtt VPC.Outputs.VPCId
         PrivateSubnet1: !GetAtt VPC.Outputs.PrivateSubnet0
         PrivateSubnet2: !GetAtt VPC.Outputs.PrivateSubnet1
 

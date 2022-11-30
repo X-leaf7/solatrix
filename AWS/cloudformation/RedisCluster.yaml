@@ -3,6 +3,8 @@ AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   ClusterName:
     Type: String
+  VPC:
+    Type: AWS::EC2::VPC::Id
   PrivateSubnet1:
     Type: AWS::EC2::Subnet::Id
   PrivateSubnet2:
@@ -25,7 +27,7 @@ Resources:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: Elasticache Security Group
-      VpcId: !GetAtt VPC.Outputs.VPCId
+      VpcId: !Ref VPC
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 6379
