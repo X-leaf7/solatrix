@@ -38,7 +38,7 @@ function DaySelect({selected, setSelected}) {
                 <div>
                     <span className="fa-stack fa-2x" onClick={() => setStartDay(startDay.minus(oneWeek))}>
                         <i className="fa-regular fa-circle fa-stack-2x"></i>
-                        <i className="fa-regular fa-chevron-left fa-stack-1x warning"></i>
+                        <i className="fa-regular fa-chevron-left fa-stack-1x warning" style={{paddingRight: '5px'}}></i>
                     </span>
                 </div>
                 
@@ -57,7 +57,7 @@ function DaySelect({selected, setSelected}) {
                 <div>
                     <span className="fa-stack fa-2x" onClick={() => setStartDay(startDay.plus(oneWeek))} >
                         <i className="fa-regular fa-circle fa-stack-2x"></i>
-                        <i className="fa-regular fa-chevron-right fa-stack-1x warning"></i>
+                        <i className="fa-regular fa-chevron-right fa-stack-1x warning" style={{paddingLeft: '5px'}}></i>
                     </span>
                 </div>
             </div>

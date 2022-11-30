@@ -22,7 +22,7 @@ function SportSelect({selected, setSelected}) {
     return (
         getSports &&
        
-        <select className="custom" defaultValue="" value={selected} onChange={handleChange}>
+        <select className="form-select form-select-lg custom" defaultValue="" value={selected} onChange={handleChange}>
             <option value="">Filter by Sport</option>
             {getSports.map(sport => (
               <option key={sport.slug} value={sport.id}>
