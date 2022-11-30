@@ -122,6 +122,7 @@ Resources:
         ContainerPort: !FindInMap [ ContainerConfig, Chat, Port ]
         MessageTableName: !Ref MessageTable
         Domain: !Ref Domain
+        RedisUrl: !GetAtt RedisCluster.Outputs.RedisUrl
 
   ChatService:
     Type: AWS::CloudFormation::Stack
@@ -143,6 +144,14 @@ Resources:
         HealthCheckPath: "/health/"
         MaxContainers: 10
         AutoScalingTargetValue: 70
+
+  RedisCluster:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: RedisCluster.yaml
+      Parameters:
+        PrivateSubnet1: !GetAtt VPC.Outputs.PrivateSubnet0
+        PrivateSubnet2: !GetAtt VPC.Outputs.PrivateSubnet1
 
   RDSCluster:
     Type: AWS::CloudFormation::Stack

@@ -1,0 +1,52 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet::Id
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet::Id
+
+Resources:
+
+  RedisCache:
+    Type: AWS::ElastiCache::CacheCluster
+    Properties:
+      Engine: redis
+      EngineVersion: 2.8.24
+      CacheNodeType: cache.t3.small
+      NumCacheNodes: 1
+      CacheSubnetGroupName: !Ref RedisSubnetGroup
+      VpcSecurityGroupIds:
+        - !GetAtt RedisSecurityGroup.GroupId
+
+  RedisSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Elasticache Security Group
+      VpcId: !GetAtt VPC.Outputs.VPCId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 6379
+          ToPort: 6379
+          CidrIp: "10.0.0.0/16"
+
+  RedisSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      CacheSubnetGroupName: !Sub "RedisSubnetGroup-${ClusterName}"
+      Description: "ElastiCache subnet group"
+      SubnetIds:
+        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet2
+
+  RedisUrl:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Sub "/${ClusterName}/redis/url"
+      Type: String
+      Value: !Sub "redis://${RedisCache.RedisEndpoint.Address}:${RedisCache.RedisEndpoint.Port}/0"
+      Description: SSM Parameter for the redis URL
+
+Outputs:
+  RedisUrl:
+    Value: !GetAtt RedisUrl.Value
