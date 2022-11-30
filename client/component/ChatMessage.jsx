@@ -18,7 +18,7 @@ function ChatMessage({message, eventData, showUserProfile, deleteMessage }) {
     }, [user])
 
     useEffect(() => {
-        if (message.userId == eventData.host.id) {
+        if (eventData.host && eventData.host.id == message.userId) {
             setMessageType('host')
         }
         else if (message.teamId == eventData.home_team.id) {
