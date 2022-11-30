@@ -1,4 +1,5 @@
-from datetime import date, datetime
+from datetime import date
+from django.utils import timezone
 
 from rest_framework import generics
 from rest_framework import viewsets
@@ -21,10 +22,10 @@ class EventViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Event.objects.all()\
-            .order_by('lobby_start_time')\
+            .order_by('event_start_time')\
             .filter(
                 lobby_start_time__date__gte=date.today(),
-                event_end_time__time__gte=datetime.now()
+                event_end_time__gte=timezone.now()
             )
 
         if self.action == 'list':
