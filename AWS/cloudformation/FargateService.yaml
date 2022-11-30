@@ -180,7 +180,6 @@ Resources:
 
   TrafficAutoScalingPolicy:
     Type: AWS::ApplicationAutoScaling::ScalingPolicy
-    Condition: UseLoadBalancer
     Properties:
       PolicyName: !Join ['', [!Ref ServiceName, TrafficAutoScalingPolicy]]
       PolicyType: TargetTrackingScaling
