@@ -192,40 +192,22 @@ function Room() {
     }, [eventData, attendance])
 
     useEffect(() => {
+        const socketHandlers = {
+            newMessage: handleNewMessage,
+            removeMessage: handleRemoveMessage,
+            disconnect: handleDisconnect,
+            reconnect: joinRoom
+        }
         if (eventData) {
-
-            socket.on('newMessage', handleNewMessage)
-            socket.on('removeMessage', handleRemoveMessage)
-
-            socket.on('disconnect', handleDisconnect);
-            socket.on('reconnect', joinRoom)
-
-            //socket.on("thread", (response) => {
-            //    const eventSelectData = Cookies.get('selectEventData')
-            //    const getEventData = JSON.parse(eventSelectData)
-            //    const getAllmsg = JSON.parse(localStorage.getItem('allMsg'));
-            //    if (response.statusCode == 200) {
-            //        var msgData = response.data
-            //        if (parseInt(getEventData.id) === msgData.eventid) {
-            //            getAllmsg.messages.push(msgData)
-            //            setJoinUserDetail(getAllmsg)
-            //        }
-            //    } else {
-            //        Router.push('/event', { shallow: true })
-            //        swal("Error", "Currently this event is inactive. Please try again.", "error")
-            //        return false
-            //    }
-            //})
-
-            //socket.on("removeMessage", (response) => {
-            //    if (response.statusCode === 200) {
-            //        document.getElementById(response.data.id).remove();
-            //    }
-            //})
+            for (const [evt, handler] of Object.entries(socketHandlers)) {
+                socket.on(evt, handler)
+            }
 
             return () => {
                 // Clean up so that the page doesn't leak async effects
-                socket.off('newMessage', handleNewMessage)
+                for (const [evt, handler] of Object.entries(socketHandlers)) {
+                    socket.off(evt, handler)
+                }
             }
         }
 
