@@ -144,7 +144,7 @@ Resources:
         HealthCheckPath: "/health/"
         MaxContainers: 10
         AutoScalingTargetValue: 70
-        AutoScalingRequstCountValue: 1000
+        AutoScalingRequestCountValue: 1000
 
   RedisCluster:
     Type: AWS::CloudFormation::Stack
