@@ -25,7 +25,7 @@ function CreateChatModal({show, selectedEvent, onClose}) {
 
     return (
         <Modal centered id="1" className="S text-center" show={show} onHide={onClose}>
-            <Modal.Header className="border-0 justify-content-center">
+            <Modal.Header className="border-0 justify-content-center" closeButton>
                 <Modal.Title><b>{newEvent ? 'Success!' : 'Create Private Chat?'}</b></Modal.Title>
             </Modal.Header>
             <Modal.Body>

@@ -52,7 +52,7 @@ function JoinChatModal({show, selectedEvent, onClose}) {
 
     return (
         <Modal centered id={selectedEvent.id} show={show} onHide={onClose}>
-            <Modal.Header >
+            <Modal.Header closeButton>
                 <Modal.Title>Join the Chat</Modal.Title>
             </Modal.Header>
             <Modal.Body>
