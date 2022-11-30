@@ -144,12 +144,14 @@ Resources:
         HealthCheckPath: "/health/"
         MaxContainers: 10
         AutoScalingTargetValue: 70
+        AutoScalingRequstCountValue: 1000
 
   RedisCluster:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: RedisCluster.yaml
       Parameters:
+        ClusterName: !Ref ClusterName
         PrivateSubnet1: !GetAtt VPC.Outputs.PrivateSubnet0
         PrivateSubnet2: !GetAtt VPC.Outputs.PrivateSubnet1
 

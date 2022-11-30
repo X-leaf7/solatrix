@@ -17,6 +17,7 @@ phases:
       - aws cloudformation validate-template --template-body file://AWS/cloudformation/AdminTask.yaml
       - aws cloudformation validate-template --template-body file://AWS/cloudformation/ChatTask.yaml
       - aws cloudformation validate-template --template-body file://AWS/cloudformation/CDN.yaml
+      - aws cloudformation validate-template --template-body file://AWS/cloudformation/RedisCluster.yaml
       - echo "Run more code tests here!"
   post_build:
     on-failure: ABORT

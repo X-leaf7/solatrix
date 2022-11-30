@@ -1,6 +1,8 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Parameters:
+  ClusterName:
+    Type: String
   PrivateSubnet1:
     Type: AWS::EC2::Subnet::Id
   PrivateSubnet2:
