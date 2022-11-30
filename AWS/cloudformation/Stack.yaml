@@ -21,7 +21,7 @@ Parameters:
 
   Domain:
     Type: String
-    Default: 'newprod.split-side.com'
+    Default: 'split-side.com'
 
 Mappings: 
   ContainerConfig: 

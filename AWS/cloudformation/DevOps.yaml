@@ -39,7 +39,7 @@ Parameters:
   ChatUrl:
     Type: String
     Description: Where the frontend can find the chat server
-    Default: https://newprod-chat.split-side.com
+    Default: https://chat.split-side.com
 
 Resources:
 
