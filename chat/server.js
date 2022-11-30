@@ -15,7 +15,7 @@ const httpServer = http.createServer((request, res) => {
 
 global.io = socketServer(httpServer, {
   cors: {
-    origin: ["http://localhost", /\.split-side\.com$/ ],
+    origin: ["http://localhost", /\.split-side\.com$/, "split-side.com" ],
     methods: ["GET", "POST"]
   }
 })
