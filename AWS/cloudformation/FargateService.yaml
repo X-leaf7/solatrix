@@ -43,6 +43,9 @@ Parameters:
   AutoScalingTargetValue:
     Type: Number
     Default: 50
+  AutoScalingRequestCountValue:
+    Type: Number
+    Default: 200
   TaskDefinition:
     Type: String
 
@@ -158,11 +161,41 @@ Resources:
       TargetTrackingScalingPolicyConfiguration:
         PredefinedMetricSpecification:
           PredefinedMetricType: ECSServiceAverageCPUUtilization
-        ScaleInCooldown: 10
-        ScaleOutCooldown: 10
-        # Keep things at or lower than 50% CPU utilization, for example
+        ScaleInCooldown: 60
+        ScaleOutCooldown: 15
         TargetValue: !Ref AutoScalingTargetValue
 
+  MemoryAutoScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Properties:
+      PolicyName: !Join ['', [!Ref ServiceName, MemoryAutoScalingPolicy]]
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref AutoScalingTarget
+      TargetTrackingScalingPolicyConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ECSServiceAverageMemoryUtilization
+        ScaleInCooldown: 60
+        ScaleOutCooldown: 15
+        TargetValue: !Ref AutoScalingTargetValue
+
+  TrafficAutoScalingPolicy:
+    Type: AWS::ApplicationAutoScaling::ScalingPolicy
+    Condition: UseLoadBalancer
+    Properties:
+      PolicyName: !Join ['', [!Ref ServiceName, TrafficAutoScalingPolicy]]
+      PolicyType: TargetTrackingScaling
+      ScalingTargetId: !Ref AutoScalingTarget
+      TargetTrackingScalingPolicyConfiguration:
+        PredefinedMetricSpecification:
+          PredefinedMetricType: ALBRequestCountPerTarget
+          ResourceLabel:
+            Fn::Join:
+              - '/'
+              - - !Select [1, !Split ["loadbalancer/", !Ref LoadBalancer]]
+                - !GetAtt ServiceTargetGroup.TargetGroupFullName
+        ScaleInCooldown: 60
+        ScaleOutCooldown: 15
+        TargetValue: !Ref AutoScalingRequestCountValue
 
 Outputs:
   LoadBalancerUrl:
