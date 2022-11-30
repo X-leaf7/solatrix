@@ -75,7 +75,9 @@ function EventCard({ event, setSelected, showJoin, showCreate }) {
                             Create Chat
                         </Button>
                         <Button className='join-chat' variant="outline-dark" onClick={showJoinChat}>
-                            Join Chat
+                            {
+                                DateTime.fromISO(event.event_start_time) > DateTime.now() ? 'Enter Lobby' : 'Join Live Chat'
+                            }
                         </Button>
                         </div>
                     </div>
