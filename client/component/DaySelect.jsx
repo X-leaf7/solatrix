@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { DateTime, Duration } from 'luxon'
 
 function DaySelect({selected, setSelected}) {
@@ -18,6 +18,15 @@ function DaySelect({selected, setSelected}) {
     }
     const [startDay, setStartDay] = useState(DateTime.now())
     const [sevenDays, setSevenDays] = useState([])
+
+    const toggleSelected = useCallback((clickedDay) => {
+        if (clickedDay == selected) {
+            setSelected(null)
+        }
+        else {
+            setSelected(clickedDay)
+        }
+    }, [selected])
 
     useEffect(() => {
         let nextSevenDays = []
@@ -44,7 +53,7 @@ function DaySelect({selected, setSelected}) {
                 
                 {
                     sevenDays.map((day, i) =>
-                        <div className={"align-self-center p-1 " + (selected == day ? "selected" : "")} onClick={() => setSelected(day)} key={i}>
+                        <div className={"align-self-center p-1 " + (selected == day ? "selected" : "")} onClick={() => toggleSelected(day)} key={i}>
                             <div className="dayName">
                                 {day.toLocaleString(dayNameFormat).toUpperCase()}
                             </div>
