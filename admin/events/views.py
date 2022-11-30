@@ -27,7 +27,7 @@ class EventViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             if self.request.user.is_authenticated:
                 # If authenticated, get user events
-                queryset = queryset.filter(host=self.request.user)
+                queryset = queryset.filter(host=self.request.user, is_private=True)
             else:
                 # Otherwise, only show public events
                 queryset = queryset.filter(is_private=False)
