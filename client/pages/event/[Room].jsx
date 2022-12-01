@@ -123,6 +123,7 @@ function Room() {
 
     function handleCloseJoinChat() {
         setShowJoinChatModal(false)
+        verifyAttendance()
     }
 
     function handleDeleteMessage(message) {
