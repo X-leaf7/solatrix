@@ -47,7 +47,7 @@ function EventCard({ event, setSelected, showJoin, showCreate }) {
                 setSelected(event)
                 showJoin(true)
             })
-        })
+        }, `/event/${event.slug}/`)
     }
 
     const showCreateChat = async () => {
