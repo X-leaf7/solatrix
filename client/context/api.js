@@ -52,7 +52,7 @@ export function useUser(userId) {
     }
 }
 
-export const getAttendance = async (userId, eventId) => {
+const getAttendance = async (userId, eventId) => {
 
     const verifyAttendance = new URLSearchParams({
         user: userId,
@@ -68,6 +68,29 @@ export const getAttendance = async (userId, eventId) => {
     const attendanceData = await attendanceResponse.json()
     if (attendanceData.length > 0) {
         return attendanceData[0]
+    }
+    return null
+}
+
+export const verifyAttendance = async (eventData) => {
+    const userData = Cookies.get('userInfo')
+    const user = JSON.parse(userData)
+
+    const attendanceData = await getAttendance(user.id, eventData.id)
+
+    if (attendanceData) {
+        return attendanceData
+    } else if (user.id === eventData.host.id) {
+        // Host goes straight into room, choose home team for them
+        const hostAttendaceRequest = await post(ATTENDEES, {
+            'user': user.id,
+            'event': eventData.id,
+            'chosen_team': eventData.home_team.id
+        })
+
+        if (hostAttendaceRequest.status == 201) {
+            return hostAttendaceRequest.data
+        }
     }
     return null
 }

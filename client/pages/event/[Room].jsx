@@ -5,7 +5,7 @@ import Cookies from 'js-cookie'
 import swal from 'sweetalert';
 import { io } from 'socket.io-client'
 import { ATTENDEES, GET_EVENTS, SOCKET_URL } from '/context/AppUrl'
-import { getAttendance, post } from '/context/api'
+import { verifyAttendance, post } from '/context/api'
 import Head from 'next/head'
 import ProfileModal from '/component/ProfileModal'
 import JoinChatModal from '/component/JoinChatModal'
@@ -81,39 +81,21 @@ function Room() {
         })
     }, [eventData])
 
-    const verifyAttendance = useCallback(async () => {
-        const userData = Cookies.get('userInfo')
-        const user = JSON.parse(userData)
+    const checkAttendance = useCallback(async () => {
+        const attendance = await verifyAttendance(eventData)
 
-        const attendanceData = await getAttendance(user.id, eventData.id)
-
-        if (attendanceData) {
-            setAttendance(attendanceData)
+        if (attendance) {
+            setAttendance(attendance)
             joinRoom()
         } else {
-            // Host goes straight into room, choose home team for them
-            if (user.id === eventData.host.id) {
-                post(ATTENDEES, {
-                    'user': user.id,
-                    'event': eventData.id,
-                    'chosen_team': eventData.home_team.id
-                }).then((response) => {
-                    if (response.status == 201) {
-                        setAttendance(response.data)
-                        joinRoom()
-                    }
-                });
-            }
-            else {
-                // Give the user a chance to pick a side
-                setShowJoinChatModal(true)
-            }
+            // Give the user a chance to pick a side
+            setShowJoinChatModal(true)
         }
     }, [eventData])
 
     useEffect(() => {
         if (eventData) {
-            checkLogin(verifyAttendance, `/event/${eventData.slug}/`)
+            checkLogin(checkAttendance, `/event/${eventData.slug}/`)
         }
     }, [eventData]);
 
@@ -123,7 +105,9 @@ function Room() {
 
     function handleCloseJoinChat() {
         setShowJoinChatModal(false)
-        verifyAttendance()
+
+        // Make sure they picked a side before closing
+        checkAttendance()
     }
 
     function handleDeleteMessage(message) {
