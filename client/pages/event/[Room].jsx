@@ -235,7 +235,7 @@ function Room() {
                                 <EventTimer eventData={eventData} />
 
                                 { eventData.host &&
-                                    <div className="chat-form">
+                                    <div className="chat-form mt-4">
                                         <div className="chat-heading-main">
                                             <h4><b>Host:</b> {eventData.host.username}</h4>
                                             <h4><b>Location:</b> {eventData.stadium.name}</h4>
