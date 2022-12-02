@@ -24,7 +24,7 @@ class EventViewSet(viewsets.ModelViewSet):
         queryset = Event.objects.all()\
             .order_by('event_start_time')\
             .filter(
-                lobby_start_time__date__gte=date.today(),
+                event_start_time__date__gte=date.today(),
                 event_end_time__gte=timezone.now()
             )
 
