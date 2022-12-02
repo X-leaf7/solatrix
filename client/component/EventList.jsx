@@ -61,7 +61,7 @@ function EventList({ searchFilter, selectedSport, selectedDay }) {
         if (selectedDay) {
             const selectedDayStart = selectedDay.startOf("day")
             filters.push((eventItem) => {
-                let eventStartDay = DateTime.fromISO(eventItem.lobby_start_time).startOf("day")
+                let eventStartDay = DateTime.fromISO(eventItem.event_start_time).startOf("day")
                 return eventStartDay.ts == selectedDayStart.ts
             })
         }
