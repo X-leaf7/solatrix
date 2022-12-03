@@ -327,7 +327,7 @@ Resources:
                 StackName: !Sub "${GitSourceRepo}-${GitBranch}-waf"
                 Capabilities: CAPABILITY_IAM,CAPABILITY_AUTO_EXPAND
                 RoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/CloudFormationRole"
-                TemplatePath: WafStack::WAF.yaml
+                TemplatePath: WafStack::AWS/cloudformation/WAF.yaml
                 OutputFileName: WafStackOutputs.json
                 ParameterOverrides: !Sub |
                   {
