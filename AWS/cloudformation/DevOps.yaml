@@ -241,6 +241,7 @@ Resources:
                 - Name: App
               OutputArtifacts:
                 - Name: Stack
+                - Name: WafStack
                 - Name: ClientBuild
               RunOrder: 1
         - Name: UpdateDevOpsStack
