@@ -19,6 +19,10 @@ Parameters:
     Type: String
     Description: ECR Image URI for the Chat Server
 
+  WafAcl:
+    Type: String
+    Description: ARN of WAF ACL hosted in us-east-1
+
   Domain:
     Type: String
     Default: 'split-side.com'
@@ -214,6 +218,7 @@ Resources:
         Domain: !Ref Domain
         DjangoAdminLoadBalancerUrl: !GetAtt AdminService.Outputs.LoadBalancerUrl
         Bucket: !Ref Bucket
+        WafAcl: !Ref WafAcl
       TemplateURL: CDN.yaml
 
   ExecutionRole:

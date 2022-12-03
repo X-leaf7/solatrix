@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Description:
-  This template runs the ECS task definition on a schedule for different cron events
+  This template creates a CloudFront Distribution for our static frontend and routing to the admin backend
 
 Metadata:
   Author: https://www.linkedin.com/in/jacob-foster-508280140/
@@ -14,6 +14,9 @@ Parameters:
     Type: String
 
   Domain:
+    Type: String
+
+  WafAcl:
     Type: String
 
   CertificateArn:
@@ -169,6 +172,7 @@ Resources:
           - !Ref Domain
           - !Sub "*.${Domain}"
         Comment: Staging CloudFront Distribution
+        WebACLId: !Ref WafAcl
         CacheBehaviors:
           - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
             CachedMethods: [GET, HEAD, OPTIONS]

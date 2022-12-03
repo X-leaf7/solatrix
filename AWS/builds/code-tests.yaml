@@ -18,6 +18,7 @@ phases:
       - aws cloudformation validate-template --template-body file://AWS/cloudformation/ChatTask.yaml
       - aws cloudformation validate-template --template-body file://AWS/cloudformation/CDN.yaml
       - aws cloudformation validate-template --template-body file://AWS/cloudformation/RedisCluster.yaml
+      - aws cloudformation validate-template --template-body file://AWS/cloudformation/WAF.yaml
       - echo "Run more code tests here!"
   post_build:
     on-failure: ABORT
@@ -34,6 +35,11 @@ artifacts:
       artifactIdentifier: Stack
       files:
         - stack.yaml
+    WafStack:
+      name: WafStack
+      artifactIdentifier: WafStack
+      files:
+        - AWS/cloudformation/WAF.yaml
     ClientBuild:
       name: ClientBuild
       artifactIdentifier: ClientBuild

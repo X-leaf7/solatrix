@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  This template creates a WAF ACL for our CDN. It must be created in us-east-1.
+
+Metadata:
+  Author: https://www.linkedin.com/in/jacob-foster-508280140/
+
+Parameters:
+  ClusterName:
+    Type: String
+  
+Resources:
+
+  WafAcl:
+    Type: AWS::WAFv2::WebACL
+    Properties:
+      DefaultAction:
+        Allow: {}
+      Description: !Sub "Protecting CDN for ${ClusterName}"
+      Scope: CLOUDFRONT
+      VisibilityConfig:
+        CloudWatchMetricsEnabled: true
+        SampledRequestsEnabled: true
+        MetricName: !Sub "WebACL${ClusterName}Metric"
+      Rules:
+        - Name: RuleWithAWSManagedRules
+          OverrideAction:
+            Count: {}
+          Priority: 0
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: !Sub "AWSManagedRules${ClusterName}Metric"
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesCommonRuleSet
+        - Name: AWSManagedBadInputs
+          OverrideAction:
+            Count: {}
+          Priority: 1
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: !Sub "AWSBadInputs${ClusterName}Metric"
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesKnownBadInputsRuleSet
+              ExcludedRules: []
+        - Name: OnlyAllowUS
+          Action:
+            Count: {}
+          Priority: 2
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: !Sub "OnlyDomesticTraffic${ClusterName}Metric"
+          Statement:
+            GeoMatchStatement:
+              CountryCodes:
+                - US
+
+Outputs:
+  WafAcl:
+    Value: !GetAtt WafAcl.Arn
