@@ -16,7 +16,7 @@ Resources:
     Type: AWS::WAFv2::WebACL
     Properties:
       DefaultAction:
-        Allow: {}
+        Block: {}
       Description: !Sub "Protecting CDN for ${ClusterName}"
       Scope: CLOUDFRONT
       VisibilityConfig:
@@ -26,7 +26,7 @@ Resources:
       Rules:
         - Name: RuleWithAWSManagedRules
           OverrideAction:
-            Count: {}
+            None: {}
           Priority: 0
           VisibilityConfig:
             SampledRequestsEnabled: true
@@ -36,9 +36,11 @@ Resources:
             ManagedRuleGroupStatement:
               VendorName: AWS
               Name: AWSManagedRulesCommonRuleSet
+              ExcludedRules:
+                - Name: SizeRestrictions_BODY
         - Name: AWSManagedBadInputs
           OverrideAction:
-            Count: {}
+            None: {}
           Priority: 1
           VisibilityConfig:
             SampledRequestsEnabled: true
@@ -51,7 +53,7 @@ Resources:
               ExcludedRules: []
         - Name: OnlyAllowUS
           Action:
-            Count: {}
+            Allow: {}
           Priority: 2
           VisibilityConfig:
             SampledRequestsEnabled: true
