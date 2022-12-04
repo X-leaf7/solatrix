@@ -38,6 +38,7 @@ Resources:
               Name: AWSManagedRulesCommonRuleSet
               ExcludedRules:
                 - Name: SizeRestrictions_BODY
+                - Name: CrossSiteScripting_BODY
         - Name: AWSManagedBadInputs
           OverrideAction:
             None: {}
