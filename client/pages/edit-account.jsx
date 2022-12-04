@@ -229,7 +229,21 @@ function EditAccount() {
                 swal("Success", "Your profile has been successfully updated.", "success");
             })
             .catch((error) => {
-                swal("Error", "Please use a different username", "error");
+                const errorData = (
+                    error.response &&
+                    error.response.data
+                )
+                if (errorData) {
+                    const errorMessages = []
+                    for (const [key, value] of Object.entries(errorData)) {
+                        errorMessages.push(`${key}: ${value}`)
+                    }
+                    const errorMessage = errorMessages.join('\n')
+                    swal("Error", errorMessage, "error")
+                }
+                else {
+                    swal("Error", "There was an error updating your profile. Please check your inputs and try again.", "error");
+                }
             });
     }
     const changePassword = async (passwordNew) => {
