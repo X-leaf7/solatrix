@@ -16,7 +16,7 @@ Resources:
     Type: AWS::ElastiCache::CacheCluster
     Properties:
       Engine: redis
-      EngineVersion: 2.8.24
+      EngineVersion: 7.0
       CacheNodeType: cache.t3.small
       NumCacheNodes: 1
       CacheSubnetGroupName: !Ref RedisSubnetGroup
