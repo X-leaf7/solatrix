@@ -30,18 +30,22 @@ $> aws cloudformation create-stack --stack-name ss_django-[branch]-devops --para
 This template is the root CloudFormation template that deploys the application itself. It has a few shared resources and several nested stacks.
 
 * Nested Stacks
-  * Admin Fargate Service ([FargateService.yaml](FargateService.yaml))
+  * Django Backend Fargate Service ([FargateService.yaml](FargateService.yaml))
+  * Chat Backend Fargate Service ([FargateService.yaml](FargateService.yaml))
   * RDS Cluster ([RDS.yaml](RDS.yaml))
   * VPC ([VPC.yaml](VPC.yaml))
+  * CDN ([CDN.yaml](CDN.yaml))
 * Shared Resources
   * Load Balancer
   * IAM Roles
   * ECS Cluster
+  * S3 Bucket
+  * DynamoDB Chat Table
 
 
 ### FargateService.yaml
 
-This template is used for the Admin backend application. It takes a docker container passed in from the build step, and runs it as a Fargate Service. There is Auto-Scaling built-in to keep up with changes in web traffic.
+This template is used for the Admin backend and Chat backend applications. It takes a docker container passed in from the build step, and runs it as a Fargate Service. There is Auto-Scaling built-in to keep up with changes in web traffic.
 
 
 ### VPC.yaml
@@ -52,3 +56,7 @@ This template creates a VPC for us to launch all of the compute resources into.
 ### RDS.yaml
 
 This template creates an RDS cluster to store permanent relational data from the apps.
+
+### CDN.yaml
+
+This template creates the resources to house and serve our static frontend to the world wide web. It is important to note that all production traffic goes through the CDN. There are caching rules that allow fully static content, and for APIs to be cacheable at custom durations to reduce the webserver load.
