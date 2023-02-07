@@ -1,3 +1,15 @@
+@font-face {
+    font-family: "AvenirBook";
+    src: url('/font/AvenirBook.ttf') format('truetype');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "AvenirBlack";
+    src: url('/font/AvenirBlack.ttf') format('truetype');
+    font-weight: bold;
+}
+
 *,
 ::after,
 ::before {
@@ -7,6 +19,20 @@ body {
     width: 100%;
     overflow-x: hidden;
 }
+
+p {
+    font-family: AvenirBook, Helvetica, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: AvenirBlack, Helvetica, sans-serif;
+}
+
+a, a.btn {
+    font-family: AvenirBlack;
+    text-transform: uppercase;
+}
+
 .btn-secondary {
     color: #fff !important;
 }
