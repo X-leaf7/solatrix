@@ -22,7 +22,7 @@ This template defines the resources needed for a Pipeline that automatically tes
 To create a new development stage using this template, run the following command:
 
 ```sh
-$> aws cloudformation create-stack --stack-name ss_django-[branch]-devops --parameters ParameterKey=GitHubToken,ParameterValue=[your-pat] ParameterKey=GitBranch,ParameterValue=[branch] --template-body file://AWS/cloudformation/DevOps.yaml --role-arn arn:aws:iam::514205568277:role/CloudFormationRole --capabilities CAPABILITY_IAM
+$> aws cloudformation create-stack --stack-name split-side-[branch]-devops --parameters ParameterKey=GitHubToken,ParameterValue=[your-pat] ParameterKey=GitBranch,ParameterValue=[branch] --template-body file://AWS/cloudformation/DevOps.yaml --role-arn arn:aws:iam::514205568277:role/CloudFormationRole --capabilities CAPABILITY_IAM
 ```
 
 ### Stack.yaml
