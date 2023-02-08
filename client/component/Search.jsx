@@ -76,7 +76,7 @@ function Search() {
         <form onSubmit={handleSubmit} className="form-inline my-2 my-lg-0 d-flex align-items-center flex-nowrap">
             <label className="sr-only">Search Team or Host</label>
             <div className='search-field'>
-                <input className="form-control me-sm-2" type="text"  value={search} onChange={handleChange} placeholder="Search Team or Host..." />
+                <input className="form-control me-sm-2" type="text"  value={search} onChange={handleChange} placeholder="Search" />
             </div>
             <button id="search-button" className="btn btn-warning" type="submit">
                 <i className="fa-regular fa-search"></i>

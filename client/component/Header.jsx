@@ -27,17 +27,14 @@ function Header() {
                     <Navbar.Toggle onClick={() => setExpanded(expanded ? false : "expanded")} aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav>
-                            <li className='d-desktop'>
-                                <Search />
-                            </li>
-                            <li className="nav-item me-lg-3 ms-lg-4">
-                                <Link href="/"><a className="nav-link">Home</a></Link>
-                            </li>
                             <li className="nav-item me-lg-3">
                                 <Link href='/events'><a className="nav-link">Events</a></Link>
                             </li>
                             <li className="nav-item me-lg-3">
                                 <Link href="/about"><a className="nav-link">About</a></Link>
+                            </li>
+                            <li className='d-desktop'>
+                                <Search />
                             </li>
                         </Nav>
                         <Nav>

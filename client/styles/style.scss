@@ -486,6 +486,7 @@ header {
     }
     .navbar { padding: 10px 0; position: relative; z-index: 9; }
     .navbar-light .navbar-toggler-icon { filter: brightness(0) invert(1); }
+    .d-desktop { width: 100%; }
 }
 header .form-inline .form-control { min-width: 200px; }
 .navbar-light .navbar-nav .nav-link:focus,
@@ -592,6 +593,7 @@ header .form-inline .form-control { min-width: 200px; }
     .listing-heading { display: block !important; width: 100%; }
 }
 .search-field {
+    width: 100%;
     display: block;
     padding-right: 5px;
     position: relative;
