@@ -25,7 +25,6 @@ Parameters:
 
   Domain:
     Type: String
-    Default: 'split-side.com'
 
 Mappings: 
   ContainerConfig: 

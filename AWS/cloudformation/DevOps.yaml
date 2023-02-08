@@ -36,10 +36,10 @@ Parameters:
     MaxLength: 100
     ConstraintDescription: You must enter a GitHub username or organization
 
-  ChatUrl:
+  Domain:
     Type: String
-    Description: Where the frontend can find the chat server
-    Default: https://chat.split-side.com
+    Description: Root Domain for the deployment
+    Default: split-side.com
 
 Resources:
 
@@ -161,7 +161,7 @@ Resources:
           - Name: S3_ARTIFACT_BUCKET
             Value: !Ref CodePipelineArtifactBucket
           - Name: NEXT_PUBLIC_SOCKET_SERVER_URL
-            Value: !Ref ChatUrl
+            Value: !Sub 'https://chat.${Domain}'
       Name: !Sub "${GitSourceRepo}-${GitBranch}-code-tests"
       ServiceRole: !Ref CodeBuildServiceRole
 
@@ -331,7 +331,8 @@ Resources:
                 OutputFileName: WafStackOutputs.json
                 ParameterOverrides: !Sub |
                   {
-                    "ClusterName": "${GitSourceRepo}-${GitBranch}"
+                    "ClusterName": "${GitSourceRepo}-${GitBranch}",
+                    "Domain": "${Domain}"
                   }
             - Name: UpdateCloudFourmation
               Namespace: StackOutputs
