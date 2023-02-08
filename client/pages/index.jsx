@@ -20,15 +20,14 @@ function Home() {
             <section id="showcase" style={{ backgroundImage: `url('/img/stadium.jpg')` }}>
                 <div className="container text-center">
                     <div className="home-search p-5">
-                        <div className="overlay p-5">
+                        <div className="p-5">
+                            <p className="text-primary lead">
+                                When You're Watching the Game on TV
+                            </p>
                             <h1 className="text-primary display-4 mt-1 mb-3">
-                                Real-Time Chat for the Sports World
+                                Create an Invite-Only Chat Place to Share with Friends & Family
                             </h1>
-                            <p className="text-primary lead">Watching a game on TV or Online?</p>
-                            <small id="emailHelp" className="form-text text-muted">
-                                Now, you can join in the conversation with fans from both sides by entering the public event room, or creating a private chat for up-to 12 guests.
-                            </small>
-                            <Link href="/events"><a className="btn btn-warning mt-3">Find Your Team & Join the Chat</a></Link>
+                            <Link href="/events"><a className="btn btn-warning mt-3">Get Started</a></Link>
                         </div>
                     </div>
                 </div>

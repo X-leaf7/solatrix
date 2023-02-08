@@ -551,18 +551,22 @@ header .form-inline .form-control { min-width: 200px; }
         }
     }
 }
+#showcase .lead {
+    font-size: 24px;
+}
+#showcase h1 {
+    font-size: 42px;
+}
 @media (max-width: 767px) {
     #showcase .home-search {
         padding: 0 !important;
     }
-    #showcase .overlay {
-        padding: 15px !important;
-        .lead {
-            font-weight: 500;
-        }
+    #showcase .lead {
+        font-size: 18px;
+        font-weight: 500;
     }
     #showcase h1 {
-        font-size: 30px;
+        font-size: 28px;
         font-weight: 500;
     }
     #showcase {
