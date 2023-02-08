@@ -26,7 +26,7 @@ Parameters:
   Domain:
     Type: String
 
-Mappings: 
+Mappings:
   ContainerConfig: 
     Admin: 
       Port: 8000

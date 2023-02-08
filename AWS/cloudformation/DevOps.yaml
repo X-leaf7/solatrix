@@ -332,8 +332,7 @@ Resources:
                 OutputFileName: WafStackOutputs.json
                 ParameterOverrides: !Sub |
                   {
-                    "ClusterName": "${GitSourceRepo}-${GitBranch}",
-                    "Domain": "${Domain}"
+                    "ClusterName": "${GitSourceRepo}-${GitBranch}"
                   }
             - Name: UpdateCloudFourmation
               Namespace: StackOutputs
@@ -362,7 +361,8 @@ Resources:
                     "ClusterName": "${GitSourceRepo}-${GitBranch}",
                     "AdminImage": { "Fn::GetParam" : [ "AdminImageJSON", "imagedefinitions.json", "imageUri" ] },
                     "ChatImage": { "Fn::GetParam" : [ "ChatImageJSON", "imagedefinitions.json", "imageUri" ] },
-                    "WafAcl" : { "Fn::GetParam" : ["WafStackOutput", "WafStackOutputs.json", "WafAcl"]}
+                    "WafAcl" : { "Fn::GetParam" : ["WafStackOutput", "WafStackOutputs.json", "WafAcl"]},
+                    "Domain": "${Domain}"
                   }
             - Name: CreateS3Objects
               RunOrder: 3
