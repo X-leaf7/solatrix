@@ -263,7 +263,8 @@ Resources:
                     "GitSourceRepo": "${GitSourceRepo}",
                     "GitBranch": "${GitBranch}",
                     "GitHubToken": "${GitHubToken}",
-                    "GitHubUser": "${GitHubUser}"
+                    "GitHubUser": "${GitHubUser}",
+                    "Domain": "${Domain}"
                   }
               InputArtifacts:
                 - Name: App
