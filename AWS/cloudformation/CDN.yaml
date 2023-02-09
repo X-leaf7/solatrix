@@ -22,7 +22,7 @@ Parameters:
   CertificateArn:
     Type: String
     # Must be in us-east-1
-    Default: 'arn:aws:acm:us-east-1:514205568277:certificate/9eb13fdb-082c-4d3c-b26f-a23343e41a0d'
+    Default: 'arn:aws:acm:us-east-1:514205568277:certificate/e6209e38-9d4c-450e-a3a6-23b0195e5943'
 
   Bucket:
     Type: String
