@@ -19,10 +19,6 @@ Parameters:
     Type: String
   ContainerSecurityGroup:
     Type: String
-  Certificate:
-    Type: String
-    # Update with the certificate ARN from Certificate Manager, which must exist in the same region.
-    Default: 'arn:aws:acm:us-west-1:514205568277:certificate/d02a3af0-16ff-4dbb-bf07-4afb7ea689fb'
   ServiceName:
     Type: String
   ContainerPort:
@@ -48,6 +44,13 @@ Parameters:
     Default: 200
   TaskDefinition:
     Type: String
+
+Mappings:
+  Certificates:
+    us-west-1:
+      Arn: 'arn:aws:acm:us-west-1:514205568277:certificate/d02a3af0-16ff-4dbb-bf07-4afb7ea689fb'
+    us-east-2:
+      Arn: 'arn:aws:acm:us-east-2:514205568277:certificate/9cdc9c5b-6fdd-499a-8379-7d68c2fb0296'
 
 Resources:
 
@@ -139,7 +142,7 @@ Resources:
       Port: !Ref LoadBalancerPort
       Protocol: HTTPS
       Certificates:
-        - CertificateArn: !Ref Certificate
+        - CertificateArn: !FindInMap [ Certificates, !Ref AWS::Region, Arn ]
 
   AutoScalingTarget:
     Type: AWS::ApplicationAutoScaling::ScalableTarget
