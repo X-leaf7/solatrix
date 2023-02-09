@@ -84,11 +84,7 @@ Resources:
                   - !Sub arn:aws:s3:::us-east-1-split-side-codepipeline-artifacts/*
                   - !Sub arn:aws:s3:::${GitSourceRepo}-${GitBranch}-app-bucket-*/*
                 Effect: Allow
-                Action:
-                  - s3:PutObject
-                  - s3:GetObject
-                  - s3:GetObjectVersion
-                  - s3:GetBucketVersioning
+                Action: 's3:*'
               - Resource: !Sub "arn:aws:cloudformation:*:${AWS::AccountId}:stack/${GitSourceRepo}-${GitBranch}*"
                 Effect: Allow
                 Action:
@@ -96,9 +92,6 @@ Resources:
                   - 'cloudformation:Get*'
                   - 'cloudformation:Create*'
                   - 'cloudformation:Update*'
-              - Resource: '*'
-                Effect: Allow
-                Action: 's3:PutObjectAcl'
 
   CodeBuildServiceRole:
    Type: AWS::IAM::Role
