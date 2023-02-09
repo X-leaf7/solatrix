@@ -96,6 +96,9 @@ Resources:
                   - 'cloudformation:Get*'
                   - 'cloudformation:Create*'
                   - 'cloudformation:Update*'
+              - Resource: '*'
+                Effect: Allow
+                Action: 's3:PutObjectAcl'
 
   CodeBuildServiceRole:
    Type: AWS::IAM::Role
