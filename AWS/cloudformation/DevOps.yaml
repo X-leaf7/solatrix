@@ -374,7 +374,7 @@ Resources:
               InputArtifacts:
                 - Name: ClientBuild
               Configuration:
-                BucketName: 'split-side-main-app-bucket-ki4uxmvsia3i'
+                BucketName: '#{StackOutputs.S3Bucket}'
                 Extract: true
 
 
