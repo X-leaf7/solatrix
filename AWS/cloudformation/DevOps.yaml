@@ -84,7 +84,12 @@ Resources:
                   - !Sub arn:aws:s3:::us-east-1-split-side-codepipeline-artifacts/*
                   - !Sub arn:aws:s3:::${GitSourceRepo}-${GitBranch}-app-bucket-*/*
                 Effect: Allow
-                Action: 's3:*'
+                Action:
+                  - s3:PutObject
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+                  - s3:PutObjectAcl
               - Resource: !Sub "arn:aws:cloudformation:*:${AWS::AccountId}:stack/${GitSourceRepo}-${GitBranch}*"
                 Effect: Allow
                 Action:
