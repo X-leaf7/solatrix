@@ -29,11 +29,19 @@ p {
 
 h1, h2, h3, h4, h5, h6 {
     font-family: AvenirBlack, Helvetica, sans-serif;
+    letter-spacing: 0.5px;
 }
 
 a, a.btn {
     font-family: AvenirBlack;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.breadcrumb a {
+    font-family: var(--bs-font-sans-serif);
+    text-transform: none;
+    letter-spacing: 0px;
 }
 
 .btn-secondary {
@@ -184,7 +192,7 @@ to avoid use of important */
 }
 
 #work {
-    padding: 6rem 0;
+    padding: 6rem 0 4rem;
 }
 
 .event-preview a {
