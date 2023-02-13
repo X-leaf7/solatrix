@@ -30,7 +30,7 @@ function About() {
                             </div>
                         </section>
 
-                        <section id="bc" className="mt-3">
+                        <section id="bc">
                             <div className="container">
                                 <nav aria-label="breadcrumb">
                                     <ol className="breadcrumb">

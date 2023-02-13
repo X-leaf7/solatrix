@@ -51,7 +51,7 @@ function Home() {
                 <EventList selectedSport={selectedSport} selectedDay={selectedDay} />
             </section>
 
-            <section id="work" className="bg-dark text-white text-center mt-5">
+            <section id="work" className="bg-dark text-white text-center">
                 <h2 className="display-4">Browse Events</h2>
                 <h4>Check out the upcoming games to see what's going on in the world of sports</h4>
                 <Link href="/events"><a className="btn btn-primary text-black btn-lg mt-5">View More Events</a></Link>
