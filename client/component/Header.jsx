@@ -33,6 +33,8 @@ function Header() {
                             <li className="nav-item me-lg-3">
                                 <Link href="/about"><a className="nav-link">About</a></Link>
                             </li>
+                        </Nav>
+                        <Nav>
                             <li className='d-desktop'>
                                 <Search />
                             </li>
