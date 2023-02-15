@@ -65,19 +65,19 @@ function Home() {
 
             <section id="team" className="py-5">
                 <div className="container">
-                    <h2 className="text-center" style={{'marginBottom':'1.5rem'}}>Learn More</h2>
+                    <h2 className="display-4 text-center mb-5">Learn More</h2>
                     <div className="row text-center">
-                        <div className="col-md-4">
+                        <div className="col-md-4 mb-3">
                             <h4>Create Account</h4>
-                            <p className="text-secondary">Create a free account and login to<br /> participate in chat.</p>
+                            <p className="text-secondary">Sign-up for a free account and login to<br /> create and participate in chats.</p>
                         </div>
-                        <div className="col-md-4">
+                        <div className="col-md-4 mb-3">
                             <h4>Search Events</h4>
-                            <p className="text-secondary">Find your team or search popular hosts<br /> from the world of sports.</p>
+                            <p className="text-secondary">Browse the events across sports like football,<br /> baseball, basketball, soccer and ice hockey.</p>
                         </div>
                         <div className="col-md-4">
-                            <h4>Join Chat, Pick a Side</h4>
-                            <p className="text-secondary">Select an event and choose the side your<br /> cheering for as you join in chat.</p>
+                            <h4>Launch Chat</h4>
+                            <p className="text-secondary">Create and share your own private chat<br /> place for up-to 12 guests.</p>
                         </div>
                     </div>
                 </div>
