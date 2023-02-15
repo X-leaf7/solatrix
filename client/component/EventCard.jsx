@@ -60,16 +60,18 @@ function EventCard({ event, setSelected, showJoin, showCreate }) {
     return (
         <div className="col-md-6 col-lg-4 mb-4">
             <div className="card listing-preview shadow-sm">
-                <div className="card-body">
-                    <div className="listing-heading text-center">
+                <div className="card-body d-flex align-items-start flex-column">
+                    <div className="listing-heading text-center mx-auto">
                         <h6>{event.name}</h6>
                         <h5>{event.home_team.name} vs {event.away_team.name}</h5>
+                    </div>
+                    <div className="mt-auto mx-auto">
                         <p className="text-center my-2">{DateTime.fromISO(event.event_start_time).toLocaleString(dateFormat)}</p>
                         <p className="text-center my-2">{DateTime.fromISO(event.event_start_time).toLocaleString(timeFormat)}</p>
                         <div className="d-flex justify-content-evenly ">
-                        <Button className='create-chat btn-warning' variant="outline-dark" onClick={showCreateChat}>
-                            Create Chat
-                        </Button>
+                            <Button className='create-chat btn-warning' variant="outline-dark" onClick={showCreateChat}>
+                                Create Chat
+                            </Button>
                         </div>
                     </div>
                 </div>
