@@ -44,9 +44,9 @@ function Home() {
                     <div className="row text-center align-items-center">
                         <div className="col-md-4"></div>
                         <div className="col-md-4">
-                            <h1 className="schedule-header display-4 mb-5 mt-5"><b>Schedule</b></h1>
+                            <h1 className="schedule-header display-4 mb-3 mt-md-5"><b>Schedule</b></h1>
                         </div>
-                        <div className="col-md-4 customDropDown mb-5 mb-md-0">
+                        <div className="col-md-4 customDropDown mb-3 mb-md-0">
                             <SportSelect selected={selectedSport} setSelected={setSelectedSport} />
                         </div>
                     </div>
