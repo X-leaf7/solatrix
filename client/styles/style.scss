@@ -65,6 +65,10 @@ img {
     width: 130px;
 }
 
+.line {
+    display: inline-block;
+}
+
 .navbar {
     opacity: 1;
     text-transform: uppercase;
@@ -422,7 +426,7 @@ button.join-chat {
 
 @media (max-width: 768px) {
     #showcase {
-        padding-top: 3rem;
+        padding-top: 0.5rem;
     }
     #showcase h1 {
         font-size: 40px;
@@ -579,19 +583,15 @@ header .form-inline .form-control { min-width: 200px; }
     #showcase .home-search {
         padding: 0 !important;
     }
-    #showcase .lead {
-        font-size: 18px;
-        font-weight: 500;
-    }
     #showcase h1 {
         font-size: 28px;
         font-weight: 500;
     }
     #showcase {
-        padding-bottom: 10rem;
+        padding: 0px;
     }
     #showcase {
-        background-size: auto;
+        background-size: 1100px;
     }
 }
 .listing-heading h4 {

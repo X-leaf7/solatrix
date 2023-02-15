@@ -22,13 +22,16 @@ function Home() {
 
             <section id="showcase">
                 <div className="container text-center">
-                    <div className="home-search p-5">
-                        <div className="p-5">
+                    <div className="home-search">
+                        <div className="p-4">
                             <p className="text-primary lead">
-                                When You're Watching the Game on TV
+                                <span className="line">When You're Watching</span>&nbsp;
+                                <span className="line">the Game on TV</span>
                             </p>
                             <h1 className="text-primary display-4 mt-1 mb-3">
-                                Create an Invite-Only Chat Place to Share with Friends & Family
+                                <span className="line">Create an Invite-Only</span>&nbsp;
+                                <span className="line">Chat Place to Share with</span>&nbsp;
+                                <span className="line">Friends & Family</span>
                             </h1>
                             <Link href="/events"><a className="btn btn-warning mt-3">Get Started</a></Link>
                         </div>
