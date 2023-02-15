@@ -58,8 +58,8 @@ function Home() {
             </section>
 
             <section id="work" className="bg-dark text-white text-center">
-                <h2 className="display-4">Browse Events</h2>
-                <h4>Check out the upcoming games to see what's going on in the world of sports</h4>
+                <h2 className="display-4 mb-3">Browse Events</h2>
+                <h4 className="mb-5">Check out the upcoming games to see what's going on in the world of sports</h4>
                 <Link href="/events"><a className="btn btn-primary text-black btn-lg mt-5">View More Events</a></Link>
             </section>
 

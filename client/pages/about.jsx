@@ -53,14 +53,14 @@ function About() {
                         </section>
 
                         <section id="work" className="bg-dark text-white text-center">
-                            <h2 className="display-4">Start Chatting</h2>
-                            <h4>Check out the upcoming events to see what&apos;s going on in the world of sports</h4>
+                            <h2 className="display-4 mb-3">Start Chatting</h2>
+                            <h4 className="mb-5">Check out the upcoming events to see what&apos;s going on in the world of sports</h4>
                             <Link href="/events"><a className="btn btn-primary text-black btn-lg">View Events</a></Link>
                         </section>
 
                         <section id="team" className="py-5">
                             <div className="container">
-                                <h2 className="text-center" style={{ 'marginBottom': '1.5rem' }}>Our Team</h2>
+                                <h2 className="text-center mb-5">Our Team</h2>
                                 <div className="row text-center">
                                     <div className="col-md-4">
                                         <h4>Aly Wagner</h4>
