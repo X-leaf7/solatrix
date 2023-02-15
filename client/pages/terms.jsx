@@ -47,7 +47,7 @@ function Terms() {
                     </section>
 
                     <section id="about">
-                        <div className="container">
+                        <div className="container py-4">
                             <div className="row">
                                 <div className="col-md-12 mb-4" dangerouslySetInnerHTML={{ __html: getTermDetail }}>
                                 </div>
