@@ -20,7 +20,7 @@ function Home() {
                 <p className="text-center lead">Chat Platform for Sports Fans</p>
             </section>
 
-            <section id="showcase" style={{ backgroundImage: `url('/img/stadium.jpg')` }}>
+            <section id="showcase">
                 <div className="container text-center">
                     <div className="home-search p-5">
                         <div className="p-5">

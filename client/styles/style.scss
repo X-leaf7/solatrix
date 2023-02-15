@@ -134,6 +134,8 @@ to avoid use of important */
     color: #fff;
     background-position: center;
     background-repeat: no-repeat;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6),
+                       rgba(0, 0, 0, 0.6)), url("/img/stadium.jpg")
 }
 
 #showcase .home-search {
