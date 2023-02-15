@@ -16,6 +16,9 @@ function Home() {
             <Head>
                  <title>Split-Side - Home</title>
             </Head>
+            <section id="announcement">
+                <p className="text-center lead">Chat Platform for Sports Fans</p>
+            </section>
 
             <section id="showcase" style={{ backgroundImage: `url('/img/stadium.jpg')` }}>
                 <div className="container text-center">
