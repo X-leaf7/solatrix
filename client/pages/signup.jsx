@@ -87,8 +87,7 @@ const Signup = () => {
             <div className="col-md-8 mx-auto">
               <div className="card shadow-sm">
                 <div className="card-header text-center">
-                  <h5 className="mt-2">Create an Account to Participate in Chat Rooms
-                  </h5>
+                  <h5 className="mt-2">Create an Account to Participate in Chat</h5>
                 </div>
                 <div className="card-body">
                   <Formik
