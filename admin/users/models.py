@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django_softdelete.models import SoftDeleteModel, SoftDeleteQuerySet
 
-from config.models import SSBaseModel
+from config.models import SSBaseModel, LowercaseEmailField
 
 
 class HybridUserManager(UserManager):
@@ -12,7 +12,7 @@ class HybridUserManager(UserManager):
 
 
 class User(SoftDeleteModel, AbstractUser, SSBaseModel):
-    email = models.EmailField(unique=True)
+    email = LowercaseEmailField(unique=True)
 
     city = models.CharField(max_length=100, blank=True)
     state = models.CharField(max_length=50, blank=True)
