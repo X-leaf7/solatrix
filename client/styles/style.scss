@@ -130,6 +130,14 @@ to avoid use of important */
     margin-right: 0.4rem;
 }
 
+#search-button {
+    background-color: rgba(255, 255, 255, 0.3);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border: 1px solid #ced4da;
+    color: lightgray;
+}
+
 #showcase {
     padding: 4rem 0;
     background-size: cover;
