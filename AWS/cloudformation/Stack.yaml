@@ -305,10 +305,11 @@ Resources:
               CountryCodes:
                 - US
 
-  Type: AWS::WAFv2::WebACLAssociation
-  Properties:
-    ResourceArn: !GetAtt AdminService.Outputs.LoadBalancerArn
-    WebACLArn: !GetAtt AdminWaf.Arn
+  AdminWafConnection:
+    Type: AWS::WAFv2::WebACLAssociation
+    Properties:
+      ResourceArn: !GetAtt AdminService.Outputs.LoadBalancerArn
+      WebACLArn: !GetAtt AdminWaf.Arn
 
 Outputs:
   S3Bucket:
