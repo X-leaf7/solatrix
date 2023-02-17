@@ -144,7 +144,7 @@ to avoid use of important */
     box-sizing: content-box;
     position: relative;
     color: #fff;
-    background-position: center;
+    background-position: bottom;
     background-repeat: no-repeat;
     background-image: linear-gradient(rgba(0, 0, 0, 0.6),
                        rgba(0, 0, 0, 0.6)), url("/img/stadium.jpg")
@@ -591,9 +591,6 @@ header .form-inline .form-control { min-width: 200px; }
     }
     #showcase {
         padding: 0px;
-    }
-    #showcase {
-        background-size: 1100px;
     }
 }
 .listing-heading h4 {
