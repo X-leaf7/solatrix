@@ -6,6 +6,7 @@ from .models import User
 @admin.register(User)
 class AllUsersAdmin(BaseUserAdmin):
 
+    ordering = ['username']
     list_display = ("username", "email", "is_active", "is_deleted")
     list_filter = ("is_staff", "is_superuser", "is_active", "groups", "is_deleted")
 
