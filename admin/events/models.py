@@ -11,6 +11,7 @@ from sports.models import Sport, Stadium, Team
 
 
 class Event(SSNamedModel):
+    name = models.CharField(max_length=255)
     sport = models.ForeignKey(Sport, on_delete=models.DO_NOTHING)
     stadium = models.ForeignKey(Stadium, on_delete=models.DO_NOTHING)
     home_team = models.ForeignKey(Team, on_delete=models.DO_NOTHING, related_name="home_events")
@@ -26,6 +27,13 @@ class Event(SSNamedModel):
         related_name="hosted_events",
         blank=True, null=True
     )
+
+    def __str__(self):
+
+        if self.is_private:
+            return "-".join([self.host.username, self.slug])
+
+        return self.slug
 
     def save(self, *args, **kwargs):
 
