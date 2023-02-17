@@ -252,6 +252,64 @@ Resources:
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole'
 
+  AdminWaf:
+    Type: AWS::WAFv2::WebACL
+    Properties:
+      DefaultAction:
+        Block: {}
+      Description: !Sub "Protecting CDN for ${ClusterName}"
+      Scope: REGIONAL
+      VisibilityConfig:
+        CloudWatchMetricsEnabled: true
+        SampledRequestsEnabled: true
+        MetricName: "AdminWebACLMetric"
+      Rules:
+        - Name: RuleWithAWSManagedRules
+          OverrideAction:
+            None: {}
+          Priority: 0
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: "AdminAWSManagedRulesMetric"
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesCommonRuleSet
+              ExcludedRules:
+                - Name: SizeRestrictions_BODY
+                - Name: CrossSiteScripting_BODY
+        - Name: AWSManagedBadInputs
+          OverrideAction:
+            None: {}
+          Priority: 1
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: "AdminAWSBadInputsMetric"
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesKnownBadInputsRuleSet
+              ExcludedRules: []
+        - Name: OnlyAllowUS
+          Action:
+            Allow: {}
+          Priority: 2
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: !Sub "AdminOnlyDomesticTrafficMetric"
+          Statement:
+            GeoMatchStatement:
+              CountryCodes:
+                - US
+
+  Type: AWS::WAFv2::WebACLAssociation
+  Properties:
+    ResourceArn: !GetAtt AdminService.Outputs.LoadBalancerArn
+    WebACLArn: !GetAtt AdminWaf.Arn
+
 Outputs:
   S3Bucket:
     Value: !Ref Bucket
