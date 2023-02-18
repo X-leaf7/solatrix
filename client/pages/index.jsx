@@ -26,7 +26,7 @@ function Home() {
                         <div className="p-4">
                             <p className="text-primary lead">
                                 <span className="line">When You're Watching</span>&nbsp;
-                                <span className="line">the Game on TV</span>
+                                <span className="line">the Game</span>
                             </p>
                             <h1 className="text-primary display-4 mt-1 mb-3">
                                 <span className="line">Create an Invite-Only</span>&nbsp;
