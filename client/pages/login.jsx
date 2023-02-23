@@ -17,7 +17,6 @@ const loginSchema = Yup.object().shape({
         .email("Please Provied valid email")
         .required("This is a Required Field"),
     password: Yup.string().required('This is a Required Field'),
-    recaptcha: Yup.string().required('Please verify that you are not a robot'),
 
 });
 
@@ -31,12 +30,15 @@ function Login() {
     const [password, setPassword] = useState('');
     const [loader, setLoader] = useState(false);
     const [redirect, setRedirect] = useState(null);
+    const recaptchaRef = React.createRef();
 
     const handlePasswordShow = () => {
         setIsPasswordShown(!isPasswordShown);
     }
 
     const handleLogin = useCallback(async (values) => {
+
+        values['recaptcha'] = await recaptchaRef.current.executeAsync();
 
         if (values.remember) {
             Cookies.set('email', values.email);
@@ -69,7 +71,7 @@ function Login() {
             swal("Error", "There was an error logging you in. Please check your username and password and try again.", "error");
         }
 
-    }, [redirect])
+    }, [redirect, recaptchaRef])
 
     useEffect(() => {
         if (Cookies.get('isLogin')) {
@@ -151,11 +153,10 @@ function Login() {
                                                         </div>
                                                         <div className="form-group">
                                                             <ReCAPTCHA
-                                                                sitekey="6LezrCEhAAAAACqaqPFdAQw8B5yzVlCOo2xG56Ao"
+                                                                sitekey="6Lfe0qokAAAAAEH9yTZnbUbKetdlrfLywvRCSFkQ"
+                                                                ref={recaptchaRef}
                                                                 name="recaptcha"
-                                                                onChange={(value) => {
-                                                                    values.recaptcha = value;
-                                                                }}
+                                                                size="invisible"
                                                             />
                                                             {errors.recaptcha && touched.recaptcha ? (<p className="error-msg">{errors.recaptcha}</p>) : null}
                                                         </div>

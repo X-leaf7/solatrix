@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'djoser',
     'django_filters',
+    'drf_recaptcha',
 
     # Django CMS
     'djangocms_text_ckeditor',
@@ -162,13 +163,16 @@ DJOSER = {
     'LOGIN_FIELD': 'email',
     'SERIALIZERS': {
         'token': 'users.serializers.TokenPlusUserSerializer',
-        'current_user': 'users.serializers.FullUserSerializer'
+        'current_user': 'users.serializers.FullUserSerializer',
+        'token_create': 'users.serializers.LoginWithRecaptcha'
     },
     'EMAIL': {
         'activation': 'users.email.CustomActivationEmail',
         'password_reset': 'users.email.CustomPasswordResetEmail',
     }
 }
+
+DRF_RECAPTCHA_SECRET_KEY = "6Lfe0qokAAAAALsydZUSZO5-x6--4dJZPVLbxew6"
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),

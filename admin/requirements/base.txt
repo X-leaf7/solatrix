@@ -14,6 +14,7 @@ django-ses==3.2.2
 django-soft-delete==0.9.21
 django-storages==1.13.1
 git+https://github.com/sunscrapers/djoser.git@abdf622f95dfa2c6278c4bd6d50dfe69559d90c0
+drf-recaptcha==2.2.2
 gunicorn==20.1.0
 psycopg2-binary==2.9.5
 redis==4.3.4
