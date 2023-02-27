@@ -1,5 +1,5 @@
 from djoser.conf import settings
-from djoser.serializers import TokenCreateSerializer
+from djoser.serializers import TokenCreateSerializer, UserCreateSerializer
 from drf_recaptcha.fields import ReCaptchaV2Field
 from rest_framework import serializers
 
@@ -32,6 +32,23 @@ class ReCaptchaMixin(metaclass=serializers.SerializerMetaclass):
 
 class LoginWithRecaptcha(TokenCreateSerializer, ReCaptchaMixin):
     pass
+
+
+class SignupWithRecaptcha(UserCreateSerializer):
+    recaptcha = ReCaptchaV2Field()
+
+    class Meta:
+        model = User
+        fields = tuple(User.REQUIRED_FIELDS) + (
+            User._meta.pk.name,
+            "email",
+            "password",
+            "recaptcha"
+        )
+
+    def validate(self, attrs):
+        attrs.pop("recaptcha")
+        return super().validate(attrs)
 
         
 class TokenPlusUserSerializer(serializers.ModelSerializer):

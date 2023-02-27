@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import swal from 'sweetalert';
 import Router from 'next/router'
-import ReCAPTCHA from "react-google-recaptcha";
+import ReCaptcha from "/component/ReCaptcha";
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import Cookies from 'js-cookie'
 import { REGISTRATION } from '/context/AppUrl'
@@ -46,7 +46,6 @@ const SignupSchema = Yup.object().shape({
     .required('This is a Required Field'),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password'), null], 'The passwords entered do not match. Please try again.').required('This is a Required Field'),
-  recaptcha: Yup.string().required('Please verify that you are not a robot'),
   termAndCondition: Yup.bool()
             .oneOf([true], 'Please select T&C condition checkbox')
             .required('Please select T&C condition checkbox'),
@@ -56,6 +55,7 @@ const Signup = () => {
   const handlePasswordShow = () => {
     setIsPasswordShown(!isPasswordShown);
   }
+  const recaptchaRef = React.createRef();
 
   useEffect(() => {
     if (Cookies.get('isLogin')) {
@@ -105,13 +105,14 @@ const Signup = () => {
                     validateOnChange={false}
                     validateOnBlur={false}
                     onSubmit={async (values) => {
-                    
+                      const reCaptchToken = await recaptchaRef.current.executeAsync();
                       const credentials = {
                         username: values.userName,
                         first_name: values.firstName,
                         last_name: values.lastName,
                         email: values.email,
-                        password: values.password
+                        password: values.password,
+                        recaptcha: reCaptchToken
                       }
                       const response = await fetch(REGISTRATION, {
                         method: 'POST',
@@ -207,17 +208,7 @@ const Signup = () => {
                           />
                           {errors.confirmPassword && touched.confirmPassword ? (<p className="error-msg">{errors.confirmPassword}</p>) : null}
                         </div>
-                        <div className="form-group">
-                          
-                          <ReCAPTCHA
-                            sitekey="6LezrCEhAAAAACqaqPFdAQw8B5yzVlCOo2xG56Ao"
-                            name="recaptcha"
-                            onChange={(value) => {
-                              values.recaptcha = value;
-                            }}
-                          />
-                          {errors.recaptcha && touched.recaptcha ? (<p className="error-msg">{errors.recaptcha}</p>) : null}
-                        </div>
+                        <ReCaptcha ref={recaptchaRef} errors={errors} touched={touched} />
 
                          <div className="form-check">
                             <Field type="checkbox" name='termAndCondition' className="form-check-input" />

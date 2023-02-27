@@ -164,7 +164,8 @@ DJOSER = {
     'SERIALIZERS': {
         'token': 'users.serializers.TokenPlusUserSerializer',
         'current_user': 'users.serializers.FullUserSerializer',
-        'token_create': 'users.serializers.LoginWithRecaptcha'
+        'token_create': 'users.serializers.LoginWithRecaptcha',
+        'user_create': 'users.serializers.SignupWithRecaptcha'
     },
     'EMAIL': {
         'activation': 'users.email.CustomActivationEmail',

@@ -5,7 +5,7 @@ import swal from 'sweetalert';
 import * as Yup from "yup";
 import Router from 'next/router'
 import { useRouter } from 'next/router'
-import ReCAPTCHA from "react-google-recaptcha";
+import ReCaptcha from '/component/ReCaptcha';
 import AppContext, { AuthContext } from "../context/AppContext";
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import Cookies from 'js-cookie'
@@ -151,15 +151,8 @@ function Login() {
                                                             {errors.password && touched.password ? (<p className="error-msg">{errors.password}</p>) : null}
 
                                                         </div>
-                                                        <div className="form-group">
-                                                            <ReCAPTCHA
-                                                                sitekey="6Lfe0qokAAAAAEH9yTZnbUbKetdlrfLywvRCSFkQ"
-                                                                ref={recaptchaRef}
-                                                                name="recaptcha"
-                                                                size="invisible"
-                                                            />
-                                                            {errors.recaptcha && touched.recaptcha ? (<p className="error-msg">{errors.recaptcha}</p>) : null}
-                                                        </div>
+
+                                                        <ReCaptcha ref={recaptchaRef} errors={errors} touched={touched} />
 
                                                         <div className="form-check">
                                                             <Field type="checkbox" name='remember' className="form-check-input" />
