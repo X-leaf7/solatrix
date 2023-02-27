@@ -22,10 +22,15 @@ from django.urls import include, path, re_path
 from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
 
+from config.admin import AuthAdminForm
 from events.views import EventViewSet, AttendeeViewSet, CopyEventView
 from sports.views import LeagueViewSet, SportViewSet, StadiumViewSet, TeamViewSet
 from users.views import UserViewSet
 
+
+admin.autodiscover()
+admin.site.login_form = AuthAdminForm
+admin.site.login_template = 'admin/login.html'
 
 router = routers.DefaultRouter()
 router.register(r'attendees', AttendeeViewSet)

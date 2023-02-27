@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     'django_extensions',
+    'captcha',
 
     # Health Checks
     'health_check',
@@ -174,7 +175,8 @@ DJOSER = {
     }
 }
 
-DRF_RECAPTCHA_SECRET_KEY = "6Lfe0qokAAAAALsydZUSZO5-x6--4dJZPVLbxew6"
+DRF_RECAPTCHA_SECRET_KEY = RECAPTCHA_PRIVATE_KEY = "6Lfe0qokAAAAALsydZUSZO5-x6--4dJZPVLbxew6"
+RECAPTCHA_PUBLIC_KEY = '6Lfe0qokAAAAAEH9yTZnbUbKetdlrfLywvRCSFkQ'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework.authentication.TokenAuthentication',),
