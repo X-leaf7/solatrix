@@ -6,8 +6,10 @@ import { Formik } from 'formik';
 import swal from 'sweetalert';
 import { REQUEST_RESET_PASSWORD } from '/context/AppUrl'
 import Head from 'next/head'
+import ReCaptcha from '/component/ReCaptcha'
 
 function ResetPassword() {
+    const recaptchaRef = React.createRef();
     useEffect(() => {
         if (Cookies.get('isLogin')) {
             Router.push('/')
@@ -43,14 +45,13 @@ function ResetPassword() {
                                         }}
                                         onSubmit={async (values, { setSubmitting }) => {
                                             setSubmitting(false);
+                                            values['recaptcha'] = await recaptchaRef.current.executeAsync();
                                             const response = await fetch(REQUEST_RESET_PASSWORD, {
                                                 method: 'POST',
                                                 headers: {
                                                     'Content-Type': 'application/json'
                                                 },
-                                                body: JSON.stringify({
-                                                    "email": values.email
-                                                }),
+                                                body: JSON.stringify(values),
                                             })
                                                 .then(data => data)
                                                 .catch(err => console.log(err))
@@ -86,6 +87,7 @@ function ResetPassword() {
                                                     />
                                                     <p className="error-msg">{errors.email && touched.email && errors.email}</p>
                                                 </div>
+                                                <ReCaptcha ref={recaptchaRef} errors={errors} touched={touched} />
                                                 <input type="submit" disabled={isSubmitting} className="btn btn-warning w-100" value="Reset Password" />
                                                 <div className="row">
                                                     <div className="col-md-12 mt-3 mb-1 text-center">

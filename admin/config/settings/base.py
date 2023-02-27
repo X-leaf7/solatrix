@@ -162,8 +162,9 @@ DJOSER = {
     'SEND_ACTIVATION_EMAIL': True,
     'LOGIN_FIELD': 'email',
     'SERIALIZERS': {
-        'token': 'users.serializers.TokenPlusUserSerializer',
         'current_user': 'users.serializers.FullUserSerializer',
+        'token': 'users.serializers.TokenPlusUserSerializer',
+        'password_reset': 'users.serializers.PasswordResetWithRecaptcha',
         'token_create': 'users.serializers.LoginWithRecaptcha',
         'user_create': 'users.serializers.SignupWithRecaptcha'
     },

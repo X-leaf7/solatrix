@@ -1,5 +1,5 @@
 from djoser.conf import settings
-from djoser.serializers import TokenCreateSerializer, UserCreateSerializer
+from djoser.serializers import SendEmailResetSerializer, TokenCreateSerializer, UserCreateSerializer
 from drf_recaptcha.fields import ReCaptchaV2Field
 from rest_framework import serializers
 
@@ -31,6 +31,10 @@ class ReCaptchaMixin(metaclass=serializers.SerializerMetaclass):
 
 
 class LoginWithRecaptcha(TokenCreateSerializer, ReCaptchaMixin):
+    pass
+
+
+class PasswordResetWithRecaptcha(SendEmailResetSerializer, ReCaptchaMixin):
     pass
 
 
