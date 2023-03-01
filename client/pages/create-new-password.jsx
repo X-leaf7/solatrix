@@ -103,7 +103,7 @@ function CreatePassword() {
                                                     />
                                                     {errors.confirmPassword && (<p className="error-msg">{errors.confirmPassword}</p>)}
                                                 </div>
-                                                <button className="primaryAction btn btn-secondary w-100" type="submit">Reset password</button>
+                                                <button className="primaryAction btn btn-warning w-100" type="submit">Reset password</button>
                                                 <div className="row">
                                                     <div className="col-md-12 mt-3 mb-1 text-center">
                                                         Remember your password? <Link href="/login"><a className="get-started-link"><strong>Login</strong></a></Link>
