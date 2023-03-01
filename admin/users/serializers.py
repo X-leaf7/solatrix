@@ -62,3 +62,7 @@ class TokenPlusUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = settings.TOKEN_MODEL
         fields = ("auth_token", "user")
+
+
+class GoogleTokenSerializer(serializers.Serializer):
+    credential = serializers.CharField()

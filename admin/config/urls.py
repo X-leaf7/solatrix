@@ -25,7 +25,7 @@ from rest_framework.documentation import include_docs_urls
 from config.admin import AuthAdminForm
 from events.views import EventViewSet, AttendeeViewSet, CopyEventView
 from sports.views import LeagueViewSet, SportViewSet, StadiumViewSet, TeamViewSet
-from users.views import UserViewSet
+from users.views import UserViewSet, GoogleLoginView
 
 
 admin.autodiscover()
@@ -48,6 +48,7 @@ urlpatterns = [
     path('api/copy-event/', CopyEventView.as_view()),
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.authtoken')),
+    path('api/google_login/',view=GoogleLoginView.as_view(), name='google-login'),
     re_path(r'^cms/', include('cms.urls'))
 ]
 
