@@ -36,7 +36,7 @@ class GoogleLoginView(generics.GenericAPIView):
         user, created = User.objects.get_or_create(
             email=user_info['email'],
             defaults={
-                'username': user_info.get('name').replace(" ", "_"),
+                'username': user_info['email'].split('@')[0],
                 'first_name': user_info.get('given_name', "").strip(),
                 'last_name': user_info.get('family_name', "").strip(),
             }
