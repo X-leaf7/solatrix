@@ -126,7 +126,7 @@ function Login() {
                 <section id="login" className="bg-light py-5">
                     <div className="container">
                         <div className="row">
-                            <div className="col-md-8 mx-auto">
+                            <div className="col-md-8 col-lg-6 mx-auto">
                                 <div className="card shadow-sm">
                                     <div className="card-header text-center">
                                         <h5 className="mt-2">Login to Participate in Chat</h5>
@@ -159,12 +159,12 @@ function Login() {
                                                         <div className="g_id_signin"
                                                              data-type="standard"
                                                              data-shape="rectangular"
-                                                             data-theme="filled_blue"
+                                                             data-theme="outline"
                                                              data-text="signin_with"
                                                              data-size="large"
                                                              data-logo_alignment="left">
                                                         </div>
-                                                        <hr/>
+                                                        <p className="loginDivider"><span>or</span></p>
                                                         <div className="form-group">
                                                             <label>Email*</label>
                                                             <Field

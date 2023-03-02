@@ -297,6 +297,25 @@ input.search {
     text-decoration: none;
 }
 
+/* login */
+p.loginDivider {
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #000;
+    line-height: 0.1em;
+    margin: 10px 0 20px;
+ }
+
+ p.loginDivider span {
+     background:#fff;
+     padding:0 10px;
+ }
+
+ div.g_id_signin iframe {
+    margin-left: auto !important;
+    margin-right: auto !important;
+ }
+
 /* edit account */
 
 .logoutDeactive {
