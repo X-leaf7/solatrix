@@ -9,9 +9,9 @@ import ReCaptcha from '/component/ReCaptcha';
 import AppContext, { AuthContext } from "../context/AppContext";
 import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import Cookies from 'js-cookie'
-import { LOGIN, GOOGLE_LOGIN } from '/context/AppUrl'
+import { LOGIN } from '/context/AppUrl'
 import Head from 'next/head'
-import Script from 'next/script'
+import GoogleLogin from '/component/GoogleLogin'
 
 const loginSchema = Yup.object().shape({
     email: Yup.string()
@@ -49,25 +49,6 @@ function Login() {
         }
         signIn();
     }, [redirect])
-
-    useEffect(() => {
-        // google handler needs to be referencable from the root window
-        window.handleGoogleLogin = async function (googleCredentials) {
-            const response = await fetch(GOOGLE_LOGIN, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(googleCredentials)
-            });
-            if (response.status === 200) {
-                const data = await response.json();
-                finishLogin(data)
-            } else {
-                swal("Error", "There was an error logging you in with your google account. Please try again.", "error");
-            }
-        }
-    }, [redirect]);
 
     const handleLogin = useCallback(async (values) => {
 
@@ -121,7 +102,6 @@ function Login() {
             <Head>
                 <title>Split-Side - Login</title>
             </Head>
-            <Script src="https://accounts.google.com/gsi/client" />
             <div>
                 <section id="login" className="bg-light py-5">
                     <div className="container">
@@ -148,22 +128,7 @@ function Login() {
                                             >
                                                 {({ values, errors, touched, handleChange, handleBlur }) => (
                                                     <Form className="login">
-                                                        <div id="g_id_onload"
-                                                             data-client_id="401041321374-gc7pa91fpmoplvoimf1t9l91vbiqteuh.apps.googleusercontent.com"
-                                                             data-context="signup"
-                                                             data-ux_mode="popup"
-                                                             data-callback="handleGoogleLogin"
-                                                             data-auto_prompt="false">
-                                                        </div>
-
-                                                        <div className="g_id_signin"
-                                                             data-type="standard"
-                                                             data-shape="rectangular"
-                                                             data-theme="outline"
-                                                             data-text="signin_with"
-                                                             data-size="large"
-                                                             data-logo_alignment="left">
-                                                        </div>
+                                                        <GoogleLogin context="signin" textType="signin_with" loginSuccess={finishLogin} />
                                                         <p className="loginDivider"><span>or</span></p>
                                                         <div className="form-group">
                                                             <label>Email*</label>
