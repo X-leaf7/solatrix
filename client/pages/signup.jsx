@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
@@ -9,6 +9,9 @@ import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import Cookies from 'js-cookie'
 import { REGISTRATION } from '/context/AppUrl'
 import Head from 'next/head'
+import GoogleLogin from "/component/GoogleLogin";
+import { AuthContext } from "../context/AppContext";
+
 
 const SignupSchema = Yup.object().shape({
   userName: Yup.string()
@@ -56,6 +59,7 @@ const Signup = () => {
     setIsPasswordShown(!isPasswordShown);
   }
   const recaptchaRef = React.createRef();
+  const { signIn } = React.useContext(AuthContext);
 
   useEffect(() => {
     if (Cookies.get('isLogin')) {
@@ -75,6 +79,14 @@ const Signup = () => {
     }
   }
 
+  const finishGoogleSignup = useCallback(async (loginResponse) => {
+    Cookies.set('userInfo', JSON.stringify(loginResponse.user));
+    Cookies.set('Token', loginResponse.auth_token);
+    swal("Success", "Thanks for signing up! Welcome to Split-Side!", "success");
+    Router.push('/');
+    signIn();
+  })
+
   return (
     <>
              <Head>
@@ -84,7 +96,7 @@ const Signup = () => {
       <section id="register" className="bg-light py-5">
         <div className="container">
           <div className="row">
-            <div className="col-md-8 mx-auto">
+            <div className="col-md-8 col-lg-6 mx-auto">
               <div className="card shadow-sm">
                 <div className="card-header text-center">
                   <h5 className="mt-2">Create an Account to Participate in Chat</h5>
@@ -137,6 +149,8 @@ const Signup = () => {
                   >
                     {({ values, errors, touched }) => (
                       <Form className="signup">
+                        <GoogleLogin context="signup" textType="signup_with" loginSuccess={finishGoogleSignup} />
+                        <p className="loginDivider"><span>or</span></p>
                         <div className="form-group">
                           <label htmlFor="exampleInputUsername">Username*</label>
                           <Field
