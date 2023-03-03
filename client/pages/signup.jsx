@@ -9,7 +9,7 @@ import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import Cookies from 'js-cookie'
 import { REGISTRATION } from '/context/AppUrl'
 import Head from 'next/head'
-import GoogleLogin from "/component/GoogleLogin";
+import GoogleLoginWrapper from "/component/GoogleLoginWrapper";
 import { AuthContext } from "../context/AppContext";
 
 
@@ -149,7 +149,7 @@ const Signup = () => {
                   >
                     {({ values, errors, touched }) => (
                       <Form className="signup">
-                        <GoogleLogin context="signup" textType="signup_with" loginSuccess={finishGoogleSignup} />
+                        <GoogleLoginWrapper context="signup" textType="signup_with" loginSuccess={finishGoogleSignup} />
                         <p className="loginDivider"><span>or</span></p>
                         <div className="form-group">
                           <label htmlFor="exampleInputUsername">Username*</label>

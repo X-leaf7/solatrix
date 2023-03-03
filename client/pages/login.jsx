@@ -11,7 +11,7 @@ import { BsEye, BsEyeSlash } from 'react-icons/bs';
 import Cookies from 'js-cookie'
 import { LOGIN } from '/context/AppUrl'
 import Head from 'next/head'
-import GoogleLogin from '/component/GoogleLogin'
+import GoogleLoginWrapper from '/component/GoogleLoginWrapper'
 
 const loginSchema = Yup.object().shape({
     email: Yup.string()
@@ -128,7 +128,7 @@ function Login() {
                                             >
                                                 {({ values, errors, touched, handleChange, handleBlur }) => (
                                                     <Form className="login">
-                                                        <GoogleLogin context="signin" textType="signin_with" loginSuccess={finishLogin} />
+                                                        <GoogleLoginWrapper context="signin" textType="signin_with" loginSuccess={finishLogin} />
                                                         <p className="loginDivider"><span>or</span></p>
                                                         <div className="form-group">
                                                             <label>Email*</label>
