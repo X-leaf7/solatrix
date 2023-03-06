@@ -304,17 +304,20 @@ p.loginDivider {
     border-bottom: 1px solid #000;
     line-height: 0.1em;
     margin: 10px 0 20px;
- }
+}
 
- p.loginDivider span {
-     background:#fff;
-     padding:0 10px;
- }
+p.loginDivider span {
+    background:#fff;
+    padding:0 10px;
+}
 
- div.google_signin iframe {
-    margin-left: auto !important;
-    margin-right: auto !important;
- }
+div.google_signin iframe {
+   margin-left: auto !important;
+   margin-right: auto !important;
+}
+div.google_signin > div > div > div:first-child{
+   display: none;
+}
 
 /* edit account */
 
