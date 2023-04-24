@@ -19,7 +19,6 @@ services:
       DJANGO_SETTINGS_MODULE: config.settings.local
       WEB_DOMAIN: localhost
   client:
-    platform: linux/amd64
     image: ss_client
     build:
       context: ./client
@@ -34,7 +33,6 @@ services:
     ports:
       - "80:80"
   chat:
-    platform: linux/amd64
     image: ss_chat
     build:
       context: ./chat
