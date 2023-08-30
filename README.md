@@ -20,12 +20,12 @@ Chat functionality, such as sending and receiving messages is handled by a node.
 
 2. Run docker-compose from the project root.
 ```sh
-$(ss_django)> docker-compose up
+$(split-side)> docker-compose up
 ```
 
 3. Hop into the shell on the container
 ```sh
-$(ss_django)> docker exec -it split-side-django-1 /bin/bash
+$(split-side)> docker exec -it split-side-django-1 /bin/bash
 ```
 
 4. Create a superuser for yourself.
@@ -42,9 +42,9 @@ $(ss_django)> docker exec -it split-side-django-1 /bin/bash
 
 7. Create Local DynamoDB Table for Chat messages
 ```sh
-$(ss_django)> export AWS_ACCESS_KEY_ID=FakeKeyId
-$(ss_django)> export AWS_SECRET_ACCESS_KEY=FakeSecretAccessKey
-$(ss_django)> aws dynamodb create-table --table-name localMessages --attribute-definitions AttributeName=eventId,AttributeType=S AttributeName=messageId,AttributeType=S --key-schema AttributeName=eventId,KeyType=HASH AttributeName=messageId,KeyType=RANGE --billing-mode PAY_PER_REQUEST --endpoint-url http://localhost:5000 --region ddblocal
+$(split-side)> export AWS_ACCESS_KEY_ID=FakeKeyId
+$(split-side)> export AWS_SECRET_ACCESS_KEY=FakeSecretAccessKey
+$(split-side)> aws dynamodb create-table --table-name localMessages --attribute-definitions AttributeName=eventId,AttributeType=S AttributeName=messageId,AttributeType=S --key-schema AttributeName=eventId,KeyType=HASH AttributeName=messageId,KeyType=RANGE --billing-mode PAY_PER_REQUEST --endpoint-url http://localhost:5000 --region ddblocal
 ```
 
 Happy coding!
