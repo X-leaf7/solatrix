@@ -32,6 +32,13 @@ class SSNamedModel(SSBaseModel):
         return slugify(self.name)
 
 
+class SportsDataModel(models.Model):
+    sports_data_id = models.IntegerField()
+
+    class Meta:
+        abstract=True
+
+
 class LowercaseEmailField(models.EmailField):
     """
     Override EmailField to convert emails to lowercase before saving.

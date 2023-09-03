@@ -17,11 +17,14 @@ class HostSerializer(serializers.ModelSerializer):
 
 
 class EventSerializer(serializers.HyperlinkedModelSerializer):
-    sport = SportSerializer()
+    sport = serializers.SerializerMethodField()
     home_team = TeamSerializer()
     away_team = TeamSerializer()
     host = HostSerializer()
     stadium = StadiumSerializer()
+
+    def get_sport(self, obj):
+        return SportSerializer(obj.round.season.league.sport, context=self.context).data
 
     class Meta:
         model = Event

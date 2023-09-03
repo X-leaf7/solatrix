@@ -7,19 +7,19 @@ from django.utils.text import slugify
 
 from config.models import SSBaseModel, SSNamedModel
 
-from sports.models import Sport, Stadium, Team
+from sports.models import Round, Stadium, Team
 
 
 class Event(SSNamedModel):
-    name = models.CharField(max_length=255)
-    sport = models.ForeignKey(Sport, on_delete=models.DO_NOTHING)
+    name = models.CharField(max_length=255, blank=True)
+    round = models.ForeignKey(Round, on_delete=models.DO_NOTHING, null=True)
     stadium = models.ForeignKey(Stadium, on_delete=models.DO_NOTHING)
     home_team = models.ForeignKey(Team, on_delete=models.DO_NOTHING, related_name="home_events")
     away_team = models.ForeignKey(Team, on_delete=models.DO_NOTHING, related_name="away_events")
     is_private = models.BooleanField()
     lobby_start_time = models.DateTimeField()
     event_start_time = models.DateTimeField()
-    event_end_time = models.DateTimeField(blank=True, null=True)
+    status = models.CharField(max_length=100, blank=True)
     banner = models.ImageField(upload_to="banners", blank=True)
     host = models.ForeignKey(
         get_user_model(),
@@ -34,13 +34,6 @@ class Event(SSNamedModel):
             return "-".join([self.host.username, self.slug])
 
         return self.slug
-
-    def save(self, *args, **kwargs):
-
-        if not self.event_end_time:
-            self.event_end_time = self.event_start_time + timedelta(hours=6)
-
-        super().save(*args, **kwargs)
 
     def create_slug(self):
         date_string = self.event_start_time.strftime("%Y-%m-%d")

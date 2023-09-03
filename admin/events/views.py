@@ -24,8 +24,9 @@ class EventViewSet(viewsets.ModelViewSet):
         queryset = Event.objects.all()\
             .order_by('event_start_time')\
             .filter(
-                event_start_time__date__gte=date.today(),
-                event_end_time__gte=timezone.now()
+                event_start_time__date__gte=date.today()
+            ).exclude(
+                status="Final"
             )
 
         if self.action == 'list':
@@ -36,7 +37,7 @@ class EventViewSet(viewsets.ModelViewSet):
                 # Otherwise, only show public events
                 queryset = queryset.filter(is_private=False)
 
-            queryset = queryset.prefetch_related('host', 'home_team', 'away_team', 'sport', 'stadium')
+            queryset = queryset.prefetch_related('host', 'home_team', 'away_team', 'round__season__league__sport', 'stadium')
 
         return queryset
 
