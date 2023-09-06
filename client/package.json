@@ -20,6 +20,7 @@
         "@nextui-org/react": "*",
         "@reach/combobox": "^0.17.0",
         "@react-oauth/google": "^0.8.0",
+        "@sentry/nextjs": "^7.68.0",
         "axios": "^0.26.1",
         "bootstrap": "^5.1.3",
         "cross-env": "^7.0.3",
