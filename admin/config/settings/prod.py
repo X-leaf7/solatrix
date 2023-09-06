@@ -1,6 +1,9 @@
 from os import getenv
+from urllib.parse import urlparse
 
 import requests
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 from .base import *
 
@@ -15,6 +18,36 @@ ADMINS = (
 MANAGERS = (
     ('Jacob', 'jacobef10@gmail.com'),
 )
+
+
+def filter_transactions(event, hint):
+    url_string = event["request"]["url"]
+    parsed_url = urlparse(url_string)
+
+    if "/health" in parsed_url.path:
+        return None
+
+    return event
+
+
+sentry_sdk.init(
+    dsn="https://ef83eec5b9a492daad36e7d4ba89841f@o4505767321272320.ingest.sentry.io/4505836030001152",
+    integrations=[DjangoIntegration()],
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True,
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+    # Filter out health checks or any other unwanted transactions
+    before_send_transaction=filter_transactions,
+)
+
 
 try:
     resp = requests.get(METADATA_URI + '/task')

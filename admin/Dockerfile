@@ -7,7 +7,7 @@ ADD requirements ${WORKDIR}/requirements
 
 RUN cd ${WORKDIR} \
     && pip install --upgrade pip \
-    && pip install -r requirements/base.txt 
+    && pip install -r requirements/production.txt 
 
 # Create the final container with the app
 FROM public.ecr.aws/docker/library/python:${PYTHON_VERSION}
