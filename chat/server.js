@@ -3,6 +3,16 @@ const socketServer = require("socket.io");
 const clientSocket = require("./socket");
 const { createClient } = require("redis");
 const { createAdapter } = require("@socket.io/redis-adapter");
+const Sentry = require("@sentry/node");
+
+if (!process.env.DEBUG) {
+  Sentry.init({
+    dsn: "https://3ee5eb0326e78dc26947adb339205e9f@o4505767321272320.ingest.sentry.io/4505863526219776",
+    // We recommend adjusting this value in production, or using tracesSampler
+    // for finer control
+    tracesSampleRate: 1.0,
+  });
+}
 
 const httpServer = http.createServer((request, res) => {
   if (request.url === '/health/') {
