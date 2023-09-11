@@ -26,4 +26,4 @@ class TeamSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Team
         lookup_field = 'slug'
-        fields = ['id', 'name', 'sport', 'league', 'stadium']
+        fields = ['id', 'name', 'sport', 'stadium']
