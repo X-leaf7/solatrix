@@ -140,3 +140,5 @@ Resources:
 Outputs:
   TaskDefinition:
     Value: !Ref TaskDefinition
+  TaskRoleArn:
+    Value: !GetAtt TaskRole.Arn
