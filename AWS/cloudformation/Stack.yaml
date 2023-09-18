@@ -311,6 +311,20 @@ Resources:
       ResourceArn: !GetAtt AdminService.Outputs.LoadBalancerArn
       WebACLArn: !GetAtt AdminWaf.Arn
 
+  Cron:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Cluster: !GetAtt Cluster.Arn
+        TaskDefinition: !GetAtt AdminTask.Outputs.TaskDefinition
+        ExecutionRole: !GetAtt ExecutionRole.Arn
+        TaskRole: !GetAtt AdminTask.Outputs.TaskRoleArn
+        ContainerName: AdminBackend
+        SecurityGroup: !Ref ContainerSecurityGroup
+        SubnetA: !GetAtt VPC.Outputs.PrivateSubnet0
+        SubnetB: !GetAtt VPC.Outputs.PrivateSubnet1
+      TemplateURL: Cron.yaml
+
 Outputs:
   S3Bucket:
     Value: !Ref Bucket
