@@ -691,6 +691,10 @@ header .form-inline .form-control { min-width: 200px; }
     }
 }
 
+.daySelector {
+    justify-content: center;
+}
+
 .daySelector .selected {
     color: darkred;
 }
