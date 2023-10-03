@@ -37,9 +37,13 @@ class Command(BaseCommand):
                         home_team=home_team,
                         away_team=away_team,
                         is_private=False,
-                        lobby_start_time=datetime.now(),
                         event_start_time=parse_datetime(game['DateTime']),
-                        status=game['Status'],
                         banner='banners/leaderboard_default_image_728px_x_90px_v2.jpg',
-                        host=host
+                        host=host,
+                        defaults={
+                            'lobby_start_time': datetime.now()
+                        }
                     )
+
+                    event.status = game['Status']
+                    event.save()
