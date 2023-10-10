@@ -3,7 +3,7 @@ from datetime import date, datetime
 from django.core.management.base import BaseCommand, CommandError
 from django.utils.dateparse import parse_datetime
 
-from sports_data_api.api import get_schedule
+from sports_data_api.soccer_api import get_schedule
 from events.models import Event
 from sports.models import Round, Sport, Stadium, Team
 from users.models import User
@@ -31,7 +31,7 @@ class Command(BaseCommand):
                     stadium = Stadium.objects.get(sports_data_id=game['VenueId'])
                     home_team = Team.objects.get(sports_data_id=game['HomeTeamId'])
                     away_team = Team.objects.get(sports_data_id=game['AwayTeamId'])
-                    event = Event.objects.get_or_create(
+                    event, new_event = Event.objects.get_or_create(
                         round=round,
                         stadium=stadium,
                         home_team=home_team,

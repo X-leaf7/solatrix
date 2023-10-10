@@ -4,7 +4,7 @@ from django.utils.dateparse import parse_datetime
 
 from requests import get
 
-from sports_data_api.api import get_leagues, get_teams, get_venues
+from sports_data_api.soccer_api import get_leagues, get_teams, get_venues
 from sports.models import League, Season, Round, Sport, Stadium, Team
 
 
