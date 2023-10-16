@@ -45,12 +45,13 @@ function Events() {
                 </section>
                 <div class="container">
                     <div className="row text-center align-items-center mt-3">
-                        <div className="col-md-4 customDropDown">
-                            <SportSelect selected={selectedSport} setSelected={setSelectedSport} />
-                        </div>
-
+                        <div className="col-lg-4 d-md-none d-lg-block"></div>
                         <div className="col-lg-4 col-md-8 justify-content-center">
                             <DaySelect selected={selectedDay} setSelected={setSelectedDay} />
+                        </div>
+
+                        <div className="col-md-4 customDropDown">
+                            <SportSelect selected={selectedSport} setSelected={setSelectedSport} />
                         </div>
                     </div>
                 </div>
