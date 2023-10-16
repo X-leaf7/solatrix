@@ -38,10 +38,10 @@ class Command(BaseCommand):
                     away_team=away_team,
                     is_private=False,
                     event_start_time=parse_datetime(game['DateTime']),
-                    banner='banners/leaderboard_default_image_728px_x_90px_v2.jpg',
-                    host=host,
                     defaults={
-                        'lobby_start_time': datetime.now()
+                        'lobby_start_time': datetime.now(),
+                        'banner': 'banners/leaderboard_default_image_728px_x_90px_v2.jpg',
+                        'host': host
                     }
                 )
                 event.status = game['Status']
