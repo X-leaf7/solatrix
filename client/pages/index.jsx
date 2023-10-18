@@ -1,15 +1,10 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Link from 'next/link'
 import EventList from '../component/EventList'
-import SportSelect from '../component/SportSelect'
 import Head from 'next/head'
-import DaySelect from '../component/DaySelect'
+
 
 function Home() {
-    
-    const [selectedSport, setSelectedSport] = useState();
-    const [selectedDay, setSelectedDay] = useState();
-
 
     return (
         <>
@@ -44,17 +39,11 @@ function Home() {
                     <div className="row text-center align-items-center">
                         <div className="col-md-4"></div>
                         <div className="col-md-4">
-                            <h1 className="schedule-header display-4 mb-3 mt-md-5"><b>Schedule</b></h1>
+                            <h1 className="schedule-header display-4 mb-3 mt-md-5"><b>Up Next</b></h1>
                         </div>
-                        <div className="col-md-4 customDropDown mb-3 mb-md-0">
-                            <SportSelect selected={selectedSport} setSelected={setSelectedSport} />
-                        </div>
-                    </div>
-                    <div className="d-flex flex-row justify-content-center mb-5">
-                        <DaySelect selected={selectedDay} setSelected={setSelectedDay} />
                     </div>
                 </div>
-                <EventList selectedSport={selectedSport} selectedDay={selectedDay} />
+                <EventList/>
             </section>
 
             <section id="work" className="bg-dark text-white text-center">

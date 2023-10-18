@@ -83,3 +83,27 @@ Resources:
                 Subnets:
                   - !Ref SubnetA
                   - !Ref SubnetB
+
+  NFLEvents:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Run NFL Schedule Script on Tuesdays at 12 UTC
+      ScheduleExpression: cron(5 0 ? * TUE *)
+      State: ENABLED
+      Targets:
+        - Arn: !Ref Cluster
+          Id: RunEcsTask
+          RoleArn: !GetAtt CronExecutionRole.Arn
+          Input: !Sub '{"containerOverrides": [{"name": "${ContainerName}", "command": ["python", "manage.py", "load_nfl_events"]}]}'
+          EcsParameters:
+            TaskCount: 1
+            TaskDefinitionArn: !Ref TaskDefinition
+            LaunchType: FARGATE
+            NetworkConfiguration:
+              AwsVpcConfiguration:
+                AssignPublicIp: DISABLED
+                SecurityGroups:
+                  - !Ref SecurityGroup
+                Subnets:
+                  - !Ref SubnetA
+                  - !Ref SubnetB
