@@ -30,7 +30,8 @@ class Command(BaseCommand):
                 country=stadium['Country'],
                 latitude=stadium['GeoLat'],
                 longitude=stadium['GeoLong'],
-                sports_data_id=stadium['StadiumID']
+                sports_data_id=stadium['StadiumID'],
+                sport=football
             )
 
         # After loading venue data, load team data for each league
@@ -39,12 +40,13 @@ class Command(BaseCommand):
             stadium_data = team_data['StadiumDetails']
             stadium, new_stadium = Stadium.objects.get_or_create(
                 sports_data_id=stadium_data['StadiumID'],
-                country=stadium_data['Country'],
+                sport=football,
                 defaults={
                     'name': stadium_data['Name'],
                     'city': stadium_data['City'],
                     'latitude': stadium_data['GeoLat'],
-                    'longitude': stadium_data['GeoLong']
+                    'longitude': stadium_data['GeoLong'],
+                    'country': stadium_data['Country']
                 }
             )
             colors = [

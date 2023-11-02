@@ -34,6 +34,7 @@ class Round(SSBaseModel, SportsDataModel):
 
 class Stadium(SSBaseModel, SportsDataModel):
     name = models.CharField(max_length=255)
+    sport = models.ForeignKey(Sport, on_delete=models.DO_NOTHING, null=True)
     latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True)
     address = models.CharField(max_length=255, blank=True)

@@ -63,7 +63,8 @@ class Command(BaseCommand):
                     country=venue_data['Country'],
                     latitude=venue_data['GeoLat'],
                     longitude=venue_data['GeoLong'],
-                    sports_data_id=venue_data['VenueId']
+                    sports_data_id=venue_data['VenueId'],
+                    sport=soccer
                 )
 
         # After loading venue data, load team data for each league
@@ -72,6 +73,7 @@ class Command(BaseCommand):
             for team_data in teams_data:
                 stadium, new_stadium = Stadium.objects.get_or_create(
                     sports_data_id=team_data['VenueId'],
+                    sport=soccer,
                     defaults={
                         'name': team_data['VenueName'],
                         'address': team_data['Address'],

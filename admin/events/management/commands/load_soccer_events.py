@@ -28,7 +28,7 @@ class Command(BaseCommand):
                         continue
 
                     round = Round.objects.get(sports_data_id=game['RoundId'], season=season)
-                    stadium = Stadium.objects.get(sports_data_id=game['VenueId'])
+                    stadium = Stadium.objects.get(sports_data_id=game['VenueId'], sport=soccer)
                     home_team = Team.objects.get(sports_data_id=game['HomeTeamId'])
                     away_team = Team.objects.get(sports_data_id=game['AwayTeamId'])
                     event, new_event = Event.objects.get_or_create(

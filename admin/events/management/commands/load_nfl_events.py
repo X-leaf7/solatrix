@@ -5,7 +5,7 @@ from django.utils.dateparse import parse_datetime
 
 from sports_data_api.nfl_api import get_schedule
 from events.models import Event
-from sports.models import League, Stadium, Team
+from sports.models import League, Sport, Stadium, Team
 from users.models import User
 
 
@@ -14,6 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         nfl = League.objects.get(name="NFL")
+        football = Sport.objects.get(name="Football")
         today = date.today()
         host = User.objects.get(email='support@split-side.com')
         active_seasons = nfl.season_set.filter(end_date__date__gte=today)
@@ -27,7 +28,7 @@ class Command(BaseCommand):
                 stadium_details = game['StadiumDetails']
                 stadium = Stadium.objects.get(
                     sports_data_id=stadium_details['StadiumID'],
-                    country=stadium_details['Country']
+                    sport=football
                 )
                 home_team = Team.objects.get(sports_data_id=game['GlobalHomeTeamID'])
                 away_team = Team.objects.get(sports_data_id=game['GlobalAwayTeamID'])
