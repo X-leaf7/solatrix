@@ -12,7 +12,7 @@ class LeagueSerializer(serializers.HyperlinkedModelSerializer):
 class SportSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sport
-        fields = ['id', 'name', 'slug', 'leagues']
+        fields = ['id', 'name', 'slug']
 
 
 class StadiumSerializer(serializers.HyperlinkedModelSerializer):

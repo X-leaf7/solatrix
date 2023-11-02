@@ -43,7 +43,7 @@ function Events() {
                         </nav>
                     </div>
                 </section>
-                <div class="container">
+                <div className="container">
                     <div className="row text-center align-items-center mt-3">
                         <div className="col-lg-4 d-md-none d-lg-block"></div>
                         <div className="col-lg-4 col-md-8 justify-content-center">
