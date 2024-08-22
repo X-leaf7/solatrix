@@ -56,15 +56,17 @@ class Command(BaseCommand):
         for venue_data in venues_data:
             if venue_data['Country'] in countries:
                 Stadium.objects.get_or_create(
-                    name=venue_data['Name'],
-                    address=venue_data['Address'] or '',
-                    city=venue_data['City'] or '',
-                    zip_code=venue_data['Zip'] or '',
-                    country=venue_data['Country'],
-                    latitude=venue_data['GeoLat'],
-                    longitude=venue_data['GeoLong'],
                     sports_data_id=venue_data['VenueId'],
-                    sport=soccer
+                    sport=soccer,
+                    defaults={
+                        'name': venue_data['Name'],
+                        'address': venue_data['Address'] or '',
+                        'city': venue_data['City'] or '',
+                        'zip_code': venue_data['Zip'] or '',
+                        'country': venue_data['Country'],
+                        'latitude': venue_data['GeoLat'],
+                        'longitude': venue_data['GeoLong']
+                    }
                 )
 
         # After loading venue data, load team data for each league
