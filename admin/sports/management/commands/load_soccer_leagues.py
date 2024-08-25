@@ -99,6 +99,13 @@ class Command(BaseCommand):
                         'colors': colors
                     }
                 )
+
+                if not new_team:
+                    # Keep the existing team up to date
+                    team.stadium = stadium
+                    team.colors = colors
+                    team.save()
+
                 logo_url = team_data['WikipediaLogoUrl']
                 if logo_url:
                     logo_name = logo_url.split('/')[-1]
