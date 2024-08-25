@@ -90,13 +90,22 @@ class Command(BaseCommand):
                     if color
                 ]
                 team, new_team = Team.objects.get_or_create(
-                    name=team_data['Name'],
+                    sports_data_id=team_data['TeamId'],
                     sport=soccer,
-                    league=league,
-                    stadium=stadium,
-                    colors=colors,
-                    sports_data_id=team_data['TeamId']
+                    defaults={
+                        'name': team_data['Name'],
+                        'league': league,
+                        'stadium': stadium,
+                        'colors': colors
+                    }
                 )
+
+                if not new_team:
+                    # Keep the existing team up to date
+                    team.stadium = stadium
+                    team.colors = colors
+                    team.save()
+
                 logo_url = team_data['WikipediaLogoUrl']
                 if logo_url:
                     logo_name = logo_url.split('/')[-1]
