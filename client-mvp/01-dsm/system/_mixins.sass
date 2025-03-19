@@ -1,0 +1,42 @@
+@use 'mq' as *
+@use 'functions' as *
+  
+@mixin container ($max: grid(175))
+  &
+    inline-size: 90%
+    margin-inline: auto
+    max-inline-size: $max
+    @include mq ($until: tablet-small)
+      padding-inline: grid(2.5)
+      inline-size: 100%
+    
+@mixin flex ($direction: row, $align: center, $justify: space-between, $wrap: wrap)
+  &
+    align-items: $align
+    display: flex
+    flex-direction: $direction
+    justify-content: $justify
+    flex-wrap: $wrap
+
+@mixin hide
+  opacity: 0
+  visibility: hidden
+
+@mixin show
+  opacity: 1
+  visibility: visible
+
+@mixin image
+  &
+    display: block
+    height: auto
+
+@mixin image-full
+  @include image
+  &
+    width: 100%
+
+@mixin image-max
+  @include image
+  &
+    max-width: 100%

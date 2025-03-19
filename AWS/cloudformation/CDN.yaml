@@ -1,0 +1,284 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  This template creates a CloudFront Distribution for our static frontend and routing to the admin backend
+
+Metadata:
+  Author: https://www.linkedin.com/in/jacob-foster-508280140/
+
+Parameters:
+  ClusterName:
+    Type: String
+
+  DjangoAdminLoadBalancerUrl:
+    Type: String
+
+  UILoadBalancerUrl:
+    Type: String
+
+  Domain:
+    Type: String
+
+  WafAcl:
+    Type: String
+
+  CertificateArn:
+    Type: String
+    # Must be in us-east-1
+    Default: 'arn:aws:acm:us-east-1:514205568277:certificate/e6209e38-9d4c-450e-a3a6-23b0195e5943'
+
+  Bucket:
+    Type: String
+
+Resources:
+
+  CloudFrontOriginAccess:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties: 
+      OriginAccessControlConfig: 
+        Description: 'Access S3 from CloudFront'
+        Name: !Ref ClusterName
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  CorsResponsePolicy:
+    Type: AWS::CloudFront::ResponseHeadersPolicy
+    Properties:
+      ResponseHeadersPolicyConfig:
+        Name: !Sub "${ClusterName}-CORS"
+        CorsConfig:
+          AccessControlAllowCredentials: false
+          AccessControlAllowHeaders:
+            Items:
+              - '*'
+          AccessControlExposeHeaders:
+            Items:
+              - '*'
+          AccessControlAllowMethods:
+            Items:
+              - GET
+              - HEAD
+              - OPTIONS
+          AccessControlAllowOrigins:
+            Items:
+              - !Sub 'https://${Domain}'
+          OriginOverride: true
+
+  BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Sid: AllowCloudFrontServicePrincipalReadOnly
+          Effect: Allow
+          Principal:
+            Service: "cloudfront.amazonaws.com"
+          Action: "s3:GetObject"
+          Resource: !Sub "arn:aws:s3:::${Bucket}/*"
+          Condition:
+             StringEquals:
+                "AWS:SourceArn": !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${CDN}"
+
+  BackendCachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Comment: Caching Policy for Admin Django Backend
+        DefaultTTL: 300
+        MaxTTL: 300
+        MinTTL: 300
+        Name: !Sub "${ClusterName}-Backend"
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingGzip: false
+          HeadersConfig:
+            HeaderBehavior: whitelist
+            Headers:
+              - Authorization
+          QueryStringsConfig:
+            QueryStringBehavior: all
+
+  IndexCachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Comment: Caching Policy for SPA index
+        DefaultTTL: 300
+        MaxTTL: 300
+        MinTTL: 300
+        Name: !Sub "${ClusterName}-SPA-Index"
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingGzip: false
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none
+
+  AuthCachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Comment: Caching Policy for Backend Auth
+        DefaultTTL: 0
+        MaxTTL: 0
+        MinTTL: 0
+        Name: !Sub "${ClusterName}-Auth"
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingGzip: false
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none
+
+  SpaRewrite:
+    Type: AWS::CloudFront::Function
+    Properties:
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Rewrites URIs to handle SPA refreshes
+        Runtime: cloudfront-js-1.0
+      Name: !Sub "${ClusterName}-SPA-rewrite"
+      FunctionCode: >
+        function handler(event) {
+            var request = event.request;
+            var uri = request.uri;
+            
+            // Event pages don't have their own file, handle refreshes
+            if (uri.includes('/event/')) {
+              request.uri = '/index.html'
+            }
+            // Check whether the URI is missing a file name.
+            else if (uri.endsWith('/')) {
+                request.uri += 'index.html';
+            } 
+            // Check whether the URI is missing a file extension.
+            else if (!uri.includes('.')) {
+                request.uri += '/index.html';
+            }
+        
+            return request;
+        }
+
+  CDN:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref Domain
+          - !Sub "*.${Domain}"
+        Comment: Staging CloudFront Distribution
+        WebACLId: !Ref WafAcl
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: '/'
+            ErrorCachingMinTTL: 60
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: '/'
+            ErrorCachingMinTTL: 60
+        CacheBehaviors:
+          - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            CachePolicyId: !Ref AuthCachePolicy
+            PathPattern: '/api/auth/*'
+            TargetOriginId: django-backend
+            ViewerProtocolPolicy: redirect-to-https
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
+          - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            CachePolicyId: !Ref AuthCachePolicy
+            PathPattern: '/api/attendees/*'
+            TargetOriginId: django-backend
+            ViewerProtocolPolicy: redirect-to-https
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
+          - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            CachePolicyId: !Ref AuthCachePolicy
+            PathPattern: '/api/*'
+            TargetOriginId: django-backend
+            ViewerProtocolPolicy: redirect-to-https
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
+          - AllowedMethods: [GET, HEAD, OPTIONS]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            CachePolicyId: !Ref IndexCachePolicy
+            PathPattern: '*index.html'
+            TargetOriginId: ui-frontend
+            ViewerProtocolPolicy: redirect-to-https
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
+          - AllowedMethods: [GET, HEAD, OPTIONS]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6' # AWS Managed Cache optimized
+            PathPattern: '/djangocms_admin_style/*'
+            TargetOriginId: s3-bucket
+            ViewerProtocolPolicy: redirect-to-https
+            OriginRequestPolicyId: '88a5eaf4-2fd4-4709-b370-b4c650ea3fcf' # AWS Managed S3 CORS
+          - AllowedMethods: [GET, HEAD, OPTIONS]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6' # AWS Managed Cache optimized
+            PathPattern: '*.css'
+            TargetOriginId: ui-frontend
+            ViewerProtocolPolicy: redirect-to-https
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
+          - AllowedMethods: [GET, HEAD, OPTIONS]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6' # AWS Managed Cache optimized
+            PathPattern: '*.js'
+            TargetOriginId: ui-frontend
+            ViewerProtocolPolicy: redirect-to-https
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
+          - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
+            CachedMethods: [GET, HEAD, OPTIONS]
+            CachePolicyId: !Ref BackendCachePolicy
+            PathPattern: '/cms/*'
+            TargetOriginId: django-backend
+            ViewerProtocolPolicy: redirect-to-https
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
+        DefaultCacheBehavior:
+          TargetOriginId: ui-frontend
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          ViewerProtocolPolicy: redirect-to-https
+          Compress: true
+          CachePolicyId: !Ref IndexCachePolicy
+          ResponseHeadersPolicyId: !Ref CorsResponsePolicy
+          OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt SpaRewrite.FunctionMetadata.FunctionARN
+        DefaultRootObject: index.html
+        Enabled: true
+        Origins: 
+          - Id: s3-bucket
+            DomainName: !Sub "${Bucket}.s3.amazonaws.com"
+            OriginAccessControlId: !GetAtt CloudFrontOriginAccess.Id
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+          - Id: ui-frontend
+            DomainName: !Ref UILoadBalancerUrl
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols:
+                - TLSv1.2
+          - Id: django-backend
+            DomainName: !Ref DjangoAdminLoadBalancerUrl
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols:
+                - TLSv1.2
+        PriceClass: PriceClass_100
+        ViewerCertificate: 
+          AcmCertificateArn: !Ref CertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+
+Outputs:
+  Bucket:
+    Value: !Ref Bucket

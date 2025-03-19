@@ -1,0 +1,15 @@
+version: 0.2
+
+env:
+  git-credential-helper: yes
+        
+phases:
+  install:
+    on-failure: ABORT
+    runtime-versions:
+      python: 3.10
+      nodejs: 16
+  build:
+    on-failure: ABORT
+    commands:
+      - echo "Run some E2E tests here!"

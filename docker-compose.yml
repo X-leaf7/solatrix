@@ -1,0 +1,79 @@
+version: "2"
+services:
+  django:
+    platform: linux/amd64
+    image: ss_django
+    build:
+      context: ./admin
+    volumes:
+      - ./admin:/app
+    ports:
+      - "8001:8000"
+    links:
+      - db
+      - redis
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DJANGO_SETTINGS_MODULE: config.settings.local
+      WEB_DOMAIN: localhost
+  # client:
+  #   image: ss_client
+  #   build:
+  #     context: ./client-mvp
+  #   environment:
+  #     NEXT_PUBLIC_SOCKET_SERVER_URL: "http://localhost:3000/"
+  #   volumes:
+  #     - ./client-mvp:/app
+  #     - exclude:/app/node_modules/
+  #   ports:
+  #     - "80:3000"
+  chat:
+    image: ss_chat
+    build:
+      context: ./chat
+    command: ["npm", "run", "dev"]
+    links:
+      - django
+      - dynamodb
+      - redis
+    environment:
+      DYNAMODB_MESSAGE_TABLE: localMessages
+      AWS_ACCESS_KEY_ID: FakeKeyId
+      AWS_SECRET_ACCESS_KEY: FakeSecretAccessKey
+      DEBUG: true
+      REDIS_URL: redis://redis:6379
+    volumes:
+      - ./chat:/app
+      - otherexclude:/app/node_modules/
+    ports:
+      - "3000:3000"
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: localpostgrespassword
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+  dynamodb:
+    user: root
+    image: amazon/dynamodb-local
+    ports:
+      - "5001:8000"
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/
+    volumes:
+      - dynamodb_data:/home/dynamodblocal/data
+
+volumes:
+  exclude:
+
+  otherexclude:
+
+  dynamodb_data:

@@ -1,0 +1,375 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  This template generates a Fargate Cluster and required resources
+
+Metadata:
+  Author: https://www.linkedin.com/in/jacob-foster-508280140/
+
+Parameters:
+  ClusterName:
+    Type: String
+    Description: The name of the Fargate Cluster
+
+  UIImage:
+    Type: String
+    Description: ECR Image URI for the UI Frontend
+
+  AdminImage:
+    Type: String
+    Description: ECR Image URI for the Admin App
+
+  ChatImage:
+    Type: String
+    Description: ECR Image URI for the Chat Server
+
+  WafAcl:
+    Type: String
+    Description: ARN of WAF ACL hosted in us-east-1
+
+  Domain:
+    Type: String
+
+Mappings:
+  ContainerConfig: 
+    UI:
+      Port: 3000
+    Admin: 
+      Port: 8000
+    Chat: 
+      Port: 3000
+
+Resources:
+
+  Cluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      CapacityProviders:
+        - FARGATE
+      ClusterName: !Ref ClusterName
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
+      Configuration:
+        ExecuteCommandConfiguration:
+          Logging: DEFAULT
+
+  LoadBalancerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Join ['', [!Ref ClusterName, LoadBalancerSecurityGroup]]
+      VpcId: !GetAtt VPC.Outputs.VPCId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+
+  ContainerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Join ['', [!Ref ClusterName, ContainerSecurityGroup]]
+      VpcId: !GetAtt VPC.Outputs.VPCId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: !FindInMap [ ContainerConfig, UI, Port ]
+          ToPort: !FindInMap [ ContainerConfig, UI, Port ]
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+        - IpProtocol: tcp
+          FromPort: !FindInMap [ ContainerConfig, Admin, Port ]
+          ToPort: !FindInMap [ ContainerConfig, Admin, Port ]
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+        - IpProtocol: tcp
+          FromPort: !FindInMap [ ContainerConfig, Chat, Port ]
+          ToPort: !FindInMap [ ContainerConfig, Chat, Port ]
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+
+  UITask:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: UITask.yaml
+      Parameters:
+        ServiceName: ui
+        ClusterName: !Ref ClusterName
+        ExecutionRole: !Ref ExecutionRole
+        Image: !Ref UIImage
+        ContainerPort: !FindInMap [ ContainerConfig, UI, Port ]
+        Domain: !Ref Domain
+
+  UIService:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: UIService.yaml
+      Parameters:
+        ServiceName: ui
+        TaskDefinition: !GetAtt UITask.Outputs.TaskDefinition
+        ContainerPort: !FindInMap [ ContainerConfig, UI, Port ]
+        Cluster: !Ref Cluster
+        VPC: !GetAtt VPC.Outputs.VPCId
+        PrivateSubnet1: !GetAtt VPC.Outputs.PrivateSubnet0
+        PrivateSubnet2: !GetAtt VPC.Outputs.PrivateSubnet1
+        PublicSubnet1: !GetAtt VPC.Outputs.PublicSubnet0
+        PublicSubnet2: !GetAtt VPC.Outputs.PublicSubnet1
+        AutoScalingRole: !GetAtt AutoScalingRole.Arn
+        LoadBalancerSecurityGroup: !Ref LoadBalancerSecurityGroup
+        ContainerSecurityGroup: !Ref ContainerSecurityGroup
+        HealthCheckPath: "/"
+        MaxContainers: 5
+        AutoScalingTargetValue: 70
+        AutoScalingRequestCountValue: 500
+
+  AdminTask:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: AdminTask.yaml
+      Parameters:
+        ServiceName: AdminBackend
+        ClusterName: !Ref ClusterName
+        ExecutionRole: !Ref ExecutionRole
+        Image: !Ref AdminImage
+        ContainerPort: !FindInMap [ ContainerConfig, Admin, Port ]
+        RDSConnectionSecret: !GetAtt RDSCluster.Outputs.ConnectionSecret
+        S3BucketName: !Ref Bucket
+        Domain: !Ref Domain
+        
+  AdminService:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      TemplateURL: FargateService.yaml
+      Parameters:
+        ServiceName: AdminBackend
+        TaskDefinition: !GetAtt AdminTask.Outputs.TaskDefinition
+        ContainerPort: !FindInMap [ ContainerConfig, Admin, Port ]
+        Cluster: !Ref Cluster
+        VPC: !GetAtt VPC.Outputs.VPCId
+        PrivateSubnet1: !GetAtt VPC.Outputs.PrivateSubnet0
+        PrivateSubnet2: !GetAtt VPC.Outputs.PrivateSubnet1
+        PublicSubnet1: !GetAtt VPC.Outputs.PublicSubnet0
+        PublicSubnet2: !GetAtt VPC.Outputs.PublicSubnet1
+        AutoScalingRole: !GetAtt AutoScalingRole.Arn
+        LoadBalancerSecurityGroup: !Ref LoadBalancerSecurityGroup
+        ContainerSecurityGroup: !Ref ContainerSecurityGroup
+        HealthCheckPath: "/health/"
+        MaxContainers: 2
+        AutoScalingTargetValue: 80
+
+  ChatTask:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: ChatTask.yaml
+      Parameters:
+        ServiceName: ChatServer
+        ClusterName: !Ref ClusterName
+        ExecutionRole: !Ref ExecutionRole
+        Image: !Ref ChatImage
+        ContainerPort: !FindInMap [ ContainerConfig, Chat, Port ]
+        MessageTableName: !Ref MessageTable
+        Domain: !Ref Domain
+        RedisUrl: !GetAtt RedisCluster.Outputs.RedisUrl
+
+  ChatService:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: FargateService.yaml
+      Parameters:
+        ServiceName: ChatServer
+        Cluster: !Ref Cluster
+        TaskDefinition: !GetAtt ChatTask.Outputs.TaskDefinition
+        ContainerPort: !FindInMap [ ContainerConfig, Chat, Port ]
+        VPC: !GetAtt VPC.Outputs.VPCId
+        PrivateSubnet1: !GetAtt VPC.Outputs.PrivateSubnet0
+        PrivateSubnet2: !GetAtt VPC.Outputs.PrivateSubnet1
+        PublicSubnet1: !GetAtt VPC.Outputs.PublicSubnet0
+        PublicSubnet2: !GetAtt VPC.Outputs.PublicSubnet1
+        AutoScalingRole: !GetAtt AutoScalingRole.Arn
+        LoadBalancerSecurityGroup: !Ref LoadBalancerSecurityGroup
+        ContainerSecurityGroup: !Ref ContainerSecurityGroup
+        HealthCheckPath: "/health/"
+        MaxContainers: 10
+        AutoScalingTargetValue: 70
+        AutoScalingRequestCountValue: 1000
+
+  RedisCluster:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: RedisCluster.yaml
+      Parameters:
+        ClusterName: !Ref ClusterName
+        VPC: !GetAtt VPC.Outputs.VPCId
+        PrivateSubnet1: !GetAtt VPC.Outputs.PrivateSubnet0
+        PrivateSubnet2: !GetAtt VPC.Outputs.PrivateSubnet1
+
+  RDSCluster:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      Parameters:
+        ClusterName: !Ref ClusterName
+        SubnetA: !GetAtt VPC.Outputs.PrivateSubnet0
+        SubnetB: !GetAtt VPC.Outputs.PrivateSubnet1
+        VPC: !GetAtt VPC.Outputs.VPCId
+        ContainerSecurityGroup: !Ref ContainerSecurityGroup
+      TemplateURL: RDS.yaml
+
+  MessageTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: eventId
+          AttributeType: S
+        - AttributeName: messageId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: eventId
+          KeyType: HASH
+        - AttributeName: messageId
+          KeyType: RANGE
+
+  VPC:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      Parameters: 
+        VPCName: !Ref ClusterName
+      TemplateURL: VPC.yaml
+
+  Bucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      AccessControl: Private
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+            AllowedOrigins:
+              - 'https://*.split-side.com'
+            ExposedHeaders: []
+            Id: allow
+            MaxAge: 3000
+
+  CDN:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        ClusterName: !Ref ClusterName
+        Domain: !Ref Domain
+        DjangoAdminLoadBalancerUrl: !GetAtt AdminService.Outputs.LoadBalancerUrl
+        UILoadBalancerUrl: !GetAtt UIService.Outputs.LoadBalancerUrl
+        Bucket: !Ref Bucket
+        WafAcl: !Ref WafAcl
+      TemplateURL: CDN.yaml
+
+  ExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
+      Policies:
+        - PolicyName: AllowReadConnectionSecret
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: 'secretsmanager:GetSecretValue'
+                Resource: !GetAtt RDSCluster.Outputs.ConnectionSecret
+
+  AutoScalingRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceAutoscaleRole'
+
+  AdminWaf:
+    Type: AWS::WAFv2::WebACL
+    Properties:
+      DefaultAction:
+        Block: {}
+      Description: !Sub "Protecting CDN for ${ClusterName}"
+      Scope: REGIONAL
+      VisibilityConfig:
+        CloudWatchMetricsEnabled: true
+        SampledRequestsEnabled: true
+        MetricName: "AdminWebACLMetric"
+      Rules:
+        - Name: RuleWithAWSManagedRules
+          OverrideAction:
+            None: {}
+          Priority: 0
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: "AdminAWSManagedRulesMetric"
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesCommonRuleSet
+              ExcludedRules:
+                - Name: SizeRestrictions_BODY
+                - Name: CrossSiteScripting_BODY
+        - Name: AWSManagedBadInputs
+          OverrideAction:
+            None: {}
+          Priority: 1
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: "AdminAWSBadInputsMetric"
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesKnownBadInputsRuleSet
+              ExcludedRules: []
+        - Name: OnlyAllowUS
+          Action:
+            Allow: {}
+          Priority: 2
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: !Sub "AdminOnlyDomesticTrafficMetric"
+          Statement:
+            GeoMatchStatement:
+              CountryCodes:
+                - US
+
+  AdminWafConnection:
+    Type: AWS::WAFv2::WebACLAssociation
+    Properties:
+      ResourceArn: !GetAtt AdminService.Outputs.LoadBalancerArn
+      WebACLArn: !GetAtt AdminWaf.Arn
+
+  Cron:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      Parameters:
+        Cluster: !GetAtt Cluster.Arn
+        TaskDefinition: !GetAtt AdminTask.Outputs.TaskDefinition
+        ExecutionRole: !GetAtt ExecutionRole.Arn
+        TaskRole: !GetAtt AdminTask.Outputs.TaskRoleArn
+        ContainerName: AdminBackend
+        SecurityGroup: !Ref ContainerSecurityGroup
+        SubnetA: !GetAtt VPC.Outputs.PrivateSubnet0
+        SubnetB: !GetAtt VPC.Outputs.PrivateSubnet1
+      TemplateURL: Cron.yaml
+
+Outputs:
+  S3Bucket:
+    Value: !Ref Bucket
