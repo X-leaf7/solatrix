@@ -1,4 +1,4 @@
-import { VerificationSent } from '@/02-components';
+import { VerificationSent } from '@/components';
 
 export default function Page() {
   return <VerificationSent />;

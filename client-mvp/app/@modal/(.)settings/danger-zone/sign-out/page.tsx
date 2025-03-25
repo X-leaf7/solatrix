@@ -1,5 +1,5 @@
-import { Modal } from '@/01-dsm';
-import { SignOut } from '@/02-components';
+import { Modal } from '@/dsm';
+import { SignOut } from '@/components';
 
 export default function Page() {
   return (

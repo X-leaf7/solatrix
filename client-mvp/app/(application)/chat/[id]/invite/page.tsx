@@ -1,4 +1,4 @@
-import { ChatInvite } from '@/02-components';
+import { ChatInvite } from '@/components';
 
 export default function Page() {
   return <ChatInvite />;

@@ -1,7 +1,7 @@
 import '@/01-dsm/app.sass';
 
 import { DM_Sans, Open_Sans } from 'next/font/google';
-import { Footer, Toaster } from '@/02-components';
+import { Footer, Toaster } from '@/components';
 import { PropsWithChildren, ReactNode } from 'react';
 
 import { AnimatePresence } from 'framer-motion';

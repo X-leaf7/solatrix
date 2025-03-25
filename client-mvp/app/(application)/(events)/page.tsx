@@ -1,5 +1,5 @@
 import Client from './page.client';
-import { Events } from '@/02-components';
+import { Events } from '@/components';
 import { Suspense } from 'react';
 
 export default function Page() {

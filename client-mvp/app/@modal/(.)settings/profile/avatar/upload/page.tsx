@@ -1,5 +1,5 @@
-import { AvatarUploader } from '@/02-components';
-import { Modal } from '@/01-dsm';
+import { AvatarUploader } from '@/components';
+import { Modal } from '@/dsm';
 
 export default function Page() {
   return (

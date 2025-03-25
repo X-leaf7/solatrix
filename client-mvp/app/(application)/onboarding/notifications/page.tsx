@@ -1,4 +1,4 @@
-import { Notifications } from '@/02-components';
+import { Notifications } from '@/components';
 
 export default function Page() {
   return <Notifications />;

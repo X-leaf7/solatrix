@@ -1,4 +1,4 @@
-import { AvatarUploader } from '@/02-components';
+import { AvatarUploader } from '@/components';
 
 export default function Page() {
   return <AvatarUploader />;

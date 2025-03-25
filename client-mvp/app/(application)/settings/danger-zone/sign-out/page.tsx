@@ -1,4 +1,4 @@
-import { SignOut } from '@/02-components';
+import { SignOut } from '@/components';
 import styles from './page.module.sass';
 
 export default function Page() {

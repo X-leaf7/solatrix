@@ -1,5 +1,5 @@
-import { Modal } from '@/01-dsm';
-import { Notifications } from '@/02-components';
+import { Modal } from '@/dsm';
+import { Notifications } from '@/components';
 
 export default function Page() {
   return (

@@ -3,7 +3,7 @@
 import { parseAsString, useQueryState } from 'nuqs';
 import { Suspense } from 'react'
 
-import { EmailChanged } from '@/02-components';
+import { EmailChanged } from '@/components';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 

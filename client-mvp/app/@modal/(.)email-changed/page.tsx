@@ -1,5 +1,5 @@
-import { EmailChanged } from '@/02-components';
-import { Modal } from '@/01-dsm';
+import { EmailChanged } from '@/components';
+import { Modal } from '@/dsm';
 
 export default function Page() {
   return (

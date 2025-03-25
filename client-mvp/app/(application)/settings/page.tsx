@@ -1,6 +1,6 @@
-import { FormProfile, ProfileProgress } from '@/02-components';
+import { FormProfile, ProfileProgress } from '@/components';
 
-import { AvatarUpload } from '@/02-components';
+import { AvatarUpload } from '@/components';
 import { Suspense } from 'react';
 import { cx } from 'cva';
 import styles from './page.module.sass';

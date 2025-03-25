@@ -1,5 +1,5 @@
-import { Modal } from '@/01-dsm';
-import { VerificationSent } from '@/02-components';
+import { Modal } from '@/dsm';
+import { VerificationSent } from '@/components';
 
 export default function Page() {
   return (

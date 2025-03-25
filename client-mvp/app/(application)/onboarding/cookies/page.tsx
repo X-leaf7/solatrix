@@ -1,4 +1,4 @@
-import { Cookies } from '@/02-components';
+import { Cookies } from '@/components';
 
 export default function Page() {
   return <Cookies />;

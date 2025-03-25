@@ -1,5 +1,5 @@
-import { Error } from '@/02-components';
-import { Modal } from '@/01-dsm';
+import { Error } from '@/components';
+import { Modal } from '@/dsm';
 
 export default function Page() {
   return (

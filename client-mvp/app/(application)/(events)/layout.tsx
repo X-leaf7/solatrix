@@ -1,4 +1,4 @@
-import { FormEvents, TabsEvents } from '@/02-components';
+import { FormEvents, TabsEvents } from '@/components';
 
 import styles from './layout.module.sass';
 

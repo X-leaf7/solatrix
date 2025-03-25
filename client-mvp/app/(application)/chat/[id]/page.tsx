@@ -1,4 +1,4 @@
-import { ChatEvent, ChatHost, ChatVideo } from '@/02-components';
+import { ChatEvent, ChatHost, ChatVideo } from '@/components';
 
 import { cx } from 'cva';
 import styles from './page.module.sass';

@@ -1,5 +1,5 @@
-import { Button, LogoMark } from '@/01-dsm';
-import { FormSignIn } from '@/02-components';
+import { Button, LogoMark } from '@/dsm';
+import { FormSignIn } from '@/components';
 import Image from 'next/image';
 import { Suspense } from 'react';
 import styles from './page.module.sass';

@@ -1,5 +1,5 @@
-import { Modal } from '@/01-dsm';
-import { PageModal } from '@/02-components';
+import { Modal } from '@/dsm';
+import { PageModal } from '@/components';
 import Terms from '@/markdown/terms.mdx';
 
 export default function Page() {

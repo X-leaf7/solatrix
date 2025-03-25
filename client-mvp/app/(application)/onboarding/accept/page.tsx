@@ -1,4 +1,4 @@
-import { Accept } from '@/02-components';
+import { Accept } from '@/components';
 
 export default function Page() {
   return <Accept />;

@@ -1,11 +1,11 @@
 'use client';
 
-import { NavigationGroup, NavigationSettings } from '@/02-components';
+import { NavigationGroup, NavigationSettings } from '@/components';
 
-import { Button } from '@/01-dsm';
+import { Button } from '@/dsm';
 import Form from 'next/form';
 import { PropsWithChildren } from 'react';
-import { Toggle } from '@/01-dsm';
+import { Toggle } from '@/dsm';
 import { cx } from 'cva';
 import styles from './layout.module.sass';
 import { usePathname } from 'next/navigation';

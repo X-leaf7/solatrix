@@ -1,4 +1,4 @@
-import { BackgroundSwitcher, Header } from '@/02-components';
+import { BackgroundSwitcher, Header } from '@/components';
 import { PropsWithChildren, Suspense } from 'react';
 
 import styles from './layout.module.sass';

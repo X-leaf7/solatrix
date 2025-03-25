@@ -1,5 +1,5 @@
-import { ChatLeave } from '@/02-components';
-import { Modal } from '@/01-dsm';
+import { ChatLeave } from '@/components';
+import { Modal } from '@/dsm';
 
 export default function Page() {
   return (

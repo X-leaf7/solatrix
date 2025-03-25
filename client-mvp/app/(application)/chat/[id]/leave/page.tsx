@@ -1,4 +1,4 @@
-import { ChatLeave } from '@/02-components';
+import { ChatLeave } from '@/components';
 
 export default function Page() {
   return <ChatLeave />;

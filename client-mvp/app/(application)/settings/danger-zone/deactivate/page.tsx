@@ -1,4 +1,4 @@
-import { Deactivate } from '@/02-components';
+import { Deactivate } from '@/components';
 import styles from './page.module.sass';
 
 export default function Page() {
