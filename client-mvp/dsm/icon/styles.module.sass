@@ -1,0 +1,42 @@
+// Base icon styles
+.icon
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  fill: currentColor
+  width: 1.5rem // 6 in tailwind (24px)
+  height: 1.5rem // 6 in tailwind (24px)
+
+  // Type variations
+  &--base
+    color: var(--color-ui-text)
+
+  &--inverted
+    color: var(--color-ui-text-alt)
+
+  &--success
+    color: var(--color-positive)
+
+  &--error
+    color: var(--color-destruct)
+
+  &--warn
+    color: var(--color-warn)
+
+  // Size variations
+  &--sm
+    width: 1rem // 4 in tailwind (16px)
+    height: 1rem
+
+  &--md
+    width: 2rem // 8 in tailwind (32px)
+    height: 2rem
+
+  &--lg
+    width: 3rem // 12 in tailwind (48px)
+    height: 3rem
+
+  &--xl
+    width: 6rem // 24 in tailwind (96px)
+    height: 6rem
+

@@ -19,3 +19,5 @@ export * from './table';
 export * from './teams';
 export * from './teams';
 export * from './toggle';
+export * from './spacer';
+export * from './icon';

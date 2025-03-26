@@ -6,12 +6,17 @@ import styles from './layout.module.sass';
 export default function Layout(props: PropsWithChildren) {
   const { children } = props;
   return (
-    <>
+    <div style={{
+      position: 'relative',
+      width: '100%',
+      overflow: 'hidden',
+      paddingBottom: '24px'
+    }}>
       <Header />
       <Suspense>
         <main className={styles.main}>{children}</main>
       </Suspense>
       <BackgroundSwitcher />
-    </>
+    </div>
   );
 }
