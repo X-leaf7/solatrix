@@ -1,3 +1,5 @@
+'use client'
+
 // From https://codepen.io/amazon-ivs/project/editor/ZzWobn
 // From https://gitlab.aws.dev/ivs-demos/amazon-ivs-real-time-tool/-/blob/main/src/contexts/DeviceManager/helpers/helpers.ts
 

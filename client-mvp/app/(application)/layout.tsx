@@ -1,3 +1,5 @@
+'use client'
+
 import { BackgroundSwitcher, Header } from '@/components';
 import { PropsWithChildren, Suspense } from 'react';
 
@@ -10,7 +12,7 @@ export default function Layout(props: PropsWithChildren) {
       position: 'relative',
       width: '100%',
       overflow: 'hidden',
-      paddingBottom: '24px'
+      paddingBottom: '40px'
     }}>
       <Header />
       <Suspense>

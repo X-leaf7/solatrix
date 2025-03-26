@@ -70,7 +70,6 @@ function BroadcastLayoutProvider({ children }: BroadcastLayoutProviderProps): Re
   )
 }
 
-export default BroadcastLayoutProvider
-export { BroadcastLayoutContext }
+export { BroadcastLayoutContext, BroadcastLayoutProvider }
 export type { UseBroadcastLayoutReturn }
 

@@ -130,14 +130,22 @@ function useLocalMedia(): UseLocalMediaReturn {
   )
 
   const setInitialDevices = async (): Promise<InitialDevices> => {
+    console.log('Set Initial Devices is called')
     const {
       videoDevices: _videoDevices,
       audioDevices: _audioDevices,
       permissions: _permissions,
     } = await refreshDevices()
 
+    console.log(('refreshed devices, getting ideal devices'))
+
     const audioDeviceId = getIdealDevice(savedAudioDeviceId, _audioDevices)
     const videoDeviceId = getIdealDevice(savedVideoDeviceId, _videoDevices)
+
+    console.log('ideal devices: ',
+      audioDeviceId,
+      videoDeviceId
+    )
 
     const audioStream = await updateLocalAudio(audioDeviceId)
     const videoStream = await updateLocalVideo(videoDeviceId)
@@ -148,7 +156,9 @@ function useLocalMedia(): UseLocalMediaReturn {
   }
 
   const cleanUpDevices = (): void => {
-    navigator.mediaDevices.removeEventListener("devicechange", handleDeviceChange)
+    if (navigator.mediaDevices) {
+      navigator.mediaDevices.removeEventListener("devicechange", handleDeviceChange)
+    }
   }
 
   const refreshDevices = async (e?: Event): Promise<RefreshedDevices> => {

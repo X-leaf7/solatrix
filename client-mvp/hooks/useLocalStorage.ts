@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useEffect } from 'react';
 
 function useLocalStorage<T>(key: string, defaultValue: T, saveSettings = false): [T, React.Dispatch<React.SetStateAction<T>>] {

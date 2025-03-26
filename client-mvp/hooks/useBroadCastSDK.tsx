@@ -124,6 +124,7 @@ export interface UseBroadcastSDKReturn {
 }
 
 const useBroadcastSDK = (): UseBroadcastSDKReturn => {
+  
   const { streamKey, ingestEndpoint } = useContext(UserSettingsContext)
   const { toggleModal, setModalProps, setModalContent } = useContext(ModalContext)
 

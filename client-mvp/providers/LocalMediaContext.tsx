@@ -184,7 +184,6 @@ function LocalMediaProvider({ children }: LocalMediaProviderProps) {
   return <LocalMediaContext.Provider value={state}>{children}</LocalMediaContext.Provider>
 }
 
-export default LocalMediaProvider
-export { LocalMediaContext }
+export { LocalMediaContext, LocalMediaProvider }
 export type { LocalMediaContextType, MediaDevice, RefreshSceneParams, InitialDevices, RefreshedDevices }
 

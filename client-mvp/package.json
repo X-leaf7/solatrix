@@ -17,6 +17,7 @@
     "@types/luxon": "^3.4.2",
     "@types/mdx": "^2.0.13",
     "amazon-ivs-web-broadcast": "^1.22.0",
+    "clsx": "^2.1.1",
     "cookies-next": "^5.1.0",
     "cva": "npm:class-variance-authority@^0.7.0",
     "expr-eval": "^2.0.2",

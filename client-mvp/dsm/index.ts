@@ -21,3 +21,5 @@ export * from './teams';
 export * from './toggle';
 export * from './spacer';
 export * from './icon';
+export * from './tooltip';
+export * from './icon';

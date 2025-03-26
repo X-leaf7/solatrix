@@ -1,3 +1,5 @@
+'use client'
+
 import { ReactNode, createContext, useState, Dispatch, SetStateAction } from 'react';
 import { getSavedValuesFromLocalStorage, clearSavedSettings } from '@/utils/userSettings';
 
@@ -57,6 +59,7 @@ function UserSettingsProvider({ children }: UserSettingsProviderProps) {
   const [audioNoiseSuppression, setAudioNoiseSuppression] = useState<boolean>(savedValues.audioNoiseSuppression || false);
   const [autoGainControl, setAutoGainControl] = useState<boolean>(savedValues.autoGainControl || false);
   const [saveSettings, setSaveSettings] = useState<boolean>(savedValues.saveSettings || false);
+  const configRef = savedValues.configRef
 
   return (
     <UserSettingsContext.Provider
@@ -84,6 +87,7 @@ function UserSettingsProvider({ children }: UserSettingsProviderProps) {
         saveSettings,
         setSaveSettings,
         clearSavedSettings,
+        configRef,
       }}
     >
       {children}
@@ -91,5 +95,4 @@ function UserSettingsProvider({ children }: UserSettingsProviderProps) {
   );
 }
 
-export default UserSettingsProvider;
-export { UserSettingsContext };
+export { UserSettingsContext, UserSettingsProvider };

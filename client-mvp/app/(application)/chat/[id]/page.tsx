@@ -1,23 +1,25 @@
-import { ChatEvent, ChatHost, ChatVideo } from '@/components';
+'use client'
 
-import { cx } from 'cva';
-import styles from './page.module.sass';
+import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+
+const ChatPage = dynamic(() => import ('./ChatPage'), {
+  ssr: false
+})
 
 export default function Page() {
+
+  const [isClient, setIsClient] = useState(false)
+ 
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
+  if (!isClient) {
+    return null
+  }
+  
   return (
-    <article className={cx(styles.base, styles['has-video'])}>
-      <div className={styles.advertising}>Advertising</div>
-      <div className={styles.host}>
-        <div className={styles.video}>
-          <ChatVideo />
-        </div>
-        <div className={styles.hostChat}>
-          <ChatHost />
-        </div>
-      </div>
-      <div className={styles.chat}>
-        <ChatEvent />
-      </div>
-    </article>
+    <ChatPage />
   );
 }

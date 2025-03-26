@@ -10,6 +10,15 @@ import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { cx } from 'cva';
 import styles from './layout.module.sass';
 
+import {
+  BroadcastLayoutProvider,
+  BroadcastMixerProvider,
+  BroadcastProvider,
+  LocalMediaProvider,
+  ModalProvider,
+  UserSettingsProvider
+} from '@/providers';
+
 const openSans = Open_Sans({
   subsets: ['latin'],
   display: 'swap',
@@ -38,7 +47,19 @@ export default function RootLayout({
     <html lang="en">
       <body className={cx(dmSans.className, openSans.className, styles.body)}>
         <NuqsAdapter>
-          {children}
+          <ModalProvider>
+            <UserSettingsProvider>
+              <LocalMediaProvider>
+                <BroadcastProvider>
+                  <BroadcastMixerProvider>
+                    <BroadcastLayoutProvider>
+                      {children}
+                    </BroadcastLayoutProvider>
+                  </BroadcastMixerProvider>
+                </BroadcastProvider>
+              </LocalMediaProvider>
+            </UserSettingsProvider>
+          </ModalProvider>
           <Footer />
           <AnimatePresence mode="wait" initial={false}>
             {modal}

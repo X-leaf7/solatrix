@@ -112,12 +112,12 @@ interface ShowScreenShareParams {
 }
 
 interface ShowFullScreenCamParams {
-  cameraStream: MediaStream | HTMLCanvasElement
-  cameraId: string
+  cameraStream?: MediaStream | HTMLCanvasElement
+  cameraId?: string
   cameraVisible?: boolean
   cameraIsCanvas?: boolean
-  micStream: MediaStream
-  micId: string
+  micStream?: MediaStream
+  micId?: string
   showMuteIcon?: boolean
 }
 
@@ -570,9 +570,10 @@ const useBroadcastLayout = (): UseBroadcastLayoutReturn => {
       }
     }
 
+    // TODO: check type assertion safety
     const fullScreenCam = DEFAULT_TEMPLATE({
-      cameraContent: cameraStream,
-      cameraId: cameraId,
+      cameraContent: cameraStream!,
+      cameraId: cameraId!,
       cameraVisible: cameraVisible,
       cameraIsCanvas: cameraIsCanvas,
       cameraResize: cameraResize,
@@ -580,8 +581,8 @@ const useBroadcastLayout = (): UseBroadcastLayoutReturn => {
       showMuteIcon: showMuteIcon,
       micMutedContent: "/assets/mic-off.png",
       backgroundContent: "/assets/camera-bg.png",
-      micContent: micStream,
-      micId: micId,
+      micContent: micStream!,
+      micId: micId!,
     })
     await setSceneFromTemplate(fullScreenCam)
     setScreenShareActive(false)

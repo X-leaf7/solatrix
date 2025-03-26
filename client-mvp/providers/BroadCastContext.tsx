@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, type ReactNode, type ReactElement } from "react"
 import useBroadcastSDK, { type UseBroadcastSDKReturn } from "@/hooks/useBroadCastSDK"
 
@@ -45,6 +47,5 @@ function BroadcastProvider({ children }: BroadcastProviderProps): ReactElement {
   return <BroadcastContext.Provider value={state}>{children}</BroadcastContext.Provider>
 }
 
-export default BroadcastProvider
-export { BroadcastContext }
+export { BroadcastContext, BroadcastProvider }
 

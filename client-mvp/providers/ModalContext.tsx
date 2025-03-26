@@ -59,7 +59,6 @@ function ModalProvider({ children }: ModalProviderProps): ReactElement {
   )
 }
 
-export default ModalProvider
-export { ModalContext }
+export { ModalContext, ModalProvider }
 export type { ModalContextType, ModalProps }
 

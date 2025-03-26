@@ -1,3 +1,5 @@
+'use client'
+
 import { createContext, type ReactNode, type ReactElement } from "react"
 import useBroadcastMixer, { type UseBroadcastMixerReturn } from "@/hooks/useBroadCastMixer"
 
@@ -55,7 +57,6 @@ function BroadcastMixerProvider({ children }: BroadcastMixerProviderProps): Reac
   )
 }
 
-export default BroadcastMixerProvider
-export { BroadcastMixerContext }
+export { BroadcastMixerContext, BroadcastMixerProvider }
 export type { UseBroadcastMixerReturn }
 
