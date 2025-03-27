@@ -75,17 +75,17 @@ interface ConnectionState {
 }
 
 // Context interfaces
-interface UserSettingsContextType {
-  streamKey: string
-  ingestEndpoint: string
-  [key: string]: any
-}
+// interface UserSettingsContextType {
+//   streamKey: string
+//   ingestEndpoint: string
+//   [key: string]: any
+// }
 
-interface ModalContextType {
-  toggleModal: () => void
-  setModalProps: (props: any) => void
-  setModalContent: (content: React.ReactNode) => void
-}
+// interface ModalContextType {
+//   toggleModal: () => void
+//   setModalProps: (props: any) => void
+//   setModalContent: (content: React.ReactNode) => void
+// }
 
 // Function parameter interfaces
 interface CreateBroadcastClientParams {

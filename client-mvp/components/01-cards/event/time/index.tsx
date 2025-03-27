@@ -4,7 +4,7 @@ import { EventTiming } from '@/data/types/event';
 import styles from './styles.module.sass';
 
 
-export function Time({eventTiming, startTime}: {eventTiming: EventTiming, startTime: string}) {
+export function Time({ startTime }: {eventTiming: EventTiming, startTime: string}) {
 
   const now = DateTime.now();
   const eventStartTime = DateTime.fromISO(startTime);

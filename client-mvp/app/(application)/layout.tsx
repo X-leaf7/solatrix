@@ -1,12 +1,11 @@
-'use client'
-
 import { BackgroundSwitcher, Header } from '@/components';
-import { PropsWithChildren, Suspense } from 'react';
+import { PropsWithChildren } from 'react';
 
 import styles from './layout.module.sass';
 
 export default function Layout(props: PropsWithChildren) {
   const { children } = props;
+  
   return (
     <div style={{
       position: 'relative',
@@ -15,9 +14,7 @@ export default function Layout(props: PropsWithChildren) {
       paddingBottom: '40px'
     }}>
       <Header />
-      <Suspense>
-        <main className={styles.main}>{children}</main>
-      </Suspense>
+      <main className={styles.main}>{children}</main>
       <BackgroundSwitcher />
     </div>
   );

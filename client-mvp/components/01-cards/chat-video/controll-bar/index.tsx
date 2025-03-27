@@ -24,37 +24,37 @@ import {
 } from "@/providers"
 
 // Define context interfaces
-interface BroadcastContextType {
-  isLive: boolean
-  streamPending: boolean
-  toggleStream: () => Promise<void>
-  sdkVersionRef: React.MutableRefObject<string | undefined>
-  broadcastClientRef: React.MutableRefObject<any>
-}
+// interface BroadcastContextType {
+//   isLive: boolean
+//   streamPending: boolean
+//   toggleStream: () => Promise<void>
+//   sdkVersionRef: React.MutableRefObject<string | undefined>
+//   broadcastClientRef: React.MutableRefObject<any>
+// }
 
-interface BroadcastLayoutContextType {
-  camActive: boolean
-  screenShareActive: boolean
-  toggleCamVisiblity: (cameraId: string) => void
-  toggleScreenSharing: (cam?: any) => Promise<void>
-}
+// interface BroadcastLayoutContextType {
+//   camActive: boolean
+//   screenShareActive: boolean
+//   toggleCamVisiblity: (cameraId: string) => void
+//   toggleScreenSharing: (cam?: any) => Promise<void>
+// }
 
-interface BroadcastMixerContextType {
-  micMuted: boolean
-  toggleMute: (deviceId?: string) => void
-}
+// interface BroadcastMixerContextType {
+//   micMuted: boolean
+//   toggleMute: (deviceId?: string) => void
+// }
 
-interface LocalMediaContextType {
-  permissions: boolean
-  localVideoDeviceId?: string
-  localAudioDeviceId?: string
-}
+// interface LocalMediaContextType {
+//   permissions: boolean
+//   localVideoDeviceId?: string
+//   localAudioDeviceId?: string
+// }
 
-interface ModalContextType {
-  toggleModal: () => void
-  setModalProps: (props: any) => void
-  setModalContent: (content: React.ReactNode) => void
-}
+// interface ModalContextType {
+//   toggleModal: () => void
+//   setModalProps: (props: any) => void
+//   setModalContent: (content: React.ReactNode) => void
+// }
 
 export default function ControlBar() {
 
@@ -93,7 +93,7 @@ export default function ControlBar() {
 
   const handleScreenShare = useCallback(async () => {
     if (broadcastClientRef.current && localVideoDeviceId) {
-      const cam = broadcastClientRef.current.getVideoInputDevice(localVideoDeviceId).source
+      // const cam = broadcastClientRef.current.getVideoInputDevice(localVideoDeviceId).source
       toggleScreenSharing()
     }
   }, [localVideoDeviceId, toggleScreenSharing, broadcastClientRef])
@@ -169,17 +169,7 @@ export default function ControlBar() {
           />
         </div>
       </div>
-
-      {/* Right bar */}
-      <div className={styles.rightBar}>
-        <Tooltip hAlign="right" content="About this tool" persist={true}>
-          <Button intent="primary" size="medium" onClick={handleAboutClick}>
-            <Icon>
-              <InformationCircleIcon className={styles.infoIcon} />
-            </Icon>
-          </Button>
-        </Tooltip>
-      </div>
+      
     </div>
   )
 }

@@ -28,8 +28,6 @@ const ChatVideo = () => {
     refreshCurrentScene
   } = useContext(BroadcastLayoutContext)
   const {
-    isLive,
-    isSupported,
     broadcastClientRef,
     createBroadcastClient,
     destroyBroadcastClient,
@@ -37,7 +35,6 @@ const ChatVideo = () => {
   } = useContext(BroadcastContext)
   const {
     configRef,
-    ingestEndpoint,
     setIngestEndpoint,
     setStreamKey,
     setChannelType
@@ -45,7 +42,6 @@ const ChatVideo = () => {
   const {
     setInitialDevices,
     localVideoDeviceId,
-    localVideoStreamRef,
     canvasElemRef,
     cleanUpDevices,
     enableCanvasCamera,
@@ -55,9 +51,9 @@ const ChatVideo = () => {
   const previewRef = useRef<HTMLCanvasElement>(null)
   const sdkIsStarting = useRef(false)
 
-  const [canvasWidth, setCanvasWidth] = useState()
-  const [canvasHeight, setCanvasHeight] = useState()
-  const [videoStream, setVideoStream] = useState()
+  // const [canvasWidth, setCanvasWidth] = useState()
+  // const [canvasHeight, setCanvasHeight] = useState()
+  // const [videoStream, setVideoStream] = useState()
 
   useEffect(() => {
     if (sdkIsStarting.current) return
@@ -69,9 +65,9 @@ const ChatVideo = () => {
         if (!broadcastClientRef.current) {
           createBroadcastClient({
             config: configRef.current,
-          }).then((client) => {
+          }).then(() => {
             if (videoStream) {
-              const { width, height } = videoStream.getTracks()[0].getSettings()
+              // const { width, height } = videoStream.getTracks()[0].getSettings()
             }
             refreshSceneRef.current = refreshCurrentScene
             showFullScreenCam({
@@ -146,14 +142,14 @@ const ChatVideo = () => {
 
   useEffect(() => {
     if (!broadcastClientMounted || !enableCanvasCamera) return;
-    if (broadcastClientRef.current) {
-      const { width, height } = broadcastClientRef.current.getCanvasDimensions();
-      setCanvasWidth(width);
-      setCanvasHeight(height);
-    }
-    if (localVideoStreamRef.current) {
-      setVideoStream(localVideoStreamRef.current);
-    }
+    // if (broadcastClientRef.current) {
+    //   const { width, height } = broadcastClientRef.current.getCanvasDimensions();
+    //   setCanvasWidth(width);
+    //   setCanvasHeight(height);
+    // }
+    // if (localVideoStreamRef.current) {
+    //   setVideoStream(localVideoStreamRef.current);
+    // }
   }, [localVideoDeviceId, broadcastClientMounted, enableCanvasCamera]);
 
   if (!isClient) {
