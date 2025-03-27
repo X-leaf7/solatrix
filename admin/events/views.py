@@ -1,4 +1,8 @@
 from datetime import date
+
+import boto3
+
+from django.conf import settings
 from django.utils import timezone
 
 from rest_framework import generics
@@ -21,12 +25,12 @@ class EventViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
 
     def get_queryset(self):
+        today = date.today()
+        yesterday = today - timezone.timedelta(days=1)
         queryset = Event.objects.all()\
             .order_by('event_start_time')\
             .filter(
-                event_start_time__date__gte=date.today()
-            ).exclude(
-                status="Final"
+                event_start_time__date__gte=yesterday
             )
 
         if self.action == 'list':

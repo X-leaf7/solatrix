@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.db.models import Q
 from rest_framework import serializers
 
-from sports.serializers import SportSerializer, TeamSerializer, StadiumSerializer
+from sports.serializers import RoundSerializer, SportSerializer, TeamSerializer, StadiumSerializer
 from .models import Event, Attendee
 
 
@@ -22,6 +22,7 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
     away_team = TeamSerializer()
     host = HostSerializer()
     stadium = StadiumSerializer()
+    round = RoundSerializer()
 
     def get_sport(self, obj):
         return SportSerializer(obj.round.season.league.sport, context=self.context).data
@@ -29,9 +30,11 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Event
         fields = [
-            'name', 'sport', 'host',
+            'name', 'sport', 'host', 'status',
             'event_start_time', 'lobby_start_time', 'banner',
-            'home_team', 'away_team', 'stadium',
+            'home_team', 'away_team',
+            'home_team_score', 'away_team_score',
+            'stadium', 'round',
             'slug', 'id'
         ]
 
@@ -61,7 +64,8 @@ class AttendeeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Attendee
-        fields = ['user', 'event', 'chosen_team', 'id']
+        fields = ['user', 'event', 'chosen_team', 'id', 'ivs_participant_token']
+        read_only_fields = ['ivs_participant_token']
 
     def validate(self, data):
         """

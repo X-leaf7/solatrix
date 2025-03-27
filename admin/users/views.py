@@ -1,3 +1,5 @@
+from django_otp import devices_for_user
+from django_otp.plugins.otp_email.models import EmailDevice
 from djoser.utils import login_user
 
 import json
@@ -8,7 +10,7 @@ from rest_framework import viewsets, permissions, status, generics
 from rest_framework.response import Response
 
 from .models import User
-from .serializers import FullUserSerializer, GoogleTokenSerializer, TokenPlusUserSerializer
+from .serializers import FullUserSerializer, GoogleTokenSerializer, OTPTokenSerializer, OTPStartSerializer, TokenPlusUserSerializer
 
 
 GOOGLE_CLIENT_ID = "401041321374-gc7pa91fpmoplvoimf1t9l91vbiqteuh.apps.googleusercontent.com"
@@ -46,3 +48,65 @@ class GoogleLoginView(generics.GenericAPIView):
         return Response(
             data=TokenPlusUserSerializer(token).data, status=status.HTTP_200_OK
         )
+
+
+class OTPLoginView(generics.GenericAPIView):
+
+    serializer_class = OTPTokenSerializer
+
+    def post(self, request, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = User.objects.get(email=request.data['email'])
+        devices = list(devices_for_user(user))
+
+        if not devices:
+            return Response(
+                data={"detail": "No devices found for user"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        device = devices[0]
+        code_verified = device.verify_token(request.data['code'])
+
+        if code_verified:
+            token = login_user(request, user)
+            return Response(
+                data=TokenPlusUserSerializer(token).data, status=status.HTTP_200_OK
+            )
+        else:
+            return Response(
+                data={"detail": "Invalid code"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+class OTPStartView(generics.GenericAPIView):
+
+    serializer_class = OTPStartSerializer
+
+    def post(self, request, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user, created = User.objects.get_or_create(
+            email=request.data['email'],
+            defaults={
+                'username': request.data['email'].split('@')[0]
+            }
+        )
+        devices = list(devices_for_user(user))
+
+        if devices:
+            device = devices[0]
+        else:
+            device = EmailDevice(email=user.email, user=user)
+            device.save()
+
+        try:
+            device.generate_challenge()
+        except:
+            return Response(
+                data={"detail": "Error generating challenge"}, status=status.HTTP_400_BAD_REQUEST
+            )
+        else:
+            return Response(
+                data={"detail": "Challenge sent"}, status=status.HTTP_200_OK
+            )

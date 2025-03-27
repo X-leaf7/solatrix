@@ -6,7 +6,7 @@ from .serializers import LeagueSerializer, SportSerializer, StadiumSerializer, T
 
 class LeagueViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    API endpoint that allows leaguess to be viewed.
+    API endpoint that allows leagues to be viewed.
     """
     queryset = League.objects.all().order_by('name')
     serializer_class = LeagueSerializer

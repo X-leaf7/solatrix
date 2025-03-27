@@ -7,7 +7,7 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 from .base import *
 
-DEBUG = True
+STAGE = 'prod'
 
 EC2_PRIVATE_IPS = []
 METADATA_URI = getenv('ECS_CONTAINER_METADATA_URI_V4')
@@ -94,3 +94,8 @@ STATICFILES_DIRS = [
 EMAIL_BACKEND = 'django_ses.SESBackend'
 DEFAULT_FROM_EMAIL = 'accounts@split-side.com'
 AWS_SES_REGION_NAME = getenv('AWS_REGION')
+
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://\w+\.split-side\.com$",
+]

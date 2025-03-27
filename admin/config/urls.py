@@ -25,7 +25,7 @@ from rest_framework.documentation import include_docs_urls
 from config.admin import AuthAdminForm
 from events.views import EventViewSet, AttendeeViewSet, CopyEventView
 from sports.views import LeagueViewSet, SportViewSet, StadiumViewSet, TeamViewSet
-from users.views import UserViewSet, GoogleLoginView
+from users.views import UserViewSet, GoogleLoginView, OTPLoginView, OTPStartView
 
 
 admin.autodiscover()
@@ -49,6 +49,8 @@ urlpatterns = [
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.authtoken')),
     path('api/google_login/',view=GoogleLoginView.as_view(), name='google-login'),
+    path('api/otp_start/',view=OTPStartView.as_view(), name='otp-start'),
+    path('api/otp_login/',view=OTPLoginView.as_view(), name='otp-login'),
     re_path(r'^cms/', include('cms.urls'))
 ]
 

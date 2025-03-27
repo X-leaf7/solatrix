@@ -1,5 +1,7 @@
 from .base import *
 
+STAGE = 'local'
+
 ALLOWED_HOSTS += ['localhost', 'django']
 
 DATABASES = {

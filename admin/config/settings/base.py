@@ -26,7 +26,11 @@ SECRET_KEY = 'django-insecure-pd5!s0xp0237d=%3(v#+%0wh!&*l#949+%696v!e(_l)h1yiuo
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+STAGE = 'base'
+
 ALLOWED_HOSTS = ['localhost']
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 DOMAIN = SITE_NAME = getenv('WEB_DOMAIN')
 
@@ -45,8 +49,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
+    'django_otp',
+    'django_otp.plugins.otp_email',
+
     'django_extensions',
     'captcha',
+    'corsheaders',
 
     # Health Checks
     'health_check',
@@ -81,6 +89,8 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django_otp.middleware.OTPMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -129,10 +139,11 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ssdb',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost'
+        'NAME': 'solatrix',
+        'USER': 'root',
+        'PASSWORD': 'secret',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
@@ -220,3 +231,5 @@ MEDIA_ROOT = '/app/media'
 FIXTURE_DIRS = [
     'config/fixtures'
 ]
+
+APPEND_SLASH = False

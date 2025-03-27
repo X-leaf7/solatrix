@@ -17,7 +17,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         leagues_data = get_leagues(options['leagues'])
-        soccer = Sport.objects.get(name="Fútbol (Soccer)")
+        soccer = Sport.objects.get(name="Soccer")
 
         countries = set()
         league_objects = []
@@ -78,10 +78,10 @@ class Command(BaseCommand):
                     sport=soccer,
                     defaults={
                         'name': team_data['VenueName'],
-                        'address': team_data['Address'],
-                        'city': team_data['City'],
-                        'zip_code': team_data['Zip'],
-                        'country': team_data['AreaName']
+                        'address': team_data['Address'] or '',
+                        'city': team_data['City'] or '',
+                        'zip_code': team_data['Zip'] or '',
+                        'country': team_data['AreaName'] or ''
                     }
                 )
                 colors = [

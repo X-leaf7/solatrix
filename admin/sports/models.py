@@ -4,11 +4,12 @@ from config.models import SSBaseModel, SSNamedModel, SportsDataModel
 
 
 class Sport(SSNamedModel):
-    pass
+    icon_name = models.CharField(max_length=100)
 
 
 class League(SSNamedModel, SportsDataModel):
-    sport = models.ForeignKey(Sport, on_delete=models.DO_NOTHING, related_name="leagues")
+    sport = models.ForeignKey(Sport, on_delete=models.CASCADE, related_name="leagues")
+    short_name = models.CharField(max_length=15, blank=True, default='')
 
 
 class Season(SSBaseModel, SportsDataModel):
@@ -47,8 +48,8 @@ class Stadium(SSBaseModel, SportsDataModel):
 
 
 class Team(SSNamedModel, SportsDataModel):
-    sport = models.ForeignKey(Sport, on_delete=models.DO_NOTHING)
-    league = models.ForeignKey(League, on_delete=models.DO_NOTHING)
-    stadium = models.ForeignKey(Stadium, on_delete=models.DO_NOTHING)
+    sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
+    league = models.ForeignKey(League, on_delete=models.CASCADE)
+    stadium = models.ForeignKey(Stadium, on_delete=models.DO_NOTHING, null=True)
     colors = models.JSONField()
     logo = models.ImageField(upload_to="team_logos", blank=True)

@@ -14,9 +14,8 @@ class Command(BaseCommand):
     help = "Pulls SportsData.io Soccer Events into the database"
 
     def handle(self, *args, **options):
-        soccer = Sport.objects.get(name="Fútbol (Soccer)")
+        soccer = Sport.objects.get(name="Soccer")
         today = date.today()
-        host = User.objects.get(email='support@split-side.com')
         leagues = soccer.leagues.filter(sports_data_id__gt=0)
         for league in leagues:
             active_seasons = league.season_set.filter(end_date__date__gte=today)
@@ -41,10 +40,17 @@ class Command(BaseCommand):
                         event_start_time=make_aware(parse_datetime(game['DateTime']), timezone.utc),
                         defaults={
                             'lobby_start_time': make_aware(datetime.now(), timezone.utc),
-                            'banner': 'banners/leaderboard_default_image_728px_x_90px_v2.jpg',
-                            'host': host
+                            'banner': 'banners/leaderboard_default_image_728px_x_90px_v2.jpg'
                         }
                     )
 
                     event.status = game['Status']
+                    event.away_team_score = (
+                        game['AwayTeamScore'] or game['AwayTeamScoreExtraTime'] or
+                        game['AwayTeamScorePeriod2'] or game['AwayTeamScorePeriod1'] or 0
+                    )
+                    event.home_team_score = (
+                        game['HomeTeamScore'] or game['HomeTeamScoreExtraTime'] or
+                        game['HomeTeamScorePeriod2'] or game['HomeTeamScorePeriod1'] or 0
+                    )
                     event.save()

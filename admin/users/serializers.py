@@ -66,3 +66,12 @@ class TokenPlusUserSerializer(serializers.ModelSerializer):
 
 class GoogleTokenSerializer(serializers.Serializer):
     credential = serializers.CharField()
+
+
+class OTPTokenSerializer(serializers.Serializer):
+    email = serializers.CharField()
+    code = serializers.CharField()
+
+
+class OTPStartSerializer(serializers.Serializer):
+    email = serializers.CharField()
