@@ -139,10 +139,11 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ssdb',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': 'localhost'
+        'NAME': 'solatrix',
+        'USER': 'root',
+        'PASSWORD': 'secret',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 

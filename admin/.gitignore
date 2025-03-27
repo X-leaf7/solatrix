@@ -6,3 +6,5 @@ media/
 static/
 
 .python_history
+
+venv
