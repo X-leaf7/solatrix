@@ -1,0 +1,11 @@
+@use '@/dsm/system' as dsm
+  
+.base
+  @include dsm.flex ($justify: flex-end)
+  @include dsm.mq ($until: tablet-medium)
+    display: contents
+  &
+    gap: dsm.grid(1)
+    > *:last-child
+      @include dsm.mq ($until: tablet-medium)
+        width: 100%

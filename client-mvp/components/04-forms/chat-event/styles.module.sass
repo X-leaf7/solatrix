@@ -1,0 +1,6 @@
+@use '@/dsm/system' as dsm
+  
+.base
+  @include dsm.flex ($justify: flex-end)
+  &
+    gap: dsm.grid(1)

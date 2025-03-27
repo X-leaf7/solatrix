@@ -12,6 +12,7 @@ import JoinChatModal from '/component/JoinChatModal'
 import ChatBox from '/component/ChatBox'
 import ChatMessage from '/component/ChatMessage'
 import EventTimer from '/component/EventTimer'
+import VideoPlayer from '/component/VideoPlayer'
 
 let socket = io(SOCKET_URL)
 
@@ -27,6 +28,8 @@ function Room() {
 
     const [otherUsersMessages, setOtherUsersMessages] = useState([]);
     const [hostUserMessages, setHostUserMessages] = useState([]);
+
+    const [isHost, setIsHost] = useState(false);
 
     useEffect(async () => {
         // Once the router has loaded the room name, fetch event details
@@ -87,6 +90,9 @@ function Room() {
         if (attendance) {
             setAttendance(attendance)
             joinRoom()
+            if (eventData.host && eventData.host.id == attendance.user) {
+                setIsHost(true)
+            }
         } else {
             // Give the user a chance to pick a side
             setShowJoinChatModal(true)
@@ -213,23 +219,34 @@ function Room() {
             <div>
                 <div id="room">
                     {
-                        eventData && <>
+                        eventData && attendance && <>
 
-                            <div className="room-chat-form mb-3">
+                            <div className="container room-chat-form mb-3">
                                 <EventTimer eventData={eventData} />
 
                                 { eventData.host &&
-                                    <div className="chat-form mt-4">
-                                        <div className="chat-heading-main">
-                                            <h4><b>Host:</b> {eventData.host.username}</h4>
-                                            <h4><b>Location:</b> {eventData.stadium.name}</h4>
+                                    <div>
+                                        <div className="row chat-heading-main">
+                                            <div className="col-md-6 col-sm-12">
+                                                <h4><b>Host:</b> {eventData.host.username}</h4>
+                                            </div>
+                                            <div className="col-md-6 d-none d-md-block text-end">
+                                                <h4><b>Location:</b> {eventData.stadium.name}</h4>
+                                            </div>
                                         </div>
-                                        <ChatBox>
-                                            {hostUserMessages.map(message => <ChatMessage message={message} eventData={eventData} showUserProfile={setSelectedUser} deleteMessage={handleDeleteMessage} key={message.messageId} />)}
-                                        </ChatBox>
+                                        <div className="row">
+                                            <div className="stream col-md-6 col-sm-12">
+                                                <VideoPlayer attendance={attendance} isHost={isHost}/>
+                                            </div>
+                                            <div className="chat-form col-md-6 col-sm-12">
+                                                <ChatBox>
+                                                    {hostUserMessages.map(message => <ChatMessage message={message} eventData={eventData} showUserProfile={setSelectedUser} deleteMessage={handleDeleteMessage} key={message.messageId} />)}
+                                                </ChatBox>
+                                            </div>
+                                        </div>
                                     </div>
                                 }
-                                <div className="chat-form">
+                                <div className="chat-form full-width">
                                     <div className="chat-heading-main">
                                         <h4><b>Home Team:</b> {eventData.home_team.name}</h4>
                                         <h4><b>Away Team:</b> {eventData.away_team.name}</h4>
@@ -245,8 +262,6 @@ function Room() {
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="p-3" id="display"></div>
                         </>
                     }
                 </div>

@@ -1,0 +1,68 @@
+@use '@/dsm/system' as dsm
+  
+.base
+  align-items: start
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  grid-template-rows: #{dsm.grid(7)} repeat(2, auto)
+  @include dsm.mq ($from: tablet-medium)
+    border-radius: dsm.grid(3)
+    overflow: hidden
+  @include dsm.mq ($until: tablet-medium)
+    margin-inline: dsm.grid(-2.5)
+  &.has-video
+    align-items: start
+    grid-template-areas: "host host advertising" "host host chat"
+    column-gap: dsm.grid(2)
+    @include dsm.mq ($until: tablet-medium)
+      grid-template-columns: repeat(1, 1fr)
+      grid-template-areas: "advertising" "host" "chat"
+  &.has-no-video
+    background: rgba(dsm.$white, .85)
+  
+.notifications
+  display: none
+  grid-area: notifications
+
+.advertising
+  @include dsm.flex ($justify: center)
+  &
+    background: dsm.$black
+    color: dsm.$white
+    height: 100%
+    grid-area: advertising
+    .base.has-video &
+      @include dsm.mq ($from: tablet-medium)
+        border-start-start-radius: dsm.grid(3)
+
+.chat
+  @include dsm.flex ($align: stretch, $direction: column)
+  &
+    height: 100%
+    grid-area: chat
+    > div:last-child
+      flex: 1
+    .base.has-video &
+      background: rgba(dsm.$white, .85)
+      @include dsm.mq ($from: tablet-medium)
+        border-end-start-radius: dsm.grid(3)
+        border-end-end-radius: dsm.grid(3)
+
+.host
+  grid-area: host
+
+.hostChat
+  padding: dsm.grid(3)
+  .base.has-video &
+    background: rgba(dsm.$white, .85)
+    @include dsm.mq ($from: tablet-medium)
+      border-end-end-radius: dsm.grid(3)
+
+.video
+  @include dsm.image-full
+  &
+    background: dsm.$black
+    aspect-ratio: 16 / 9
+    .base.has-video &
+      @include dsm.mq ($from: tablet-medium)
+        border-start-end-radius: dsm.grid(3)

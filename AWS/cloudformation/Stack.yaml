@@ -11,6 +11,10 @@ Parameters:
     Type: String
     Description: The name of the Fargate Cluster
 
+  UIImage:
+    Type: String
+    Description: ECR Image URI for the UI Frontend
+
   AdminImage:
     Type: String
     Description: ECR Image URI for the Admin App
@@ -28,6 +32,8 @@ Parameters:
 
 Mappings:
   ContainerConfig: 
+    UI:
+      Port: 3000
     Admin: 
       Port: 8000
     Chat: 
@@ -70,6 +76,10 @@ Resources:
       VpcId: !GetAtt VPC.Outputs.VPCId
       SecurityGroupIngress:
         - IpProtocol: tcp
+          FromPort: !FindInMap [ ContainerConfig, UI, Port ]
+          ToPort: !FindInMap [ ContainerConfig, UI, Port ]
+          SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+        - IpProtocol: tcp
           FromPort: !FindInMap [ ContainerConfig, Admin, Port ]
           ToPort: !FindInMap [ ContainerConfig, Admin, Port ]
           SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
@@ -77,6 +87,40 @@ Resources:
           FromPort: !FindInMap [ ContainerConfig, Chat, Port ]
           ToPort: !FindInMap [ ContainerConfig, Chat, Port ]
           SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+
+  UITask:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: UITask.yaml
+      Parameters:
+        ServiceName: ui
+        ClusterName: !Ref ClusterName
+        ExecutionRole: !Ref ExecutionRole
+        Image: !Ref UIImage
+        ContainerPort: !FindInMap [ ContainerConfig, UI, Port ]
+        Domain: !Ref Domain
+
+  UIService:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: UIService.yaml
+      Parameters:
+        ServiceName: ui
+        TaskDefinition: !GetAtt UITask.Outputs.TaskDefinition
+        ContainerPort: !FindInMap [ ContainerConfig, UI, Port ]
+        Cluster: !Ref Cluster
+        VPC: !GetAtt VPC.Outputs.VPCId
+        PrivateSubnet1: !GetAtt VPC.Outputs.PrivateSubnet0
+        PrivateSubnet2: !GetAtt VPC.Outputs.PrivateSubnet1
+        PublicSubnet1: !GetAtt VPC.Outputs.PublicSubnet0
+        PublicSubnet2: !GetAtt VPC.Outputs.PublicSubnet1
+        AutoScalingRole: !GetAtt AutoScalingRole.Arn
+        LoadBalancerSecurityGroup: !Ref LoadBalancerSecurityGroup
+        ContainerSecurityGroup: !Ref ContainerSecurityGroup
+        HealthCheckPath: "/"
+        MaxContainers: 5
+        AutoScalingTargetValue: 70
+        AutoScalingRequestCountValue: 500
 
   AdminTask:
     Type: AWS::CloudFormation::Stack
@@ -216,6 +260,7 @@ Resources:
         ClusterName: !Ref ClusterName
         Domain: !Ref Domain
         DjangoAdminLoadBalancerUrl: !GetAtt AdminService.Outputs.LoadBalancerUrl
+        UILoadBalancerUrl: !GetAtt UIService.Outputs.LoadBalancerUrl
         Bucket: !Ref Bucket
         WafAcl: !Ref WafAcl
       TemplateURL: CDN.yaml

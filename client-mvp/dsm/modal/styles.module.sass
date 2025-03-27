@@ -1,0 +1,27 @@
+@use '@/dsm/system' as dsm
+
+.base
+  @include dsm.flex ($justify: center)
+  &
+    background: rgba(dsm.$black, .8)
+    border: none
+    block-size: 100%
+    inline-size: 100%
+    padding: dsm.grid(2)
+    left: 0
+    position: fixed
+    top: 0
+    z-index: 10
+    @include dsm.mq ($until: tablet-medium)
+      align-items: flex-end
+      padding: 0
+
+.box
+  background: rgba(dsm.$white-400, .85)
+  border-radius: dsm.grid(4)
+  inline-size: dsm.grid(93.75)
+  max-inline-size: 100%
+  padding: dsm.grid(5)
+  @include dsm.mq ($until: tablet-medium)
+    border-end-end-radius: 0
+    border-end-start-radius: 0

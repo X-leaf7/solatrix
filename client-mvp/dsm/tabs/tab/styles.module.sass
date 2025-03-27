@@ -1,0 +1,13 @@
+@use '@/dsm/system' as dsm
+  
+.base
+  border-block-start: 2px solid rgba(dsm.$white-300, .40)
+  color: dsm.$black-900
+  font-size: dsm.pixrem(16)
+  font-weight: 400
+  flex: 1
+  padding-block-start: dsm.grid(1)
+  padding-inline: dsm.grid(1)
+  &:hover,
+  &.active
+    border-color: dsm.$black

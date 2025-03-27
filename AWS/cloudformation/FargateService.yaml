@@ -50,7 +50,7 @@ Mappings:
     us-west-1:
       Arn: 'arn:aws:acm:us-west-1:514205568277:certificate/d02a3af0-16ff-4dbb-bf07-4afb7ea689fb'
     us-east-2:
-      Arn: 'arn:aws:acm:us-east-2:514205568277:certificate/264a320f-daf4-450b-b0b0-a8512910993d'
+      Arn: 'arn:aws:acm:us-east-2:514205568277:certificate/c07c8088-6ed2-4265-8ebe-8980dd25374a'
 
 Resources:
 

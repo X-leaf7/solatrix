@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Task Definition for the UI frontend service
+
+Parameters:
+  ServiceName:
+    Type: String
+  ClusterName:
+    Type: String
+  ExecutionRole:
+    Type: String
+  Image:
+    Type: String
+  ContainerPort:
+    Type: Number
+  Domain:
+    Type: String
+
+Resources:
+  TaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action: 'sts:AssumeRole'
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
+
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Ref ServiceName
+      Cpu: "1024"
+      Memory: "2048"
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      ExecutionRoleArn: !Ref ExecutionRole
+      TaskRoleArn: !Ref TaskRole
+      ContainerDefinitions:
+        - Name: !Ref ServiceName
+          Command: ["npm", "run", "start"]
+          Image: !Ref Image
+          PortMappings:
+            - ContainerPort: !Ref ContainerPort
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Ref LogGroup
+              awslogs-region: !Ref AWS::Region
+              awslogs-stream-prefix: ecs
+              awslogs-create-group: true
+
+  LogGroup:
+    Type: AWS::Logs::LogGroup
+    DeletionPolicy: Retain
+    Properties:
+      LogGroupName: !Sub ${ClusterName}-${ServiceName}
+      RetentionInDays: 14
+
+Outputs:
+  TaskDefinition:
+    Value: !Ref TaskDefinition
+  TaskRoleArn:
+    Value: !GetAtt TaskRole.Arn

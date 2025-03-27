@@ -43,6 +43,11 @@ Parameters:
 
 Resources:
 
+  UIEcrRepository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub "ui-${GitBranch}"
+
   AdminAppEcrRepository:
     Type: AWS::ECR::Repository
     Properties:
@@ -131,6 +136,7 @@ Resources:
                  - s3:PutObject
                  - s3:GetObjectVersion
              - Resource:
+                 - !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${UIEcrRepository}
                  - !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${AdminAppEcrRepository}
                  - !Sub arn:aws:ecr:${AWS::Region}:${AWS::AccountId}:repository/${ChatServerEcrRepository}
                Effect: Allow
@@ -161,8 +167,6 @@ Resources:
         EnvironmentVariables:
           - Name: S3_ARTIFACT_BUCKET
             Value: !Ref CodePipelineArtifactBucket
-          - Name: NEXT_PUBLIC_SOCKET_SERVER_URL
-            Value: !Sub 'https://chat.${Domain}'
       Name: !Sub "${GitSourceRepo}-${GitBranch}-code-tests"
       ServiceRole: !Ref CodeBuildServiceRole
 
@@ -179,6 +183,9 @@ Resources:
         Type: LINUX_CONTAINER
         Image: "aws/codebuild/standard:6.0"
         PrivilegedMode: True
+        EnvironmentVariables:
+          - Name: DOMAIN
+            Value: !Ref Domain
       Name: !Sub "${GitSourceRepo}-${GitBranch}-docker-build"
       ServiceRole: !Ref CodeBuildServiceRole
 
@@ -243,7 +250,6 @@ Resources:
               OutputArtifacts:
                 - Name: Stack
                 - Name: WafStack
-                - Name: ClientBuild
               RunOrder: 1
         - Name: UpdateDevOpsStack
           Actions:
@@ -271,6 +277,25 @@ Resources:
                 - Name: App
         - Name: BuildDockerImages
           Actions:
+            - Name: BuildUI
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref DockerBuild
+                PrimarySource: App
+                EnvironmentVariables: !Sub |
+                  [
+                    {"name": "REPOSITORY_URI", "value": "${UIEcrRepository.RepositoryUri}"},
+                    {"name": "DOCKER_BUILD_PATH", "value": "client-mvp/"}
+                  ]
+              InputArtifacts:
+                - Name: App
+              OutputArtifacts:
+                - Name: UIImageJSON
+              RunOrder: 1
             - Name: BuildAdmin
               ActionTypeId:
                 Category: Build
@@ -346,6 +371,7 @@ Resources:
               InputArtifacts:
                 - Name: Stack
                 - Name: WafStackOutput
+                - Name: UIImageJSON
                 - Name: AdminImageJSON
                 - Name: ChatImageJSON
               OutputArtifacts:
@@ -360,23 +386,12 @@ Resources:
                 ParameterOverrides: !Sub |
                   {
                     "ClusterName": "${GitSourceRepo}-${GitBranch}",
+                    "UIImage": { "Fn::GetParam" : [ "UIImageJSON", "imagedefinitions.json", "imageUri" ] },
                     "AdminImage": { "Fn::GetParam" : [ "AdminImageJSON", "imagedefinitions.json", "imageUri" ] },
                     "ChatImage": { "Fn::GetParam" : [ "ChatImageJSON", "imagedefinitions.json", "imageUri" ] },
                     "WafAcl" : { "Fn::GetParam" : ["WafStackOutput", "WafStackOutputs.json", "WafAcl"]},
                     "Domain": "${Domain}"
                   }
-            - Name: CreateS3Objects
-              RunOrder: 3
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: S3
-                Version: 1
-              InputArtifacts:
-                - Name: ClientBuild
-              Configuration:
-                BucketName: '#{StackOutputs.S3Bucket}'
-                Extract: true
 
 
   DeveloperAccessPolicy:

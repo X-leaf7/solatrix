@@ -1,0 +1,18 @@
+@use '@/dsm/system' as dsm
+  
+.heading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(32)
+  &:not(:last-child)
+    margin-block-end: dsm.grid(3)
+
+.grid
+  align-items: stretch
+  background: dsm.$white-900
+  border-radius: dsm.grid(2)
+  display: grid
+  grid-template-columns: repeat(2, 1fr)
+  gap: dsm.grid(3)
+  padding: dsm.grid(3)
+  @include dsm.mq ($until: tablet-medium)
+    grid-template-columns: repeat(1, 1fr)

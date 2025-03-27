@@ -28,20 +28,16 @@ function EventTimer({eventData}) {
     }, [eventData])
 
     return (
-        <div className="event-start-main">
+        <div className="event-start-main mb-2">
             {showTimer === true ? (
-                <h3>Event Starts in… </h3>
-            ) : (
-                <h3></h3>
-            )}
-            {showTimer === true ? (
-                <div className="event-time-box">
-                    <p>{getEventTimer}</p>
+                <div>
+                    <h3>Event Starts in… </h3>
+                    <div className="event-time-box">
+                        <p>{getEventTimer}</p>
+                    </div>
                 </div>
             ) : (
-                <div className="event-time-box" style={{ 'border': 'none' }}>
-                    <img src={eventData.banner} alt="" />
-                </div>
+                <div></div>
             )}
         </div>
     )

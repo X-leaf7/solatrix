@@ -1,0 +1,19 @@
+@use '@/dsm/system' as dsm
+  
+.base
+  @include dsm.flex ($align: flex-start, $justify: flex-start)
+  &
+    gap: dsm.grid(1)
+    padding: 0 dsm.grid(2) dsm.grid(2)
+  &.current
+    flex-direction: row-reverse
+
+.content
+  background: dsm.$white-900
+  border-radius: dsm.grid(1.25)
+  border-start-start-radius: dsm.grid(.25)
+  font-size: dsm.pixrem(12)
+  flex: 1
+  line-height: calc(16/12)
+  max-inline-size: dsm.grid(28)
+  padding: dsm.grid(1)

@@ -1,0 +1,19 @@
+@use '@/dsm/system' as dsm
+
+.base
+  table-layout: fixed
+  width: 100%
+
+.head
+  border-block-end: 1px solid dsm.$grey-100
+  color: dsm.$grey-600
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(16)
+  text-align: center
+  padding-block-end: dsm.grid(2.5)
+
+.body
+  border-block-end: 1px solid dsm.$grey-100
+  padding-block: dsm.grid(1.25)
+  text-align: center
+  vertical-align: middle

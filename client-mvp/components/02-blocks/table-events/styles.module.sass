@@ -1,0 +1,14 @@
+@use '@/dsm/system' as dsm
+
+.actions
+  @include dsm.flex ($justify: center)
+  &
+    gap: dsm.grid(1)
+
+.desktop
+  @include dsm.mq ($until: tablet-medium)
+    display: none
+
+.mobile
+  @include dsm.mq ($from: tablet-medium)
+    display: none

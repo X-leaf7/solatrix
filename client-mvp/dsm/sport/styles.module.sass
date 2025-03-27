@@ -1,0 +1,16 @@
+@use '@/dsm/system' as dsm
+
+.base
+  @include dsm.flex ($justify: center)
+  &
+    display: inline-flex
+    border-radius: dsm.grid(.5)
+    background: dsm.$white-900
+    gap: dsm.grid(.5)
+    padding: dsm.grid(.5) dsm.grid(1)
+
+.heading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(14)
+  font-weight: 400
+  text-transform: capitalize

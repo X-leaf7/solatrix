@@ -1,4 +1,4 @@
-version: '2'
+version: "2"
 services:
   django:
     platform: linux/amd64
@@ -8,7 +8,7 @@ services:
     volumes:
       - ./admin:/app
     ports:
-      - "8000:8000"
+      - "8001:8000"
     links:
       - db
       - redis
@@ -18,25 +18,22 @@ services:
     environment:
       DJANGO_SETTINGS_MODULE: config.settings.local
       WEB_DOMAIN: localhost
-  client:
-    image: ss_client
-    build:
-      context: ./client
-    links:
-      - django
-      - chat
-    environment:
-      NEXT_PUBLIC_SOCKET_SERVER_URL: "http://localhost:3000/"
-    volumes:
-      - ./client:/app
-      - exclude:/app/node_modules/
-    ports:
-      - "80:80"
+  # client:
+  #   image: ss_client
+  #   build:
+  #     context: ./client-mvp
+  #   environment:
+  #     NEXT_PUBLIC_SOCKET_SERVER_URL: "http://localhost:3000/"
+  #   volumes:
+  #     - ./client-mvp:/app
+  #     - exclude:/app/node_modules/
+  #   ports:
+  #     - "80:3000"
   chat:
     image: ss_chat
     build:
       context: ./chat
-    command: ['npm', 'run', 'dev']
+    command: ["npm", "run", "dev"]
     links:
       - django
       - dynamodb
@@ -69,10 +66,10 @@ services:
     user: root
     image: amazon/dynamodb-local
     ports:
-      - "5000:8000"
+      - "5001:8000"
     command: -jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal/data/
     volumes:
-     - dynamodb_data:/home/dynamodblocal/data
+      - dynamodb_data:/home/dynamodblocal/data
 
 volumes:
   exclude:

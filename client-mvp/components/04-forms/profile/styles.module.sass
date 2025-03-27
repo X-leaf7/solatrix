@@ -1,0 +1,31 @@
+@use '@/dsm/system' as dsm
+
+.base
+  container-type: inline-size
+  container-name: form-profile
+
+.header
+  @include dsm.flex
+  &:not(:last-child)
+    margin-block-end: dsm.grid(3)
+
+.heading
+  color: dsm.$grey-600
+  font-size: dsm.pixrem(14)
+  font-weight: 600
+
+.form
+  display: grid
+  gap: dsm.grid(2)
+  grid-template-columns: repeat(2, 1fr)  
+  @container form-profile (max-width: #{dsm.grid(62)})
+    grid-template-columns: repeat(1, 1fr)  
+
+.full
+  @container form-profile (min-width: #{dsm.grid(62)})
+    &
+      grid-column: span 2
+
+.action
+  button
+    width: 100%

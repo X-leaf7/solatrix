@@ -1,0 +1,28 @@
+@use '@/dsm/system' as dsm
+
+.base
+  @include dsm.flex
+  &
+    background: dsm.$white-off
+    border-radius: dsm.grid(1.25)
+    padding: dsm.grid(2.5) dsm.grid(2)
+    gap: dsm.grid(10)
+
+.box
+  @include dsm.flex ($direction: column, $align: flex-start, $justify: flex-start)
+  &
+    flex: 1
+    gap: dsm.grid(.5)
+
+.heading
+  font-weight: 600
+
+.content
+  color: dsm.$grey-600
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(14)
+  line-height: calc(20/14)
+  @include dsm.mq ($until: tablet-medium)
+    font-size: dsm.pixrem(12)
+    max-inline-size: dsm.grid(34)
+    line-height: calc(18/12)

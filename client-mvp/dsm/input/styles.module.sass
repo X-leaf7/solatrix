@@ -1,0 +1,24 @@
+@use '@/dsm/system' as dsm
+
+.base
+  @include dsm.flex
+  &.fullWidth
+    flex: 1
+
+.control
+  background: rgba(dsm.$white, .4)
+  border: 1px solid dsm.$grey-200
+  border-radius: dsm.grid(1)
+  block-size: dsm.grid(5.5)
+  color: dsm.$black-900
+  flex: 1
+  font-size: dsm.pixrem(16)
+  padding-inline: dsm.grid(1.6)
+  @include dsm.mq ($from: tablet-medium)
+    font-size: dsm.pixrem(14)
+  &[disabled]
+    background: dsm.$grey-100
+  &::placeholder
+    color: dsm.$grey-600
+  &:focus
+    outline: none

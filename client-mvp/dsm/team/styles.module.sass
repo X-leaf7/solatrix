@@ -1,0 +1,11 @@
+@use '@/dsm/system' as dsm
+
+.base
+  @include dsm.flex ($justify: center)
+  &
+    gap: dsm.grid(1)
+
+.heading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(16)
+  font-weight: 500

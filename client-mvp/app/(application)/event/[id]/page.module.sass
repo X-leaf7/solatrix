@@ -1,0 +1,31 @@
+@use '@/dsm/system' as dsm
+  
+.base
+  background: dsm.$white
+  border-radius: dsm.grid(2)
+
+.header
+  border-block-end: 1px solid dsm.$white-200
+  padding: dsm.grid(3) dsm.grid(4)
+
+.grid
+  display: grid
+  gap: dsm.grid(3)
+  grid-template-columns: 1.5fr dsm.grid(.125) 1fr 1fr
+  padding: dsm.grid(2) dsm.grid(4) dsm.grid(4) dsm.grid(4)
+
+.divider
+  align-self: stretch
+  background: dsm.$white-200
+  border: none
+  width: dsm.grid(.125)
+
+.box1
+  display: grid
+  gap: dsm.grid(3)
+
+.actions
+  @include dsm.flex ($justify: center)
+  gap: dsm.grid(2)
+  > *
+    flex: 1

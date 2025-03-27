@@ -1,0 +1,51 @@
+@use '@/dsm/system' as dsm
+
+.image
+  @include dsm.flex ($justify: center)
+  img
+    @include dsm.image
+    @include dsm.mq ($until: tablet-medium)
+      max-inline-size: dsm.grid(15)
+  &:not(:last-child)
+    margin-block-end: dsm.grid(2)
+
+.header
+  text-align: center
+  &:not(:last-child)
+    margin-block-end: dsm.grid(4)
+
+.heading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(48)
+  font-weight: 400
+  @include dsm.mq ($until: tablet-medium)
+    font-size: dsm.pixrem(32)
+  &:not(:last-child)
+    margin-block-end: dsm.grid(1)
+
+.content
+  color: dsm.$black-800
+  line-height: calc(22/16)
+  @include dsm.mq ($until: tablet-medium)
+    font-size: dsm.pixrem(14)
+    max-inline-size: dsm.grid(27.5)
+    margin-inline: auto
+
+.group
+  display: grid
+  gap: dsm.grid(1.5)
+  &:not(:last-child)
+    margin-block-end: dsm.grid(1.5)
+
+.fineprint
+  color: dsm.$grey-600
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(14)
+  line-height: calc(18/14)
+  &:not(:last-child)
+    margin-block-end: dsm.grid(5)
+
+.actions
+  @include dsm.flex ($justify: center)
+  &
+    gap: dsm.grid(1)

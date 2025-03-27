@@ -1,0 +1,52 @@
+@use '@/dsm/system' as dsm
+
+.header
+  @include dsm.flex
+  &
+    border-block-end: 1px solid dsm.$light-grey
+    padding-block-end: dsm.grid(3)
+    gap: dsm.grid(3)
+    margin-block-start: dsm.grid(-1.5)
+    margin-inline: dsm.grid(-5)
+    padding-inline: dsm.grid(5)
+
+.heading
+  color: dsm.$black-800
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(32)
+
+.meta
+  color: dsm.$grey
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(14)
+  strong
+    color: dsm.$black
+
+.action
+  @include dsm.flex ($justify: center)
+  &
+    appearance: none
+    background: none
+    border: none
+    color: dsm.$light-grey
+    margin-inline-start: auto
+    padding: 0
+    block-size: dsm.grid(4)
+    inline-size: dsm.grid(4)
+    &:hover
+      cursor: pointer
+  svg
+    block-size: dsm.grid(3.5)
+    inline-size: dsm.grid(3.5)
+
+.box
+  max-block-size: dsm.grid(58)
+  overflow: auto
+  padding-block-start: dsm.grid(5)
+
+.group
+  display: contents
+  @include dsm.mq ($until: tablet-medium)
+    @include dsm.flex ($direction: column, $align: flex-start )
+    &
+      gap: dsm.grid(1)

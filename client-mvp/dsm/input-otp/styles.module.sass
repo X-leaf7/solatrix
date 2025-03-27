@@ -1,0 +1,14 @@
+@use '@/dsm/system' as dsm
+
+.base
+  @include dsm.flex
+
+.control
+  @include dsm.flex ($justify: center)
+  &
+    border: 1px solid dsm.$grey-200
+    border-radius: dsm.grid(1.25)
+    block-size: dsm.grid(5.5)
+    color: dsm.$black
+    font-size: dsm.pixrem(14)
+    inline-size: dsm.grid(5.5)

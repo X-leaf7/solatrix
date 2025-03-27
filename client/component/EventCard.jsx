@@ -68,9 +68,21 @@ function EventCard({ event, setSelected, showJoin, showCreate }) {
                     <div className="mt-auto mx-auto">
                         <p className="text-center my-2">{DateTime.fromISO(event.event_start_time).toLocaleString(dateFormat)}</p>
                         <p className="text-center my-2">{DateTime.fromISO(event.event_start_time).toLocaleString(timeFormat)}</p>
+                        {
+                            event.host &&
+                            <p className="text-center mt-2 mb-4">
+                                Hosted by: {event.host.username}
+                                <br/>
+                                <Button className='join-chat' variant="outline-dark" onClick={showJoinChat}>
+                                    {
+                                        DateTime.fromISO(event.event_start_time) > DateTime.now() ? 'Enter Lobby' : 'Join Live Chat'
+                                    }
+                                </Button>
+                            </p>
+                        }
                         <div className="d-flex justify-content-evenly ">
                             <Button className='create-chat btn-warning' variant="outline-dark" onClick={showCreateChat}>
-                                Create Chat
+                                Create Private Chat
                             </Button>
                         </div>
                     </div>

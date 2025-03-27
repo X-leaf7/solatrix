@@ -1,0 +1,20 @@
+@use '@/dsm/system' as dsm
+
+.base
+  container: chat-host / inline-size
+  display: grid
+  gap: dsm.grid(2)
+
+.header
+  @include dsm.flex
+  
+.heading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(24)
+
+.grid
+  display: grid
+  gap: dsm.grid(1.5)
+  grid-template-columns: repeat(2, 1fr)
+  @container chat-host (max-width: #{dsm.grid(42)})
+    grid-template-columns: repeat(1, 1fr)z

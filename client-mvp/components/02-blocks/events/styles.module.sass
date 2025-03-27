@@ -1,0 +1,8 @@
+@use '@/dsm/system' as dsm
+
+.base
+  display: grid
+  grid-template-columns: repeat(3, 1fr)
+  gap: dsm.grid(2)
+  @include dsm.mq ($until: tablet-medium)
+    grid-template-columns: repeat(1, 1fr)

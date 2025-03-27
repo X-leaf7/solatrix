@@ -1,0 +1,20 @@
+@use '@/dsm/system' as dsm
+
+.base
+  font-size: dsm.pixrem(14)
+  line-height: 1.4
+  h1,h2,h3,h4,h5,h6
+    font-weight: 600
+    &:not(:last-child)
+      margin-block-end: dsm.grid(1.25)
+  p, ul, ol
+    &:not(:last-child)
+      margin-block-end: dsm.grid(2)
+  ul, ol
+    display: grid
+    gap: dsm.grid(.5)
+    margin-inline-start: dsm.grid(3)
+  ul
+    list-style: disc
+  ol
+    list-style: decimal

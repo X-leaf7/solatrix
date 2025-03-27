@@ -13,6 +13,9 @@ Parameters:
   DjangoAdminLoadBalancerUrl:
     Type: String
 
+  UILoadBalancerUrl:
+    Type: String
+
   Domain:
     Type: String
 
@@ -173,6 +176,15 @@ Resources:
           - !Sub "*.${Domain}"
         Comment: Staging CloudFront Distribution
         WebACLId: !Ref WafAcl
+        CustomErrorResponses:
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: '/'
+            ErrorCachingMinTTL: 60
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: '/'
+            ErrorCachingMinTTL: 60
         CacheBehaviors:
           - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
             CachedMethods: [GET, HEAD, OPTIONS]
@@ -199,9 +211,9 @@ Resources:
             CachedMethods: [GET, HEAD, OPTIONS]
             CachePolicyId: !Ref IndexCachePolicy
             PathPattern: '*index.html'
-            TargetOriginId: s3-bucket
+            TargetOriginId: ui-frontend
             ViewerProtocolPolicy: redirect-to-https
-            OriginRequestPolicyId: '88a5eaf4-2fd4-4709-b370-b4c650ea3fcf' # AWS Managed S3 CORS
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
           - AllowedMethods: [GET, HEAD, OPTIONS]
             CachedMethods: [GET, HEAD, OPTIONS]
             CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6' # AWS Managed Cache optimized
@@ -213,16 +225,16 @@ Resources:
             CachedMethods: [GET, HEAD, OPTIONS]
             CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6' # AWS Managed Cache optimized
             PathPattern: '*.css'
-            TargetOriginId: s3-bucket
+            TargetOriginId: ui-frontend
             ViewerProtocolPolicy: redirect-to-https
-            OriginRequestPolicyId: '88a5eaf4-2fd4-4709-b370-b4c650ea3fcf' # AWS Managed S3 CORS
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
           - AllowedMethods: [GET, HEAD, OPTIONS]
             CachedMethods: [GET, HEAD, OPTIONS]
             CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6' # AWS Managed Cache optimized
             PathPattern: '*.js'
-            TargetOriginId: s3-bucket
+            TargetOriginId: ui-frontend
             ViewerProtocolPolicy: redirect-to-https
-            OriginRequestPolicyId: '88a5eaf4-2fd4-4709-b370-b4c650ea3fcf' # AWS Managed S3 CORS
+            OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
           - AllowedMethods: [GET, HEAD, OPTIONS, PUT, PATCH, POST, DELETE]
             CachedMethods: [GET, HEAD, OPTIONS]
             CachePolicyId: !Ref BackendCachePolicy
@@ -231,13 +243,13 @@ Resources:
             ViewerProtocolPolicy: redirect-to-https
             OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
         DefaultCacheBehavior:
-          TargetOriginId: s3-bucket
-          AllowedMethods: [GET, HEAD]
+          TargetOriginId: ui-frontend
+          AllowedMethods: [GET, HEAD, OPTIONS]
           ViewerProtocolPolicy: redirect-to-https
           Compress: true
-          CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6' # AWS Managed Cache optimized
+          CachePolicyId: !Ref IndexCachePolicy
           ResponseHeadersPolicyId: !Ref CorsResponsePolicy
-          OriginRequestPolicyId: '88a5eaf4-2fd4-4709-b370-b4c650ea3fcf' # AWS Managed S3 CORS
+          OriginRequestPolicyId: '216adef6-5c7f-47e4-b989-5492eafa07d3' # AWS MANAGED FORWARD ALL
           FunctionAssociations:
             - EventType: viewer-request
               FunctionARN: !GetAtt SpaRewrite.FunctionMetadata.FunctionARN
@@ -249,6 +261,12 @@ Resources:
             OriginAccessControlId: !GetAtt CloudFrontOriginAccess.Id
             S3OriginConfig:
               OriginAccessIdentity: ""
+          - Id: ui-frontend
+            DomainName: !Ref UILoadBalancerUrl
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols:
+                - TLSv1.2
           - Id: django-backend
             DomainName: !Ref DjangoAdminLoadBalancerUrl
             CustomOriginConfig:

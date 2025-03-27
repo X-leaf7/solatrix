@@ -1,0 +1,6 @@
+@use '@/dsm/system' as dsm
+
+.base
+  @include dsm.flex ($justify: center)
+  &
+    min-height: calc(100svh - dsm.grid(20.875))

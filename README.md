@@ -47,6 +47,18 @@ $(split-side)> export AWS_SECRET_ACCESS_KEY=FakeSecretAccessKey
 $(split-side)> aws dynamodb create-table --table-name localMessages --attribute-definitions AttributeName=eventId,AttributeType=S AttributeName=messageId,AttributeType=S --key-schema AttributeName=eventId,KeyType=HASH AttributeName=messageId,KeyType=RANGE --billing-mode PAY_PER_REQUEST --endpoint-url http://localhost:5000 --region ddblocal
 ```
 
+8. Log in to the [admin](http://localhost:8000/admin/) and create a Sport entry for Soccer
+
+9. To load up some demo data, back into the shell.
+```sh
+~# python manage.py load_soccer_leagues 2025 EPL
+```
+```sh
+~# python manage.py load_soccer_events
+```
+
+You can now access the [frontend](http://localhost) and start using the app!
+
 Happy coding!
 
 
