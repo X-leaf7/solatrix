@@ -2,11 +2,17 @@
 
 import { useRouter } from 'next/navigation';
 import { setCookie } from 'cookies-next/client';
-import { Button, Input, InputField, InputOTP } from '@/dsm';
 import { parseAsInteger, useQueryState } from 'nuqs';
-
 import Form from 'next/form';
+
 import styles from './styles.module.sass';
+import { REST_API_BASE_URL } from '@/constants';
+import {
+  Button,
+  Input,
+  InputField,
+  InputOTP
+} from '@/dsm';
 
 export function FormSignIn() {
   const [email, setEmail] = useQueryState('email');
@@ -17,39 +23,45 @@ export function FormSignIn() {
   async function formAction() {
 
     if (email && !code) {
-      const codeResponse = await fetch('/api/otp_start/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({email: email}),
-      }).catch(err => console.log(err));
+      try {
+        const response = await fetch(`${REST_API_BASE_URL}/api/otp_start/`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({email: email}),
+        })
 
-      if (!codeResponse || codeResponse.status === 400) {
-        console.log("Got an error!");
-      }
-      else {
-        setStep(2);
+        if (response.ok) {
+          setStep(2)
+        } else {
+          console.log('Error in OTP start response: ', response.status)
+        }
+      } catch (error) {
+        console.log('Got an error in OTP start: ', error)
       }
     }
 
     if (email && code) {
-      const verifyResponse = await fetch('/api/otp_login/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({email: email, code: code}),
-      }).catch(err => console.log(err));
+      try {
+        const response = await fetch(`${REST_API_BASE_URL}/api/otp_login/`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({email: email, code: code}),
+        })
 
-      if (!verifyResponse || verifyResponse.status === 400) {
-        console.log("Got an error!");
-      }
-      else {
-        const verifiedJson = await verifyResponse.json();
-        setCookie('userInfo', JSON.stringify(verifiedJson.user))
-        setCookie('Token', verifiedJson.auth_token)
-        router.push('/')
+        if (response.ok) {
+          const responseData = await response.json();
+          setCookie('userInfo', JSON.stringify(responseData.user))
+          setCookie('Token', responseData.auth_token)
+          router.push('/')
+        } else {
+          console.log('Error in OTP login response: ', response.status)
+        }
+      } catch (error) {
+        console.log('Got an error in OTP login: ', error)
       }
     }
   }
