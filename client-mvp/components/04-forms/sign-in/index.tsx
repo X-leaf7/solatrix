@@ -1,67 +1,62 @@
-'use client';
+"use client"
 
-import { useRouter } from 'next/navigation';
-import { setCookie } from 'cookies-next/client';
-import { parseAsInteger, useQueryState } from 'nuqs';
-import Form from 'next/form';
+import { useRouter } from "next/navigation"
+import { parseAsInteger, useQueryState } from "nuqs"
+import Form from "next/form"
 
-import styles from './styles.module.sass';
-import { REST_API_BASE_URL } from '@/constants';
-import {
-  Button,
-  Input,
-  InputField,
-  InputOTP
-} from '@/dsm';
+import styles from "./styles.module.sass"
+import { Button, Input, InputField, InputOTP } from "@/dsm"
 
 export function FormSignIn() {
-  const [email, setEmail] = useQueryState('email');
-  const [step, setStep] = useQueryState('step', parseAsInteger);
-  const [code, setCode] = useQueryState('code');
-  const router = useRouter();
+  const [email, setEmail] = useQueryState("email")
+  const [step, setStep] = useQueryState("step", parseAsInteger)
+  const [code, setCode] = useQueryState("code")
+  const router = useRouter()
 
   async function formAction() {
-
     if (email && !code) {
       try {
-        const response = await fetch(`${REST_API_BASE_URL}/api/otp_start/`, {
-          method: 'POST',
+        // Use the proxy API route instead of direct backend call
+        const response = await fetch("/api/auth/otp-start", {
+          method: "POST",
           headers: {
-              'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({email: email}),
+          body: JSON.stringify({ email: email }),
         })
 
         if (response.ok) {
           setStep(2)
         } else {
-          console.log('Error in OTP start response: ', response.status)
+          const errorData = await response.json()
+          console.log("Error in OTP start response:", response.status, errorData)
         }
       } catch (error) {
-        console.log('Got an error in OTP start: ', error)
+        console.log("Got an error in OTP start:", error)
       }
     }
 
     if (email && code) {
       try {
-        const response = await fetch(`${REST_API_BASE_URL}/api/otp_login/`, {
-          method: 'POST',
+        // Use the proxy API route instead of direct backend call
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
           headers: {
-              'Content-Type': 'application/json'
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({email: email, code: code}),
+          body: JSON.stringify({ email: email, code: code }),
         })
 
         if (response.ok) {
-          const responseData = await response.json();
-          setCookie('userInfo', JSON.stringify(responseData.user))
-          setCookie('Token', responseData.auth_token)
-          router.push('/')
+          // No need to manually set cookies anymore as they're set by the server
+          // Just redirect the user after successful login
+          router.push("/")
         } else {
-          console.log('Error in OTP login response: ', response.status)
+          const errorData = await response.json()
+          console.log("Error in OTP login response:", response.status, errorData)
         }
       } catch (error) {
-        console.log('Got an error in OTP login: ', error)
+        console.log("Got an error in OTP login:", error)
       }
     }
   }
@@ -75,7 +70,7 @@ export function FormSignIn() {
               onChange={(e) => setEmail(e.target.value)}
               name="email"
               placeholder="Enter your email"
-              value={email || ''}
+              value={email || ""}
               required
             />
           </InputField>
@@ -83,7 +78,9 @@ export function FormSignIn() {
         {step === 2 && (
           <InputField label="Verification Code" text="Resend Code">
             <InputOTP
-              onChange={(value) => {setCode(value)}}
+              onChange={(value) => {
+                setCode(value)
+              }}
               name="code"
               required
             />
@@ -91,8 +88,9 @@ export function FormSignIn() {
         )}
       </div>
       <div className={styles.action}>
-        <Button type="submit">{step === 2 ? 'Sign In' : 'Next'}</Button>
+        <Button type="submit">{step === 2 ? "Sign In" : "Next"}</Button>
       </div>
     </Form>
-  );
+  )
 }
+

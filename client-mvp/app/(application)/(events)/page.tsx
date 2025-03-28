@@ -6,7 +6,7 @@ export default function Page() {
   return (
     <Suspense>
       <Client>
-        <Events eventTiming="live" token={null} />
+        <Events eventTiming="live" />
       </Client>
     </Suspense>
   );

@@ -8,9 +8,9 @@ import { Event } from '@/components/01-cards';
 import { useEvents } from '@/data/api';
 import styles from './styles.module.sass';
 
-export function Events({eventTiming, token}: {eventTiming: EventTiming, token: Token}) {
-  const { events, isLoadingEvents, isErrorEvents } = useEvents(token);
-  const now = DateTime.now();
+export function Events({eventTiming}: {eventTiming: EventTiming}) {
+  const { events, isLoadingEvents, isErrorEvents } = useEvents();
+  const now = DateTime.now(); 
   const filters = {
     live: (event: EventType) => {
       return DateTime.fromISO(event.event_start_time) < now && event.status === 'InProgress';
