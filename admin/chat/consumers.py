@@ -3,10 +3,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 from .models import ChatRoom, Message, ChatRoomMember
 from django.utils import timezone
-from rest_framework_simplejwt.tokens import AccessToken
-from rest_framework_simplejwt.exceptions import TokenError
 from django.contrib.auth import get_user_model
-from urllib.parse import parse_qs
 
 User = get_user_model()
 

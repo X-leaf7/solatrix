@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     # 'health_check.contrib.migrations',
 
     # DRF
+    'channels',
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
@@ -135,13 +136,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 SITE_ID = 1
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-ASGI_APPLICATION = "config.asgi.application"
+ASGI_APPLICATION = 'config.asgi.application'
 
 CHANNEL_LAYERS = {
   'default': {
-    "BACKEND": "channels_redis.core.RedisChannelLayer",
-    "CONFIG": {
-        "hosts": [("127.0.0.1", 6379)],
+    'BACKEND': 'channels_redis.core.RedisChannelLayer',
+    'CONFIG': {
+        'hosts': [('127.0.0.1', 6379)],
     },
   }
 }
