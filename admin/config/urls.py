@@ -23,10 +23,27 @@ from rest_framework import routers
 from rest_framework.documentation import include_docs_urls
 
 from config.admin import AuthAdminForm
-from events.views import EventViewSet, AttendeeViewSet, CopyEventView
-from sports.views import LeagueViewSet, SportViewSet, StadiumViewSet, TeamViewSet
-from users.views import UserViewSet, GoogleLoginView, OTPLoginView, OTPStartView
-
+from events.views import (
+    EventViewSet,
+    AttendeeViewSet,
+    CopyEventView
+)
+from sports.views import (
+    LeagueViewSet,
+    SportViewSet,
+    StadiumViewSet,
+    TeamViewSet
+)
+from users.views import (
+    UserViewSet,
+    GoogleLoginView,
+    OTPLoginView,
+    OTPStartView
+)
+from chat.views import (
+    ChatRoomViewSet,
+    MessageViewSet
+)
 
 admin.autodiscover()
 admin.site.login_form = AuthAdminForm
@@ -40,6 +57,8 @@ router.register(r'teams', TeamViewSet)
 router.register(r'stadiums', StadiumViewSet)
 router.register(r'sports', SportViewSet)
 router.register(r'profiles', UserViewSet)
+router.register(r'chatroom', ChatRoomViewSet)
+router.register(r'messages', MessageViewSet)
 
 urlpatterns = [
     path('health/', include('health_check.urls')),
