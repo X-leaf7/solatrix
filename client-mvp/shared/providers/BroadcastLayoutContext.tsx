@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import useBroadcastLayout, { type UseBroadcastLayoutReturn } from "@/hooks/useBroadcastLayout"
+import useBroadcastLayout, { type UseBroadcastLayoutReturn } from "@/shared/hooks/useBroadcastLayout"
 import { createContext, useMemo, type ReactNode } from "react"
 
 // Create the context with a properly typed default value

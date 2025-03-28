@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { createContext, useMemo, type ReactNode, type RefObject } from "react"
-import useLocalMedia from "@/hooks/useLocalMedia"
+import useLocalMedia from "@/shared/hooks/useLocalMedia"
 
 // Define a MediaDevice type for consistency
 interface MediaDevice {

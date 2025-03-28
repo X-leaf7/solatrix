@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactNode, createContext, useState, Dispatch, SetStateAction } from 'react';
-import { getSavedValuesFromLocalStorage, clearSavedSettings } from '@/utils/userSettings';
+import { getSavedValuesFromLocalStorage, clearSavedSettings } from '@/shared/utils/userSettings';
 
 // Define allowed values for specific fields
 type ChannelType = 'BASIC' | 'STANDARD' | 'ADVANCED_HD' | 'ADVANCED_SD' | undefined;

@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { createContext, useState, useMemo, type ReactNode, type ReactElement } from "react"
-import useModal from "@/hooks/useModal"
+import useModal from "@/shared/hooks/useModal"
 
 // Define the interface for the context value
 interface ModalContextType {

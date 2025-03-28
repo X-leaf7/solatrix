@@ -3,11 +3,11 @@
 import type React from "react"
 
 import { useContext, useRef, useState, type RefObject } from "react"
-import { DEFAULT_TEMPLATE, SCREENSHARE_TEMPLATE } from "@/utils/broadcastLayoutTemplates"
-import { BroadcastContext } from "@/providers/BroadCastContext"
-import { calcScaledCoords, formatPositionFromDimensions } from "@/utils/broadcastLayout"
-import { LocalMediaContext } from "@/providers/LocalMediaContext"
-import { BroadcastMixerContext } from "@/providers/BroadcastMixerContext"
+import { DEFAULT_TEMPLATE, SCREENSHARE_TEMPLATE } from "@/shared/utils/broadcastLayoutTemplates"
+import { BroadcastContext } from "@/shared/providers/BroadCastContext"
+import { calcScaledCoords, formatPositionFromDimensions } from "@/shared/utils/broadcastLayout"
+import { LocalMediaContext } from "@/shared/providers/LocalMediaContext"
+import { BroadcastMixerContext } from "@/shared/providers/BroadcastMixerContext"
 import toast from "react-hot-toast"
 
 // Define interfaces for the layer types

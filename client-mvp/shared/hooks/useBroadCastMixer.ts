@@ -3,7 +3,7 @@
 import type React from "react"
 import { useContext, useEffect, useRef, useState } from "react"
 
-import { BroadcastContext } from "@/providers/BroadCastContext"
+import { BroadcastContext } from "@/shared/providers/BroadCastContext"
 
 // Define interfaces for the mixer devices
 interface MixerDevice {

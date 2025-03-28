@@ -35,7 +35,7 @@
     ".next/types/**/*.ts",
     "app/(pages)/privacy/page.tsx",
     "app/@modal/(.)privacy/page.tsx",
-    "hooks/useBroadCastSDK.tsx"
+    "shared/hooks/useBroadCastSDK.tsx"
   ],
   "exclude": [
     "node_modules"

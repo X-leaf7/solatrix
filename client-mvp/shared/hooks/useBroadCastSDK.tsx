@@ -7,8 +7,8 @@ import toast from "react-hot-toast"
 
 import { Button } from "@/dsm"
 import Settings from "@/components/settings/Settings"
-import { ModalContext } from "@/providers/ModalContext"
-import { UserSettingsContext } from "@/providers/UserSettingsContext"
+import { ModalContext } from "@/shared/providers/ModalContext"
+import { UserSettingsContext } from "@/shared/providers/UserSettingsContext"
 
 // Define types based on the Amazon IVS Web Broadcast SDK
 // See: https://aws.github.io/amazon-ivs-web-broadcast/docs/sdk-reference

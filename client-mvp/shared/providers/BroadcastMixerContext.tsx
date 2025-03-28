@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, type ReactNode, type ReactElement } from "react"
-import useBroadcastMixer, { type UseBroadcastMixerReturn } from "@/hooks/useBroadCastMixer"
+import useBroadcastMixer, { type UseBroadcastMixerReturn } from "@/shared/hooks/useBroadCastMixer"
 
 // Create the context with a default value
 // We're using the UseBroadcastMixerReturn type from the hook

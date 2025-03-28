@@ -1,4 +1,4 @@
-import useLocalStorage from '@/hooks/useLocalStorage';
+import useLocalStorage from '@/shared/hooks/useLocalStorage';
 import { useEffect, useRef } from 'react';
 import { isMobileOnly } from 'react-device-detect';
 

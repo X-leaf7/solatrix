@@ -4,10 +4,10 @@ import type React from "react"
 import { useContext, useRef, useState, type RefObject } from "react"
 import toast from "react-hot-toast"
 
-import useLocalStorage from "@/hooks/useLocalStorage"
-import { UserSettingsContext } from "@/providers/UserSettingsContext"
+import useLocalStorage from "@/shared/hooks/useLocalStorage"
+import { UserSettingsContext } from "@/shared/providers/UserSettingsContext"
 
-import { debounce } from "@/utils/helper"
+import { debounce } from "@/shared/utils/helper"
 import {
   getCameraStream,  
   getMicrophoneStream,
@@ -16,7 +16,7 @@ import {
   getIdealDevice,
   getDisconnectedDevices,
   getConnectedDevices,
-} from "@/utils/localMedia"
+} from "@/shared/utils/localMedia"
 
 // Define interfaces for device objects
 interface MediaDevice {

@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-import { REST_API_BASE_URL } from "@/constants"
+import { REST_API_BASE_URL } from "@/shared/constants"
 
 export async function POST(request: NextRequest) {
   try {

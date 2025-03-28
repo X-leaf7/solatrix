@@ -21,7 +21,7 @@ import {
   LocalMediaContext,
   BroadcastMixerContext,
   ModalContext
-} from "@/providers"
+} from "@/shared/providers"
 
 // Define context interfaces
 // interface BroadcastContextType {

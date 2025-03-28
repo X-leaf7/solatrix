@@ -1,4 +1,4 @@
-import type { Template } from "@/hooks/useBroadcastLayout"
+import type { Template } from "@/shared/hooks/useBroadcastLayout"
 
 // Update the ResizeConfig interface to match what's used in Slot
 interface ResizeConfig {

@@ -1,7 +1,7 @@
 'use client'
 
 import { createContext, type ReactNode, type ReactElement } from "react"
-import useBroadcastSDK, { type UseBroadcastSDKReturn } from "@/hooks/useBroadCastSDK"
+import useBroadcastSDK, { type UseBroadcastSDKReturn } from "@/shared/hooks/useBroadCastSDK"
 
 // Define the broadcast status enum
 export enum BROADCAST_STATUS {
