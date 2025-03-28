@@ -7,6 +7,9 @@ import Image from 'next/image';
 import styles from './styles.module.sass';
 import { toast } from 'sonner';
 import { useCopyToClipboard } from 'usehooks-ts';
+import { useParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { useCallback } from 'react';
 
 export function ChatInvite() {
   const [, copy] = useCopyToClipboard();
@@ -16,10 +19,28 @@ export function ChatInvite() {
     parseAsBoolean.withDefault(true),
   );
 
-  function handleCopy() {
-    copy('https://apple.com');
-    toast('Copied the invite link.');
-  }
+  const params = useParams()
+
+  const searchParams = useSearchParams();
+
+  const chatId = params.id as string
+  
+  const invitationCode = searchParams.get("code")
+
+  const handleCopy = useCallback(() => {
+    try {
+      const currentHost = window.location.origin
+
+      const inviteUrl = `${currentHost}/chat/${chatId}?stream=${stream}&code=${invitationCode}`
+
+      copy(inviteUrl)
+
+      toast("Copied the invite link.")
+    } catch (error) {
+      console.error("Failed to copy invite link:", error)
+      toast.error("Failed to copy invite link. Please try again.")
+    }
+  }, [chatId, stream, invitationCode, copy])
 
   return (
     <section className={styles.base}>
@@ -64,7 +85,7 @@ export function ChatInvite() {
         <Button href="/settings" intent="tertiary">
           Go to Settings
         </Button>
-        <Button href={`/chat/1?stream=${stream}`}>Enter Chat</Button>
+        <Button href={`/chat/${chatId}?stream=${stream}`}>Enter Chat</Button>
       </div>
     </section>
   );
