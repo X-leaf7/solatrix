@@ -28,9 +28,48 @@ DEBUG = True
 
 STAGE = 'base'
 
-ALLOWED_HOSTS = ['localhost']
+CSRF_COOKIE_HTTPONLY = True
+ALLOWED_HOSTS = [
+  'localhost',
+  "127.0.0.1",
+  "23.131.24.126",
+  "23.131.24.126:3002",
+  "23.131.24.126:8000"
+]
+CSRF_TRUSTED_ORIGINS = [
+  "http://localhost",
+  "http://127.0.0.1",
+  "http://localhost:3000",
+  "http://localhost:3002",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3002",
+  "http://23.131.24.126:3000",
+  "http://23.131.24.126:3002",
+  "http://23.131.24.126",
+  "http://23.131.24.126:8000"
+]
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 
 DOMAIN = SITE_NAME = getenv('WEB_DOMAIN')
 
@@ -38,7 +77,7 @@ DOMAIN = SITE_NAME = getenv('WEB_DOMAIN')
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
+    # 'daphne',
     'djangocms_admin_style', # must be before admin
     'users', # must be before auth
 
@@ -90,10 +129,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django_otp.middleware.OTPMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -208,7 +247,6 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -247,3 +285,5 @@ FIXTURE_DIRS = [
 ]
 
 APPEND_SLASH = False
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

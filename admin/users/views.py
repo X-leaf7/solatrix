@@ -80,33 +80,47 @@ class OTPLoginView(generics.GenericAPIView):
 
 
 class OTPStartView(generics.GenericAPIView):
-
     serializer_class = OTPStartSerializer
 
     def post(self, request, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user, created = User.objects.get_or_create(
-            email=request.data['email'],
-            defaults={
-                'username': request.data['email'].split('@')[0]
-            }
-        )
-        devices = list(devices_for_user(user))
-
-        if devices:
-            device = devices[0]
-        else:
-            device = EmailDevice(email=user.email, user=user)
-            device.save()
-
         try:
-            device.generate_challenge()
-        except:
-            return Response(
-                data={"detail": "Error generating challenge"}, status=status.HTTP_400_BAD_REQUEST
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            
+            email = serializer.validated_data['email']
+            
+            user, created = User.objects.get_or_create(
+                email=email,
+                defaults={
+                    'username': email.split('@')[0]
+                }
             )
-        else:
+            
+            devices = list(devices_for_user(user))
+
+            if devices:
+                device = devices[0]
+            else:
+                device = EmailDevice(email=user.email, user=user)
+                device.save()
+
+            try:
+                device.generate_challenge()
+            except Exception as e:
+                print(f"Error generating challenge: {str(e)}")
+                return Response(
+                    data={"detail": f"Error generating challenge: {str(e)}"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+                
             return Response(
-                data={"detail": "Challenge sent"}, status=status.HTTP_200_OK
+                data={"detail": "Challenge sent", "success": True},
+                status=status.HTTP_200_OK
+            )
+            
+        except Exception as e:
+            print(f"Unexpected error: {str(e)}")
+            return Response(
+                data={"detail": "An unexpected error occurred"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
