@@ -19,6 +19,7 @@ class ChatRoomViewSet(viewsets.ModelViewSet):
     """
     API endpoint for chat rooms
     """
+    queryset = ChatRoom.objects.all()
     serializer_class = ChatRoomSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -369,6 +370,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated]
+    queryset = Message.objects.all()
     pagination_class = MessagePagination
     http_method_names = ['get', 'post', 'patch', 'delete']
     

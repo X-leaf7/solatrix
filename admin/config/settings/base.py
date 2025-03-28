@@ -85,8 +85,7 @@ INSTALLED_APPS = [
     # Custom Apps
     'sports',
     'events',
-    'chat',
-    'users'
+    'chat'
 ]
 
 MIDDLEWARE = [
