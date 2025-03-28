@@ -38,6 +38,7 @@ DOMAIN = SITE_NAME = getenv('WEB_DOMAIN')
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'djangocms_admin_style', # must be before admin
     'users', # must be before auth
 
@@ -81,9 +82,10 @@ INSTALLED_APPS = [
     'menus',
     'treebeard',
 
-    # Our Apps
+    # Custom Apps
     'sports',
-    'events'
+    'events',
+    'chat'
 ]
 
 MIDDLEWARE = [
@@ -132,6 +134,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 SITE_ID = 1
 X_FRAME_OPTIONS = 'SAMEORIGIN'
+
+ASGI_APPLICATION = "config.asgi.application"
+
+CHANNEL_LAYERS = {
+  'default': {
+    "BACKEND": "channels_redis.core.RedisChannelLayer",
+    "CONFIG": {
+        "hosts": [("127.0.0.1", 6379)],
+    },
+  }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
