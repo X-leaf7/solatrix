@@ -3,14 +3,15 @@
 import { DateTime } from 'luxon';
 
 import { Event as EventType, EventTiming } from '@/data/types/event';
-import { Token } from '@/data/types/helpers';
 import { Event } from '@/components/01-cards';
 import { useEvents } from '@/data/api';
 import styles from './styles.module.sass';
 
 export function Events({eventTiming}: {eventTiming: EventTiming}) {
   const { events, isLoadingEvents, isErrorEvents } = useEvents();
-  const now = DateTime.now(); 
+  console.log('fetched events: ', events)
+
+  const now = DateTime.now();
   const filters = {
     live: (event: EventType) => {
       return DateTime.fromISO(event.event_start_time) < now && event.status === 'InProgress';

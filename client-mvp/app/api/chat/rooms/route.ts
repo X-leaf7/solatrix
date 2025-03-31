@@ -5,7 +5,6 @@ import { REST_API_BASE_URL } from "@/shared/constants"
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('creating chat')
     const body = await request.json()
 
     // Get token from cookies
@@ -15,8 +14,6 @@ export async function POST(request: NextRequest) {
     if (!token) {
       return NextResponse.json({ detail: "Authentication required" }, { status: 401 })
     }
-
-    console.log('seding request')
 
     // Forward the request to your backend
     const response = await fetch(`${REST_API_BASE_URL}/api/chatroom/`, {

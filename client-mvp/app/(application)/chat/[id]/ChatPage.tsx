@@ -1,11 +1,13 @@
 'use client'
 
 import React, { useCallback, useEffect } from 'react'
-import { cx } from 'cva';
+import { getCookie } from 'cookies-next/client';
 import { useParams, useSearchParams } from 'next/navigation';
+import { cx } from 'cva';
 
 import { ChatEvent, ChatHost } from '@/components';
 import ChatVideo from '@/components/01-cards/chat-video';
+import { useWebSocket } from '@/shared/providers';
 
 import styles from './page.module.sass';
 
@@ -16,6 +18,14 @@ const ChatPage = () => {
   const chatId = params.id as string
   const invitationCode = searchParams.get("code")
 
+  const userCookie = getCookie('user')
+  let userId = 'anonymous'
+
+  if (userCookie) {
+    const userData = JSON.parse(userCookie as string)
+    userId = userData.id || userData.user_id || "anonymous"
+  }
+
   const fetchData = useCallback(async () => {
     await joinRoom()
   }, [invitationCode, chatId])
@@ -24,9 +34,21 @@ const ChatPage = () => {
 
   }, [invitationCode, chatId])
 
+  const websocketService = useWebSocket()
+
   useEffect(() => {
     fetchData()
   }, [fetchData])
+
+  useEffect(() => {
+    websocketService.disconnect()
+
+    websocketService.connect(chatId, userId)
+
+    return () => {
+      websocketService.disconnect()
+    }
+  }, [chatId])
 
   return (
     <article className={cx(styles.base, styles['has-video'])}>

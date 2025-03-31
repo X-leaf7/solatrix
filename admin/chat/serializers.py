@@ -61,6 +61,13 @@ class MessageSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Message
-        fields = ['id', 'room', 'sender', 'sender_details', 'content', 'timestamp']
+        fields = [
+            'id',
+            'room',
+            'sender',
+            'sender_details',
+            'content',
+            'timestamp'
+        ]
         read_only_fields = ['sender', 'timestamp']
 

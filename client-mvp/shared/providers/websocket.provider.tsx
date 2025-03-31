@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useEffect } from 'react'
+import React, { createContext, useContext } from 'react'
 import { websocketService } from '../service/websocket.service'
 
 const WebSocketContext = createContext<typeof websocketService | null>(null)

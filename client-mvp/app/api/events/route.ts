@@ -5,21 +5,9 @@ import { REST_API_BASE_URL } from "@/shared/constants"
 
 export async function GET(request: NextRequest) {
   try {
-    // Get the cookie store - use await since cookies() returns a Promise
-    console.log('events proxy api')
-    const cookieStore = await cookies()
-
-    // Get token from cookies
-    const token = cookieStore.get("access_token")?.value
-
     // Prepare headers for the backend request
     const headers: HeadersInit = {
       "Content-Type": "application/json",
-    }
-
-    // Add authorization header if token exists in cookies
-    if (token) {
-      headers["Authorization"] = `Token ${token}`
     }
 
     // Forward the request to your backend

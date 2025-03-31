@@ -5,7 +5,7 @@ class WebSocketService {
   private ws: WebSocket | null = null
   private messageHandlers: Record<string, ((data: any) => void)[]> = {}
 
-  private constructor() {}
+  private constructor() { }
 
   public static getInstance(): WebSocketService {
     if (!WebSocketService.instance) {
@@ -14,10 +14,12 @@ class WebSocketService {
     return WebSocketService.instance
   }
 
-  connect(roomId: string) {
+  connect(roomId: string, userId: string) {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) return
 
-    this.ws = new WebSocket(`${WS_API_BASE_URL}/ws/chat/${roomId}/`)
+    this.ws = new WebSocket(
+      `${WS_API_BASE_URL}/ws/chat/${roomId}/?user_id=${userId}`,
+    )
 
     this.ws.onopen = () => console.log('WebSocket connected')
     this.ws.onclose = () => console.log('WebSocket disconnected')
@@ -48,13 +50,16 @@ class WebSocketService {
   }
 
   registerOnMessageHandler(type: string, handler: (data: any) => void) {
+    console.log(`registering ${type} handler`)
     if (!this.messageHandlers[type]) {
       this.messageHandlers[type] = []
     }
     this.messageHandlers[type].push(handler)
+    console.log('registered: ', this.messageHandlers[type])
   }
 
   unRegisterOnMessageHandler(type: string, handler: (data: any) => void) {
+    console.log(`unregistering ${type} handler`)
     if (this.messageHandlers[type]) {
       this.messageHandlers[type] = this.messageHandlers[type].filter(
         (h) => h !== handler
@@ -64,6 +69,7 @@ class WebSocketService {
         delete this.messageHandlers[type]
       }
     }
+    console.log('unregistered: ', this.messageHandlers[type])
   }
 
   get connectionStatus(): string {
