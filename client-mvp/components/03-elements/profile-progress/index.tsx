@@ -1,4 +1,4 @@
-import { Progress, ProgressProps } from '@/dsm';
+import { Progress, ProgressProps } from '@/shared/dsm';
 
 type ProfileProgressProps = {
   label: ProgressProps['label'];

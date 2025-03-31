@@ -5,7 +5,7 @@ import type React from "react"
 import { useContext, useRef, useState } from "react"
 import toast from "react-hot-toast"
 
-import { Button } from "@/dsm"
+import { Button } from "@/shared/dsm"
 import Settings from "@/components/settings/Settings"
 import { ModalContext } from "@/shared/providers/ModalContext"
 import { UserSettingsContext } from "@/shared/providers/UserSettingsContext"

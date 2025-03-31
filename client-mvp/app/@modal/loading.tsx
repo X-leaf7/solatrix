@@ -1,4 +1,4 @@
-import { Modal } from '@/dsm';
+import { Modal } from '@/shared/dsm';
 
 export default function Loading() {
   return (

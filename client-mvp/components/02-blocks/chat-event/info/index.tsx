@@ -1,4 +1,4 @@
-import { Avatar, Button } from '@/dsm';
+import { Avatar, Button } from '@/shared/dsm';
 
 import styles from './styles.module.sass';
 

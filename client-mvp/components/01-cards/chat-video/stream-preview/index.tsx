@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { HandRaisedIcon } from '@heroicons/react/24/outline'
 
-import { Icon } from '@/dsm'
+import { Icon } from '@/shared/dsm'
 import {
   LocalMediaContext,
   UserSettingsContext,

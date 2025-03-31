@@ -3,8 +3,8 @@
 import styles from './styles.module.sass';
 import { getCookie } from 'cookies-next/client';
 
-import { Button, Table, type TableColumn } from '@/dsm';
-import { League, Sport, Teams } from '@/dsm';
+import { Button, Table, type TableColumn } from '@/shared/dsm';
+import { League, Sport, Teams } from '@/shared/dsm';
 
 import { Events } from '@/components';
 import { useEvents } from '@/data/api';

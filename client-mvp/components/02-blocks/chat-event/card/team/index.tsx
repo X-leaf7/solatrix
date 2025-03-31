@@ -1,4 +1,4 @@
-import { Icons } from '@/dsm';
+import { Icons } from '@/shared/dsm';
 import styles from './styles.module.sass';
 
 export function Team() {

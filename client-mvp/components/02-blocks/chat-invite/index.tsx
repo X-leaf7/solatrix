@@ -1,6 +1,6 @@
 'use client';
 
-import { Action, Button, ControlledToggle } from '@/dsm';
+import { Action, Button, ControlledToggle } from '@/shared/dsm';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 
 import Image from 'next/image';

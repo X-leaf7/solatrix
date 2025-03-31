@@ -1,4 +1,4 @@
-import { Button, IconName, Logo } from '@/dsm';
+import { Button, IconName, Logo } from '@/shared/dsm';
 import Link, { LinkProps } from 'next/link';
 
 import styles from './style.module.sass';

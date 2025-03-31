@@ -1,4 +1,4 @@
-import { Icons } from '@/dsm';
+import { Icons } from '@/shared/dsm';
 import Image from 'next/image';
 import { Team as TeamType } from '@/data/types/team';
 import styles from './styles.module.sass';

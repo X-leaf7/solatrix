@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/dsm';
+import { Button } from '@/shared/dsm';
 import styles from './styles.module.sass';
 
 export function Accept() {

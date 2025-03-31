@@ -1,4 +1,4 @@
-import { DividerGradient } from '@/dsm';
+import { DividerGradient } from '@/shared/dsm';
 import { Score } from './score';
 import { Team } from './team';
 import { Time } from './time';

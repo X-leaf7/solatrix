@@ -1,4 +1,4 @@
-import { Modal } from '@/dsm';
+import { Modal } from '@/shared/dsm';
 import { PageModal } from '@/components';
 import Privacy from '@/markdown/privacy.mdx';
 
