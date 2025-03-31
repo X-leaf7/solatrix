@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, DragAndDrop, Icons } from '@/dsm';
+import { Button, DragAndDrop, Icons } from '@/shared/dsm';
 import { parseAsInteger, useQueryState } from 'nuqs';
 
 import Image from 'next/image';

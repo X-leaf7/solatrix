@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/dsm"
+import { Button } from "@/shared/dsm"
 import Image from "next/image"
 import styles from "./styles.module.sass"
 

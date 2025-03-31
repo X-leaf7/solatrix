@@ -1,6 +1,6 @@
 'use client';
 
-import { Input, Select } from '@/dsm';
+import { Input, Select } from '@/shared/dsm';
 
 import styles from './styles.module.sass';
 import { useQueryState } from 'nuqs';

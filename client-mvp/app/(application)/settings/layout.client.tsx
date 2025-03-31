@@ -2,10 +2,10 @@
 
 import { NavigationGroup, NavigationSettings } from '@/components';
 
-import { Button } from '@/dsm';
+import { Button } from '@/shared/dsm';
 import Form from 'next/form';
 import { PropsWithChildren } from 'react';
-import { Toggle } from '@/dsm';
+import { Toggle } from '@/shared/dsm';
 import { cx } from 'cva';
 import styles from './layout.module.sass';
 import { usePathname } from 'next/navigation';

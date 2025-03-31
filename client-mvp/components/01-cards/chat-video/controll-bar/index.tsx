@@ -4,7 +4,7 @@ import type React from "react"
 import { isDesktop } from "react-device-detect"
 import { useContext, useCallback, useEffect, useState } from "react"
 
-import { Button, Icon, Tooltip } from "@/dsm"
+import { Button, Icon, Tooltip } from "@/shared/dsm"
 
 import styles from "./controlbar.module.sass"
 import { MuteButton } from "./mute-button"

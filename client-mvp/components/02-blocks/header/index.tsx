@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, LogoMark } from '@/dsm';
+import { Button, LogoMark } from '@/shared/dsm';
 
 import Link from 'next/link';
 import styles from './styles.module.sass';

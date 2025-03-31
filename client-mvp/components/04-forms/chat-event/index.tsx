@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, type FormEvent } from "react"
-import { Button, Input } from "@/dsm"
+import { Button, Input } from "@/shared/dsm"
 
 import styles from "./styles.module.sass"
 

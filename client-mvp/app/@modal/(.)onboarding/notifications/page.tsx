@@ -1,4 +1,4 @@
-import { Modal } from '@/dsm';
+import { Modal } from '@/shared/dsm';
 import { Notifications } from '@/components';
 
 export default function Page() {

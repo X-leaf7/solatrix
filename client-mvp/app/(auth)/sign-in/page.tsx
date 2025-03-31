@@ -1,4 +1,4 @@
-import { Button, LogoMark } from '@/dsm';
+import { Button, LogoMark } from '@/shared/dsm';
 import { FormSignIn } from '@/components';
 import Image from 'next/image';
 import { Suspense } from 'react';

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/dsm';
+import { Button } from '@/shared/dsm';
 import { TeamChoose } from '@/components/01-cards';
 import styles from './styles.module.sass';
 

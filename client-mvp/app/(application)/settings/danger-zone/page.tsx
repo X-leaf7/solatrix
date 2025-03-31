@@ -1,4 +1,4 @@
-import { Button } from '@/dsm';
+import { Button } from '@/shared/dsm';
 import styles from './page.module.sass';
 
 export default function Page() {

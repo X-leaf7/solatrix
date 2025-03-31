@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { Button, Icon } from "@/dsm"
+import { Button, Icon } from "@/shared/dsm"
 import styles from "../controlbar.module.sass"
 import { useEffect, useState } from "react"
 

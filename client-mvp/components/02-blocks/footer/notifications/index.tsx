@@ -1,4 +1,4 @@
-import { Button } from '@/dsm';
+import { Button } from '@/shared/dsm';
 
 export function Notifications() {
   return (

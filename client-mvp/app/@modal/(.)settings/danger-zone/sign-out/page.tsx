@@ -1,4 +1,4 @@
-import { Modal } from '@/dsm';
+import { Modal } from '@/shared/dsm';
 import { SignOut } from '@/components';
 
 export default function Page() {

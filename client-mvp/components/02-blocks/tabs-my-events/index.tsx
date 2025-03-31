@@ -1,6 +1,6 @@
 'use client';
 
-import { Tabs } from '@/dsm';
+import { Tabs } from '@/shared/dsm';
 import { usePathname } from 'next/navigation';
 
 const tabs = [

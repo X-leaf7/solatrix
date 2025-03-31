@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select } from '@/dsm';
+import { Select } from '@/shared/dsm';
 import './styles.module.sass';
 
 type DeviceSelectProps = {

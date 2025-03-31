@@ -1,4 +1,4 @@
-import { Modal } from '@/dsm';
+import { Modal } from '@/shared/dsm';
 import { VerificationSent } from '@/components';
 
 export default function Page() {

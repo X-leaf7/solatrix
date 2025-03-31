@@ -1,4 +1,4 @@
-import { Avatar } from '@/dsm';
+import { Avatar } from '@/shared/dsm';
 import { User } from '@/data/types';
 import styles from './styles.module.sass';
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { Content } from '@/components/02-blocks';
-import { Icons } from '@/dsm';
+import { Icons } from '@/shared/dsm';
 import { PropsWithChildren } from 'react';
 import styles from './styles.module.sass';
 import { useRouter } from 'next/navigation';

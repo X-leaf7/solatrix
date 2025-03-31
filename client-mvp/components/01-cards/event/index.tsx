@@ -1,4 +1,4 @@
-import { DividerGradient, League, Sport } from '@/dsm';
+import { DividerGradient, League, Sport } from '@/shared/dsm';
 
 import { Event as EventType, EventTiming } from '@/data/types/event';
 

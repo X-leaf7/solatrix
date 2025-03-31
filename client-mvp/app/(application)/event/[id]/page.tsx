@@ -1,4 +1,4 @@
-import { Button } from '@/dsm';
+import { Button } from '@/shared/dsm';
 // import { Event } from '@/02-components';
 import styles from './page.module.sass';
 

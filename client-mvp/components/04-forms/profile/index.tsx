@@ -5,7 +5,7 @@ import {
   Input,
   InputField,
   ControlledToggle as Toggle,
-} from '@/dsm';
+} from '@/shared/dsm';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 
 import Form from 'next/form';

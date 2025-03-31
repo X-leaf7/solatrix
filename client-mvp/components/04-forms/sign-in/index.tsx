@@ -5,7 +5,7 @@ import { parseAsInteger, useQueryState } from "nuqs"
 import Form from "next/form"
 
 import styles from "./styles.module.sass"
-import { Button, Input, InputField, InputOTP } from "@/dsm"
+import { Button, Input, InputField, InputOTP } from "@/shared/dsm"
 
 export function FormSignIn() {
   const [email, setEmail] = useQueryState("email")
