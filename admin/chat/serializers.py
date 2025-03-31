@@ -11,10 +11,8 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     creator_details = UserSerializer(source='creator', read_only=True)
     member_count = serializers.SerializerMethodField()
     is_member = serializers.SerializerMethodField()
-    unread_count = serializers.SerializerMethodField()
     last_message = serializers.SerializerMethodField()
     is_private = serializers.BooleanField(read_only=False, default=False)
-    invitation_link = serializers.SerializerMethodField()
     max_members = serializers.IntegerField(min_value=2, max_value=100, default=10)
     current_member_count = serializers.SerializerMethodField()
     
@@ -23,9 +21,9 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'name', 'description', 'creator', 'creator_details',
             'created_at', 'updated_at', 'member_count', 'is_member',
-            'unread_count', 'last_message', 'is_private', 'invitation_link', 'max_members', 'current_member_count'
+            'last_message', 'is_private', 'max_members', 'invitation_code', 'current_member_count'
         ]
-        read_only_fields = ['creator', 'created_at', 'updated_at', 'invitation_link', 'current_member_count']
+        read_only_fields = ['creator', 'created_at', 'updated_at', 'current_member_count']
     
     def get_member_count(self, obj):
         return obj.members.count()
@@ -36,14 +34,6 @@ class ChatRoomSerializer(serializers.ModelSerializer):
             return obj.members.filter(user=request.user).exists()
         return False
     
-    def get_unread_count(self, obj):
-        request = self.context.get('request')
-        if request and hasattr(request, 'user'):
-            return Message.objects.filter(
-                room=obj
-            ).exclude(sender=request.user).count()
-        return 0
-    
     def get_last_message(self, obj):
         last_message = obj.messages.order_by('-timestamp').first()
         if last_message:
@@ -53,12 +43,6 @@ class ChatRoomSerializer(serializers.ModelSerializer):
                 'sender': last_message.sender.username,
                 'timestamp': last_message.timestamp.isoformat()
             }
-        return None
-
-    def get_invitation_link(self, obj):
-        request = self.context.get('request')
-        if request and obj.is_private:
-            return obj.get_invitation_link(request)
         return None
     
     def get_current_member_count(self, obj):
@@ -77,6 +61,13 @@ class MessageSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Message
-        fields = ['id', 'room', 'sender', 'sender_details', 'content', 'timestamp']
+        fields = [
+            'id',
+            'room',
+            'sender',
+            'sender_details',
+            'content',
+            'timestamp'
+        ]
         read_only_fields = ['sender', 'timestamp']
 

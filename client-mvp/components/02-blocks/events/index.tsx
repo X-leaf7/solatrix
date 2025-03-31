@@ -3,13 +3,14 @@
 import { DateTime } from 'luxon';
 
 import { Event as EventType, EventTiming } from '@/data/types/event';
-import { Token } from '@/data/types/helpers';
 import { Event } from '@/components/01-cards';
 import { useEvents } from '@/data/api';
 import styles from './styles.module.sass';
 
-export function Events({eventTiming, token}: {eventTiming: EventTiming, token: Token}) {
-  const { events, isLoadingEvents, isErrorEvents } = useEvents(token);
+export function Events({eventTiming}: {eventTiming: EventTiming}) {
+  const { events, isLoadingEvents, isErrorEvents } = useEvents();
+  console.log('fetched events: ', events)
+
   const now = DateTime.now();
   const filters = {
     live: (event: EventType) => {

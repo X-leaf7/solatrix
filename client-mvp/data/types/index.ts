@@ -7,3 +7,4 @@ export * from './sport';
 export * from './stadium';
 export * from './team';
 export * from './user';
+export * from  './message';

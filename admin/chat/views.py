@@ -3,12 +3,16 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.db import transaction
-from django.db.models import Q, Count, Max, Prefetch
+from django.db.models import Q, Prefetch
 from django.shortcuts import get_object_or_404
 import uuid
 
 from .models import ChatRoom, ChatRoomMember, Message
-from .serializers import ChatRoomSerializer, ChatRoomMemberSerializer, MessageSerializer
+from .serializers import (
+    ChatRoomSerializer,
+    ChatRoomMemberSerializer,
+    MessageSerializer
+)
 
 class MessagePagination(PageNumberPagination):
     page_size = 50

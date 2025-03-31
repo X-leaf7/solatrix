@@ -1,26 +1,24 @@
-import { VariantProps, cva } from 'cva';
+import type React from "react"
+import { cva } from "cva"
 
-import { Avatar } from '@/dsm';
-import styles from './styles.module.sass';
+import { Avatar } from "@/dsm"
+import type { Message } from "@/data"
+import styles from "./styles.module.sass"
 
-const message = cva(styles.base, {
+const messageStyles = cva(styles.base, {
   variants: {
     current: {
       true: styles.current,
     },
   },
-});
+})
 
-type MessageEventProps = VariantProps<typeof message> & {
-  profile_image?: string;
-  text: string;
-  is_current_user?: boolean;
-};
+interface MessageItemProps {
+  message: Message
+}
 
-export function MessageEvent(props: MessageEventProps) {
-  const { text, is_current_user = false } = props;
-
-  const style = message({ current: is_current_user });
+export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
+  const style = messageStyles({ current: message.isCurrentUser })
 
   return (
     <li className={style}>
@@ -28,8 +26,9 @@ export function MessageEvent(props: MessageEventProps) {
         <Avatar size="small" />
       </div>
       <div className={styles.content}>
-        <p>{text}</p>
+        <p>{message.text}</p>
       </div>
     </li>
-  );
+  )
 }
+

@@ -1,25 +1,17 @@
-'use client'
+import ChatPage from './ChatPage';
+import { WebSocketProvider, ChatProvider } from '@/shared/providers';
 
-import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+const Page = async () => {
 
-const ChatPage = dynamic(() => import ('./ChatPage'), {
-  ssr: false
-})
+  // TODO: Room validation, authority validation
 
-export default function Page() {
-
-  const [isClient, setIsClient] = useState(false)
- 
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  if (!isClient) {
-    return null
-  }
-  
   return (
-    <ChatPage />
+    <WebSocketProvider>
+      <ChatProvider>
+        <ChatPage />
+      </ChatProvider>
+    </WebSocketProvider>
   );
 }
+
+export default Page

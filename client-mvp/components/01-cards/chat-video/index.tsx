@@ -7,7 +7,7 @@ import {
   UserSettingsContext,
   BroadcastLayoutContext,
   LocalMediaContext
-} from '@/providers'
+} from '@/shared/providers'
 
 import ControllBar from './controll-bar'
 import StreamPreview from './stream-preview'

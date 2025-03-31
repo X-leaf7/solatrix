@@ -8,7 +8,7 @@ import {
   LocalMediaContext,
   UserSettingsContext,
   BroadcastLayoutContext
-} from '@/providers'
+} from '@/shared/providers'
 
 import styles from './preview.module.sass'
 

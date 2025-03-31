@@ -17,7 +17,7 @@ import {
   LocalMediaProvider,
   ModalProvider,
   UserSettingsProvider
-} from '@/providers';
+} from '@/shared/providers';
 
 const openSans = Open_Sans({
   subsets: ['latin'],

@@ -1,10 +1,24 @@
+'use client'
+
+import { Suspense, useCallback, useEffect, useState } from 'react';
+
 import { MessageHost } from '@/components/01-cards';
-import { Suspense } from 'react';
 import { getChatHost } from '@/data';
 import styles from './styles.module.sass';
 
-export async function ChatHost() {
-  const data = await getChatHost();
+export function ChatHost() {
+  // const data = await getChatHost();
+  const [data, setData] = useState([])
+
+  const fetchData = useCallback(async () => {
+    const data = await getChatHost()
+
+    setData(data)
+  }, [])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   return (
     <section className={styles.base}>

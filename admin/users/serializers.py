@@ -7,13 +7,19 @@ from users.models import User
 
 
 class LoginUserSerializer(serializers.ModelSerializer):
-
+    profile_image_url = serializers.SerializerMethodField()
+    
     class Meta:
         model = User
         fields = (
             "username", "first_name", "last_name", "email",
-            "is_staff", "id"
+            "is_staff", "id", "profile_image_url"
         )
+    
+    def get_profile_image_url(self, obj):
+        if obj.profile_image:
+            return obj.profile_image.url
+        return None
 
 class FullUserSerializer(serializers.ModelSerializer):
 

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from os import getenv
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,9 +29,48 @@ DEBUG = True
 
 STAGE = 'base'
 
-ALLOWED_HOSTS = ['localhost']
+CSRF_COOKIE_HTTPONLY = True
+ALLOWED_HOSTS = [
+  'localhost',
+  "127.0.0.1",
+  "23.131.24.126",
+  "23.131.24.126:3002",
+  "23.131.24.126:8000"
+]
+CSRF_TRUSTED_ORIGINS = [
+  "http://localhost",
+  "http://127.0.0.1",
+  "http://localhost:3000",
+  "http://localhost:3002",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:3002",
+  "http://23.131.24.126:3000",
+  "http://23.131.24.126:3002",
+  "http://23.131.24.126",
+  "http://23.131.24.126:8000"
+]
 
 CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
+]
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
 
 DOMAIN = SITE_NAME = getenv('WEB_DOMAIN')
 
@@ -65,6 +105,7 @@ INSTALLED_APPS = [
     # 'health_check.contrib.migrations',
 
     # DRF
+    'channels',
     'rest_framework',
     'rest_framework.authtoken',
     'djoser',
@@ -89,20 +130,20 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django_otp.middleware.OTPMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'cms.middleware.user.CurrentUserMiddleware',
-    'cms.middleware.page.CurrentPageMiddleware',
-    'cms.middleware.toolbar.ToolbarMiddleware',
-    'cms.middleware.language.LanguageCookieMiddleware'
+    # 'cms.middleware.user.CurrentUserMiddleware',
+    # 'cms.middleware.page.CurrentPageMiddleware',
+    # 'cms.middleware.toolbar.ToolbarMiddleware',
+    # 'cms.middleware.language.LanguageCookieMiddleware'
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -135,13 +176,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 SITE_ID = 1
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
-ASGI_APPLICATION = "config.asgi.application"
+ASGI_APPLICATION = 'config.asgi.application'
 
 CHANNEL_LAYERS = {
   'default': {
-    "BACKEND": "channels_redis.core.RedisChannelLayer",
-    "CONFIG": {
-        "hosts": [("127.0.0.1", 6379)],
+    'BACKEND': 'channels_redis.core.RedisChannelLayer',
+    'CONFIG': {
+        'hosts': [('127.0.0.1', 6379)],
     },
   }
 }
@@ -207,7 +248,6 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -239,10 +279,12 @@ STATIC_URL = 'static/'
 STATIC_ROOT = "/app/static"
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/app/media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 FIXTURE_DIRS = [
     'config/fixtures'
 ]
 
 APPEND_SLASH = False
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

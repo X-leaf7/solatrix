@@ -11,7 +11,8 @@ export default function Layout(props: PropsWithChildren) {
       position: 'relative',
       width: '100%',
       overflow: 'hidden',
-      paddingBottom: '40px'
+      paddingBottom: '40px',
+      minHeight: '80vh'
     }}>
       <Header />
       <main className={styles.main}>{children}</main>

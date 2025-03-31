@@ -1,5 +1,0 @@
-node_modules/
-out/
-.next/
-# Sentry Auth Token
-.sentryclirc
