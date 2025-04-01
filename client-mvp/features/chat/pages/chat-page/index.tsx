@@ -1,17 +1,15 @@
 'use client'
 
 import React, { useCallback, useEffect } from 'react'
+import { cx } from 'cva';
 import { getCookie } from 'cookies-next/client';
 import { useParams, useSearchParams } from 'next/navigation';
-import { cx } from 'cva';
-
-import { ChatEvent, ChatHost } from '@/components';
-import ChatVideo from '@/components/01-cards/chat-video';
-import { useWebSocket } from '@/shared/providers';
 
 import styles from './page.module.sass';
+import { useWebSocket } from '../../providers';
+import { ChatHost, ChatVideo, ChatSubmitForm } from '../../components';
 
-const ChatPage = () => {
+export const ChatPage = () => {
   const params = useParams();
   const searchParams = useSearchParams();
 
@@ -34,19 +32,19 @@ const ChatPage = () => {
 
   }, [invitationCode, chatId])
 
-  const websocketService = useWebSocket()
+  const chatWebsocketService = useWebSocket()
 
   useEffect(() => {
     fetchData()
   }, [fetchData])
 
   useEffect(() => {
-    websocketService.disconnect()
+    chatWebsocketService.disconnect()
 
-    websocketService.connect(chatId, userId)
+    chatWebsocketService.connect(chatId, userId)
 
     return () => {
-      websocketService.disconnect()
+      chatWebsocketService.disconnect()
     }
   }, [chatId])
 
@@ -62,10 +60,8 @@ const ChatPage = () => {
         </div>
       </div>
       <div className={styles.chat}>
-        <ChatEvent />
+        <ChatSubmitForm />
       </div>
     </article>
   )
 }
-
-export default ChatPage

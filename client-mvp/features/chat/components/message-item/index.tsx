@@ -2,7 +2,7 @@ import type React from "react"
 import { cva } from "cva"
 
 import { Avatar } from "@/shared/dsm"
-import type { Message } from "@/data"
+import { Message } from "../../types"
 import styles from "./styles.module.sass"
 
 const messageStyles = cva(styles.base, {

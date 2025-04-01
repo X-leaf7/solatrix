@@ -1,5 +1,4 @@
 import { Button } from '@/shared/dsm';
-// import { Event } from '@/02-components';
 import styles from './page.module.sass';
 
 export default function Page() {
@@ -9,8 +8,8 @@ export default function Page() {
         <div>
           <Button href="/" intent="tertiary" size="large" icon="arrowBack" />
         </div>
-        <div></div>
-        <div></div>
+        <div />
+        <div />
       </header>
       <div className={styles.grid}>
         <div className={styles.box1}>
@@ -21,8 +20,8 @@ export default function Page() {
           </div>
         </div>
         <hr className={styles.divider} />
-        <div></div>
-        <div></div>
+        <div />
+        <div />
       </div>
     </article>
   );

@@ -13,8 +13,7 @@ import ControllBar from './controll-bar'
 import StreamPreview from './stream-preview'
 import styles from './video.module.sass'
 
-const ChatVideo = () => {
-
+export const ChatVideo = () => {
   const [isClient, setIsClient] = useState(false)
 
   useEffect(() => {
@@ -163,5 +162,3 @@ const ChatVideo = () => {
     </div>
   )
 }
-
-export default ChatVideo

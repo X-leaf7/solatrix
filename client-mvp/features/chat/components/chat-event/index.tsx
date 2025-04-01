@@ -7,9 +7,9 @@ import { Button, Input } from "@/shared/dsm"
 
 import styles from "./styles.module.sass"
 
-import { useChatContext } from "@/shared/providers"
+import { useChatContext } from "../../providers/chat.provider"
 
-export function FormChatEvent() {
+export function ChatSubmitForm() {
   const [message, setMessage] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
   const { sendMessage } = useChatContext()

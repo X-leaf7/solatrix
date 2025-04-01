@@ -1,4 +1,4 @@
-import { ChatChoose } from '@/components';
+import { ChatChoose } from "@/features/chat/components";
 
 export default function Page() {
   return <ChatChoose />;
