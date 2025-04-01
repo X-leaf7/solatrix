@@ -1,16 +1,16 @@
 'use client';
 
-import { NavigationGroup, NavigationSettings } from '@/components';
-
-import { Button } from '@/shared/dsm';
+import React from 'react';
 import Form from 'next/form';
-import { PropsWithChildren } from 'react';
-import { Toggle } from '@/shared/dsm';
 import { cx } from 'cva';
-import styles from './layout.module.sass';
 import { usePathname } from 'next/navigation';
+import { PropsWithChildren } from 'react';
 
-export default function LayoutClient(props: PropsWithChildren) {
+import { Button, Toggle } from '@/shared/dsm';
+import styles from './layout.module.sass';
+import { NavigationGroup, NavigationSettings } from './navigation';
+
+export const SettingsLayout = (props: PropsWithChildren) => {
   const { children } = props;
   const pathname = usePathname();
 

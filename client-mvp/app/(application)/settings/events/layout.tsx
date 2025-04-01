@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react';
-import { TabsMyEvents } from '@/components';
+
+import { TabsMyEvents } from '@/features/settings/components';
 import styles from './layout.module.sass';
 
 export default function Layout(props: PropsWithChildren) {
