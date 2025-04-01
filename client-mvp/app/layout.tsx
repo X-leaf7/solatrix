@@ -1,4 +1,4 @@
-import '@/dsm/app.sass';
+import '@/shared/dsm/app.sass';
 
 import { DM_Sans, Open_Sans } from 'next/font/google';
 import { Footer, Toaster } from '@/components';
