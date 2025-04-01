@@ -1,13 +1,7 @@
-import Client from './page.client';
-import { Events } from '@/components';
-import { Suspense } from 'react';
+import { EventDashboard } from '@/features/event-dashboard/pages';
 
 export default function Page() {
   return (
-    <Suspense>
-      <Client>
-        <Events eventTiming="live" />
-      </Client>
-    </Suspense>
+    <EventDashboard eventTiming="live" />
   );
 }
