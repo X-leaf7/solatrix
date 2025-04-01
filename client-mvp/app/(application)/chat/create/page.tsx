@@ -1,4 +1,4 @@
-import { ChatCreate } from '@/components';
+import { ChatCreate } from "@/features/chat/pages";
 
 export default function Page() {
   return <ChatCreate />;

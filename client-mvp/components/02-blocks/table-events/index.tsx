@@ -1,7 +1,6 @@
 'use client';
 
 import styles from './styles.module.sass';
-import { getCookie } from 'cookies-next/client';
 
 import { Button, Table, type TableColumn } from '@/shared/dsm';
 import { League, Sport, Teams } from '@/shared/dsm';
@@ -30,8 +29,7 @@ const columns: TableColumn[] = [
 ];
 
 export function TableEvents() {
-  const token = getCookie('Token');
-  const { events } = useEvents(token);
+  const { events } = useEvents();
   const [eventRows, setEventRows] = useState([]);
 
   useEffect(() => {
@@ -56,7 +54,7 @@ export function TableEvents() {
         <Table columns={columns} body={eventRows} />
       </div>
       <div className={styles.mobile}>
-        <Events eventTiming="all" token={token} />
+        <Events eventTiming="all" />
       </div>
     </>
   );

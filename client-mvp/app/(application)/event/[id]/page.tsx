@@ -13,7 +13,6 @@ export default function Page() {
       </header>
       <div className={styles.grid}>
         <div className={styles.box1}>
-          {/* <Event /> */}
           <div className={styles.actions}>
             <Button intent="tertiary">Create Chat</Button>
             <Button href={`/chat/one`}>Enter the Chat</Button>
