@@ -4,7 +4,6 @@ export * from './content';
 export * from './deactivate';
 export * from './email-changed';
 export * from './error';
-export * from './events';
 export * from './footer';
 export * from './header';
 export * from './sign-out';

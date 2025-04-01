@@ -5,7 +5,7 @@ import styles from './styles.module.sass';
 import { Button, Table, type TableColumn } from '@/shared/dsm';
 import { League, Sport, Teams } from '@/shared/dsm';
 
-import { Events } from '@/components';
+import { Events } from '@/features/event-dashboard/components';
 import { useEvents } from '@/data/api';
 import { useEffect, useState } from 'react';
 import { Event as EventType } from '@/data/types/event';

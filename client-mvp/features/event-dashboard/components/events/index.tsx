@@ -9,7 +9,6 @@ import styles from './styles.module.sass';
 
 export function Events({eventTiming}: {eventTiming: EventTiming}) {
   const { events, isLoadingEvents, isErrorEvents } = useEvents();
-  console.log('fetched events: ', events)
 
   const now = DateTime.now();
   const filters = {
