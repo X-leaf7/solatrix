@@ -1,17 +1,17 @@
-import { WS_API_BASE_URL } from '../constants'
+import { WS_API_BASE_URL } from '../../../shared/constants'
 
-class WebSocketService {
-  private static instance: WebSocketService
+class ChatWebSocketService {
+  private static instance: ChatWebSocketService
   private ws: WebSocket | null = null
   private messageHandlers: Record<string, ((data: any) => void)[]> = {}
 
   private constructor() { }
 
-  public static getInstance(): WebSocketService {
-    if (!WebSocketService.instance) {
-      WebSocketService.instance = new WebSocketService()
+  public static getInstance(): ChatWebSocketService {
+    if (!ChatWebSocketService.instance) {
+      ChatWebSocketService.instance = new ChatWebSocketService()
     }
-    return WebSocketService.instance
+    return ChatWebSocketService.instance
   }
 
   connect(roomId: string, userId: string) {
@@ -89,4 +89,4 @@ class WebSocketService {
   }
 }
 
-export const websocketService = WebSocketService.getInstance()
+export const chatWebsocketService = ChatWebSocketService.getInstance()

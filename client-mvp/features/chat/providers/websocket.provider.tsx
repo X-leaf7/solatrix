@@ -1,9 +1,9 @@
 'use client'
 
 import React, { createContext, useContext } from 'react'
-import { websocketService } from '../service/websocket.service'
+import { chatWebsocketService } from '../service/websocket.service'
 
-const WebSocketContext = createContext<typeof websocketService | null>(null)
+const WebSocketContext = createContext<typeof chatWebsocketService | null>(null)
 
 interface IWebSocketProvider {
   children: React.ReactNode
@@ -11,7 +11,7 @@ interface IWebSocketProvider {
 
 export const WebSocketProvider: React.FC<IWebSocketProvider> = ({ children }) => {
   return (
-    <WebSocketContext.Provider value={websocketService}>
+    <WebSocketContext.Provider value={chatWebsocketService}>
       {children}
     </WebSocketContext.Provider>
   )

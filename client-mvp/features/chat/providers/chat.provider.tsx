@@ -9,7 +9,7 @@ import React, {
 } from "react"
 
 import { useWebSocket } from "./websocket.provider"
-import { Message } from "@/data"
+import { Message } from "@/features/chat/types"
 
 // Define the context type
 interface ChatContextType {
@@ -41,7 +41,7 @@ export function ChatProvider({ children, initialMessages = [], initialRules = []
   const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [rules, setRules] = useState<string[]>(initialRules)
 
-  const websocketService = useWebSocket()
+  const chatWebsocketService = useWebSocket()
 
   // Add a new message
   const addMessage = useCallback((message: Message) => {
@@ -78,9 +78,9 @@ export function ChatProvider({ children, initialMessages = [], initialRules = []
   }, [])
 
   const sendMessage = (message: string) => {
-    if (websocketService.connectionStatus === 'OPEN') {
+    if (chatWebsocketService.connectionStatus === 'OPEN') {
       console.log('sending message: ', message)
-      websocketService.sendMessage('send_message', {
+      chatWebsocketService.sendMessage('send_message', {
         message,
       })
     } else {

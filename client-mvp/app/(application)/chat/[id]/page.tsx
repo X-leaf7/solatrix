@@ -1,5 +1,5 @@
-import ChatPage from './ChatPage';
-import { WebSocketProvider, ChatProvider } from '@/shared/providers';
+import { ChatPage } from '@/features/chat/pages';
+import { WebSocketProvider, ChatProvider } from '@/features/chat/providers';
 
 const Page = async () => {
 
