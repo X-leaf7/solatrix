@@ -1,4 +1,3 @@
-export * from './chat-choose'
 export * from './chat-host'
 export * from './chat-event'
 export * from './chat-video'

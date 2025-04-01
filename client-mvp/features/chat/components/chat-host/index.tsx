@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useState } from 'react';
 
-import { MessageHost } from '@/components/01-cards';
+import { MessageHost } from '../message-host';
 import { getChatHost } from '@/data';
 import styles from './styles.module.sass';
 

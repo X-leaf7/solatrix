@@ -1,5 +1,5 @@
-import { ChatChoose } from "@/features/chat/components";
+import { EventChoose } from "@/features/event/pages";
 
 export default function Page() {
-  return <ChatChoose />;
+  return <EventChoose />;
 }

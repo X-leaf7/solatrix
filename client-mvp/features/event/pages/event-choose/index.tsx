@@ -1,15 +1,16 @@
 'use client';
 
 import { Button } from '@/shared/dsm';
-import { TeamChoose } from '@/components/01-cards';
+import { TeamChoose } from '../../components';
+
 import styles from './styles.module.sass';
 
-type ChatChooseProps = {
+type EventChooseProps = {
   onDismiss?: () => void;
   onClose?: () => void;
 };
 
-export function ChatChoose(props: ChatChooseProps) {
+export function EventChoose(props: EventChooseProps) {
   const { onDismiss } = props;
 
   return (
