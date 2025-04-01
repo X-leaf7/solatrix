@@ -1,4 +1,4 @@
-import { TableEvents } from '@/components';
+import { TableEvents } from "@/features/settings/pages";
 
 export default function Page() {
   return <TableEvents />;

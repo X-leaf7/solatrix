@@ -1,10 +1,7 @@
-import MainPage from '../page';
-import { Suspense } from 'react';
+import { SettingsMainPage } from '@/features/settings/pages';
 
 export default function Page() {
   return (
-    <Suspense>
-      <MainPage />
-    </Suspense>
+    <SettingsMainPage />
   );
 }
