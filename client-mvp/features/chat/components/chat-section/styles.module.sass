@@ -1,0 +1,16 @@
+@use '@/shared/dsm/system' as dsm
+  
+.base
+  @include dsm.flex ($align: stretch, $direction: column)
+  &
+    flex: 1
+
+.messages
+  @include dsm.flex ($direction: column, $align: stretch)
+  &
+    flex: 1
+    justify-content: flex-end
+    gap: dsm.grid(1)
+
+.box
+  padding: 0 dsm.grid(2) dsm.grid(2)

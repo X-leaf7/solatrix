@@ -1,4 +1,4 @@
-import { ChatLeave } from '@/components';
+import { ChatLeave } from '@/features/chat/pages';
 import { Modal } from '@/shared/dsm';
 
 export default function Page() {

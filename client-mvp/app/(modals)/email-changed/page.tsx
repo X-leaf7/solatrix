@@ -12,7 +12,7 @@ export default function Page() {
 
   useEffect(() => {
     router.push(`/email-changed?email=${email}`);
-  }, []);
+  }, [email, router]);
 
   return <EmailChanged />;
 }
