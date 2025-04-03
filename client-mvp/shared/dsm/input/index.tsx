@@ -5,8 +5,8 @@ import styles from './styles.module.sass';
 
 const input = cva(styles.base, {
   variants: {
-    fullWidth: {
-      true: styles.fullWidth,
+    fullwidth: {
+      true: styles.fullwidth,
     },
     error: {
       true: styles.error,
@@ -18,11 +18,11 @@ type InputProps = InputHTMLAttributes<HTMLInputElement>;
 type Props = VariantProps<typeof input> & InputProps;
 
 export function Input(props: Props) {
-  const { error, fullWidth } = props;
+  const { error, fullwidth, ...restprops } = props;
 
   return (
-    <div className={input({ error, fullWidth })}>
-      <input className={styles.control} {...props} />
+    <div className={input({ error, fullwidth })}>
+      <input className={styles.control} {...restprops} />
     </div>
   );
 }

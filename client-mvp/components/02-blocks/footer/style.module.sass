@@ -1,12 +1,9 @@
 @use '@/shared/dsm/system' as dsm
-  
+
 .base
   // background: dsm.$white
   grid-area: footer
   padding-block: dsm.grid(5)
-  // @include dsm.mq ($from: tablet-medium)
-  //   bottom: 0
-  //   position: sticky
 
 .boxed
   @include dsm.container
@@ -14,7 +11,7 @@
   @include dsm.mq ($until: tablet-medium)
     align-items: center
     flex-direction: column
-    gap: dsm.grid(2)  
+    gap: dsm.grid(2)
 
 .box1
   @include dsm.flex ($direction: column, $align: flex-start)

@@ -3,7 +3,7 @@ import { cookies } from "next/headers"
 
 import { REST_API_BASE_URL } from "@/shared/constants"
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // Prepare headers for the backend request
     const headers: HeadersInit = {

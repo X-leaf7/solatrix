@@ -1,13 +1,18 @@
 'use client'
 
 import React, { useCallback, useEffect } from 'react'
-import { cx } from 'cva';
 import { getCookie } from 'cookies-next/client';
 import { useParams, useSearchParams } from 'next/navigation';
+import { cx } from 'cva';
+
+import {
+  ChatHost,
+  ChatVideo,
+  ChatSection
+} from '../../components';
 
 import styles from './page.module.sass';
 import { useWebSocket } from '../../providers';
-import { ChatHost, ChatVideo, ChatSubmitForm } from '../../components';
 
 export const ChatPage = () => {
   const params = useParams();
@@ -60,7 +65,7 @@ export const ChatPage = () => {
         </div>
       </div>
       <div className={styles.chat}>
-        <ChatSubmitForm />
+        <ChatSection />
       </div>
     </article>
   )

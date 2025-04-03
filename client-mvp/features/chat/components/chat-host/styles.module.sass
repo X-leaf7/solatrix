@@ -4,6 +4,51 @@
   container: chat-host / inline-size
   display: grid
   gap: dsm.grid(2)
+  max-height: 220px
+  overflow-y: scroll
+  padding-right: 8px
+  
+  // Basic scrollbar styling
+  &::-webkit-scrollbar
+    width: 6px
+    height: 6px
+    
+  &::-webkit-scrollbar-track
+    background: transparent
+    
+  &::-webkit-scrollbar-thumb
+    background-color: #e8e9ec
+    border-radius: 20px
+  
+  // Completely hide all scrollbar buttons/arrows
+  &::-webkit-scrollbar-button
+    width: 0
+    height: 0
+    display: none
+  
+  &::-webkit-scrollbar-corner
+    display: none
+    
+  // Target start and end buttons specifically
+  &::-webkit-scrollbar-button:start:decrement,
+  &::-webkit-scrollbar-button:end:increment
+    display: none
+    height: 0
+    width: 0
+    
+  // Firefox scrollbar styling
+  scrollbar-width: thin
+  scrollbar-color: #e8e9ec transparent
+  
+  // IE/Edge specific
+  -ms-overflow-style: -ms-autohiding-scrollbar
+  
+  // Additional trick to hide arrows in some browsers
+  &::before, &::after
+    content: ""
+    display: block
+    height: 0
+    width: 0
 
 .header
   @include dsm.flex

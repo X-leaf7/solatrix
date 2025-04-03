@@ -13,7 +13,7 @@ function Inner() {
 
   useEffect(() => {
     router.push(`/email-changed?email=${email}`);
-  }, []);
+  }, [email, router]);
 
   return <EmailChanged />;
 }

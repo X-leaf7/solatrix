@@ -3,7 +3,6 @@
 import type React from "react"
 import { Button, Icon } from "@/shared/dsm"
 import styles from "../controlbar.module.sass"
-import { useEffect, useState } from "react"
 
 // Define custom icon components if they're not imported from a library
 function ScreenShareIcon(): React.ReactElement {
@@ -59,16 +58,6 @@ export function ScreenShareButton({
   ...additionalProps
 }: ScreenShareButtonProps) {
   const buttonStyle = active ? "secondary" : "primary"
-
-  const [isClient, setIsClient] = useState(false)
-  
-    useEffect(() => {
-      setIsClient(true)
-    }, [])
-  
-    if (!isClient) {
-      return null
-    }
 
   return (
     <Button intent={buttonStyle} size="medium" onClick={handleScreenShare} {...additionalProps}>

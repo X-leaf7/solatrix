@@ -158,7 +158,7 @@ export const ChatVideo = () => {
   return (
     <div style={{ color: 'white' }} className={styles.container}>
       <StreamPreview previewRef={previewRef} />
-      <ControllBar />
+      {/* <ControllBar /> */}
     </div>
   )
 }

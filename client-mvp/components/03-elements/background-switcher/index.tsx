@@ -24,7 +24,6 @@ export function BackgroundSwitcher() {
   return (
     <img
       src={currentImage}
-      width='100%'
       alt="Background Image"
       className={styles.background}
     />
