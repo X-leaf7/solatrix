@@ -50,16 +50,13 @@ class ChatWebSocketService {
   }
 
   registerOnMessageHandler(type: string, handler: (data: any) => void) {
-    console.log(`registering ${type} handler`)
     if (!this.messageHandlers[type]) {
       this.messageHandlers[type] = []
     }
     this.messageHandlers[type].push(handler)
-    console.log('registered: ', this.messageHandlers[type])
   }
 
   unRegisterOnMessageHandler(type: string, handler: (data: any) => void) {
-    console.log(`unregistering ${type} handler`)
     if (this.messageHandlers[type]) {
       this.messageHandlers[type] = this.messageHandlers[type].filter(
         (h) => h !== handler
@@ -69,7 +66,6 @@ class ChatWebSocketService {
         delete this.messageHandlers[type]
       }
     }
-    console.log('unregistered: ', this.messageHandlers[type])
   }
 
   get connectionStatus(): string {

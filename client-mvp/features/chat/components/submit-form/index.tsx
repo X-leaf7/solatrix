@@ -52,7 +52,7 @@ export function ChatSubmitForm() {
   return (
     <form className={styles.base} onSubmit={handleSubmit}>
       <Input
-        fullWidth
+        fullwidth
         value={message}
         onChange={handleChange}
         onKeyDown={handleKeyDown}

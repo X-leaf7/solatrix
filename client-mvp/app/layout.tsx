@@ -1,14 +1,9 @@
-import '@/shared/dsm/app.sass';
-
 import { DM_Sans, Open_Sans } from 'next/font/google';
-import { Footer, Toaster } from '@/components';
 import { PropsWithChildren, ReactNode } from 'react';
-
-import { AnimatePresence } from 'framer-motion';
 import type { Metadata } from 'next';
+import { AnimatePresence } from 'framer-motion';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import { cx } from 'cva';
-import styles from './layout.module.sass';
 
 import {
   BroadcastLayoutProvider,
@@ -18,6 +13,9 @@ import {
   ModalProvider,
   UserSettingsProvider
 } from '@/shared/providers';
+import '@/shared/dsm/app.sass';
+import styles from './layout.module.sass';
+import { Footer, Toaster } from '@/components';
 
 const openSans = Open_Sans({
   subsets: ['latin'],

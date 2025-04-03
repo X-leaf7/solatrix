@@ -4,7 +4,6 @@ import type React from "react"
 import { SignalIcon } from "@heroicons/react/20/solid"
 import { Button, Icon } from "@/shared/dsm"
 import styles from "../controlbar.module.sass"
-import { useEffect, useState } from "react"
 
 interface StreamButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   isLive: boolean
@@ -22,16 +21,6 @@ export function StreamButton({
 }: StreamButtonProps) {
   const buttonStyle = isLive ? "danger" : "primary"
   const buttonContent = isLive ? "Stop streaming" : "Start streaming"
-
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  if (!isClient) {
-    return null
-  }
 
   return (
     <Button
