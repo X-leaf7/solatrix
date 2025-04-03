@@ -70,6 +70,7 @@ class Message(models.Model):
         on_delete=models.CASCADE,
         related_name='sent_messages'
     )
+    is_host_message = models.BooleanField(null=False, blank=False)
     content = models.TextField(_('Message Content'))
     timestamp = models.DateTimeField(auto_now_add=True)
     
@@ -79,3 +80,18 @@ class Message(models.Model):
     def __str__(self):
         return f"{self.sender.username}: {self.content[:20]}"
 
+class HostMessage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    room = models.ForeignKey(
+        ChatRoom,
+        on_delete=models.CASCADE,
+        related_name='host_message'
+    )
+    content = models.TextField(_('Host Message Content'))
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"{self.content[:20]}"

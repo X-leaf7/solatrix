@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { MessageHost } from '../message-host';
 import { getChatHost } from '@/data';
@@ -25,13 +25,11 @@ export function ChatHost() {
       <header className={styles.header}>
         <h2 className={styles.heading}>Host Chats</h2>
       </header>
-      <Suspense>
-        <div className={styles.grid}>
-          {data.map((message) => (
-            <MessageHost key={message.id} {...message} />
-          ))}
-        </div>
-      </Suspense>
+      <div className={styles.grid}>
+        {data.map((message) => (
+          <MessageHost key={message.id} {...message} />
+        ))}
+      </div>
     </section>
   );
 }

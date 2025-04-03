@@ -3,7 +3,12 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 
 from config import settings
-from .models import ChatRoom, Message, ChatRoomMember
+from .models import (
+    ChatRoom,
+    Message,
+    ChatRoomMember,
+    HostMessage
+)
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 
@@ -65,17 +70,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
         
         await self.accept()
-        
-        # Send user joined message to group
-        # await self.channel_layer.group_send(
-        #     self.room_group_name,
-        #     {
-        #         'type': 'user_join',
-        #         'user_id': str(self.user.id),
-        #         'username': self.user.username,
-        #         'timestamp': timezone.now().isoformat(),
-        #     }
-        # )
     
     async def disconnect(self, close_code):
         # Leave room group
@@ -84,37 +78,28 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 self.channel_name
             )
-            
-            # Send user left message
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'user_leave',
-                    'user_id': str(self.user.id),
-                    'username': self.user.username,
-                    'timestamp': timezone.now().isoformat(),
-                }
-            )
     
     async def receive(self, text_data):
         data = json.loads(text_data)
         message_type = data.get('type', 'send_message')
+
+        profile_image_url = await self.get_profile_image_url(self.user)
         
         if message_type == 'send_message':
             message = data.get('message', '')
             
             if not message.strip():
                 return
+
+            is_room_creator = self.is_room_creator(self.user.id, self.room_id)
             
             # Save message to database
             message_obj = await self.save_message(
                 self.user.id,
                 self.room_id,
-                message
+                message,
+                is_room_creator
             )
-
-            # Get the profile image URL
-            profile_image_url = await self.get_profile_image_url(self.user)
             
             # Send message to room group
             await self.channel_layer.group_send(
@@ -122,6 +107,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 {
                     'type': 'chat_message',
                     'message': message,
+                    'is_host_message': message_obj.is_host_message,
                     'sender_id': str(self.user.id),
                     'username': self.user.username,
                     'timestamp': message_obj.timestamp.isoformat(),
@@ -140,24 +126,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'timestamp': event['timestamp'],
             'message_id': event['message_id'],
             'profile_image_url': event['profile_image_url']
-        }))
-    
-    async def user_join(self, event):
-        # Send user joined notification to WebSocket
-        await self.send(text_data=json.dumps({
-            'type': 'user_join',
-            'user_id': event['user_id'],
-            'username': event['username'],
-            'timestamp': event['timestamp'],
-        }))
-    
-    async def user_leave(self, event):
-        # Send user left notification to WebSocket
-        await self.send(text_data=json.dumps({
-            'type': 'user_leave',
-            'user_id': event['user_id'],
-            'username': event['username'],
-            'timestamp': event['timestamp'],
         }))
     
     @database_sync_to_async
@@ -181,26 +149,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
             room_id=room_id
         ).exists()
     
-    # @database_sync_to_async
-    # def add_to_room(self, user_id, room_id):
-    #     room = ChatRoom.objects.get(id=room_id)
-    #     user = User.objects.get(id=user_id)
-        
-    #     ChatRoomMember.objects.create(
-    #         room=room,
-    #         user=user,
-    #         is_admin=False
-    #     )
+    @database_sync_to_async
+    def is_room_creator(self, user_id, room_id):
+        try:
+            room = ChatRoom.objects.get(id=room_id)
+            return str(room.creator_id) == str(user_id)
+        except ChatRoom.DoesNotExist:
+            return False
     
     @database_sync_to_async
-    def save_message(self, user_id, room_id, content):
+    def save_message(self, user_id, room_id, content, is_room_creator):
         room = ChatRoom.objects.get(id=room_id)
         user = User.objects.get(id=user_id)
         
         message = Message.objects.create(
             room=room,
             sender=user,
-            content=content
+            content=content,
+            is_host_message=is_room_creator
         )
         
         # Update room's updated_at timestamp

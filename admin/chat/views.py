@@ -415,8 +415,19 @@ class MessageViewSet(viewsets.ModelViewSet):
         if not is_member:
             raise permissions.PermissionDenied("You are not a member of this room")
         
+        is_host = self.request.user == room.creator
+        
         # Save message and update room's updated_at timestamp
-        message = serializer.save(sender=self.request.user, room=room)
+        message = serializer.save(
+            sender=self.request.user,
+            room=room,
+            is_host_message=is_host
+        )
         room.save(update_fields=['updated_at'])
         
         return message
+
+class HostMessageViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for host messages
+    """

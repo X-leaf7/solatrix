@@ -67,7 +67,8 @@ class MessageSerializer(serializers.ModelSerializer):
             'sender',
             'sender_details',
             'content',
+            'is_host_message',
             'timestamp'
         ]
         read_only_fields = ['sender', 'timestamp']
-
+        
