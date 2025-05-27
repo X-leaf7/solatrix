@@ -8,8 +8,14 @@
     border: 1px dsm.$grey-100
     gap: dsm.grid(1.25)
     min-block-size: dsm.grid(25)
+    cursor: pointer
   &:has(input:checked)
     border: 1px solid dsm.$grey-600
+
+.disabled
+  cursor: not-allowed !important
+  opacity: 0.6 !important
+  pointer-events: none !important
 
 .heading
   font-family: var(--font-dm-sans)

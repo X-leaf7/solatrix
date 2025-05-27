@@ -5,10 +5,10 @@ import { Avatar } from "@/shared/dsm"
 import { Message } from "../../types"
 import styles from "./styles.module.sass"
 
-const messageStyles = cva(styles.base, {
+const userMessageStyles = cva(styles.base, {
   variants: {
-    current: {
-      true: styles.current,
+    isAwaySelected: {
+      true: styles.isAwaySelected,
     },
   },
 })
@@ -17,8 +17,8 @@ interface MessageItemProps {
   message: Message
 }
 
-export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
-  const style = messageStyles({ current: message.isCurrentUser })
+const UserMessageItem: React.FC<MessageItemProps> = ({ message }) => {
+  const style = userMessageStyles({ isAwaySelected: message.selectedTeam === 'away' })
 
   return (
     <li className={style}>
@@ -30,5 +30,31 @@ export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
       </div>
     </li>
   )
+}
+
+const HostMessageItem: React.FC<MessageItemProps> = ({ message }) => {
+  return (
+    <div className={styles.hostBase}>
+      <div className={styles.header}>
+        <Avatar size="small" />
+        <h3>{message.firstName} {message.lastName}</h3>
+      </div>
+      <p>
+        {message.text}
+      </p>
+    </div>
+  )
+}
+
+export const MessageItem: React.FC<MessageItemProps> = ({ message }) => {
+  if (!message.isHostMessage) {
+    return (
+      <UserMessageItem message={message} />
+    )
+  } else {
+    return (
+      <HostMessageItem message={message} />
+    )
+  }
 }
 

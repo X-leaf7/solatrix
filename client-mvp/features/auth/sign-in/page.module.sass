@@ -1,0 +1,92 @@
+@use '@/shared/dsm/system' as dsm
+
+// Base container
+.base
+  @include dsm.mq ($until: tablet-small)
+    @include dsm.flex ($direction: column, $align: center, $justify: space-between)
+    &
+      block-size: 100%
+      inline-size: 100%
+      padding-inline: dsm.grid(3)
+      padding-block: dsm.grid(4)
+      position: relative
+
+// Content box
+.box
+  margin-block-end: dsm.grid(4)
+  @include dsm.mq ($from: tablet-small)
+    text-align: center
+  @include dsm.mq ($until: tablet-small)
+    @include dsm.flex ($direction: column, $align: stretch)
+    &
+      width: 100%
+      margin-block-start: dsm.grid(8)
+
+// Logo styling
+.logo
+  max-inline-size: dsm.grid(4)
+  @include dsm.mq ($from: tablet-small)
+    margin-inline: auto
+    margin-block-end: dsm.grid(4)
+  @include dsm.mq ($until: tablet-small)
+    margin-block-end: dsm.grid(10)
+    margin-inline-start: 0
+  img
+    @include dsm.image-full
+
+// Content group
+.group
+  @include dsm.mq ($until: tablet-small)
+    margin-block-end: dsm.grid(3)
+
+// Heading style
+.heading
+  font-family: var(--font-dm-sans)  
+  @include dsm.mq ($from: tablet-small)
+    font-size: dsm.pixrem(40)
+  @include dsm.mq ($until: tablet-small)
+    font-size: dsm.pixrem(28)
+    font-weight: 500
+  margin-block-end: dsm.grid(1)
+  color: rgba(0, 0, 0, 0.9)
+
+// Content text
+.content
+  line-height: 1.4
+  @include dsm.mq ($from: tablet-small)
+    font-size: dsm.pixrem(16)
+    max-inline-size: dsm.grid(31)
+    margin-inline: auto
+  @include dsm.mq ($until: tablet-small)
+    font-size: dsm.pixrem(14)
+    color: rgba(0, 0, 0, 0.7)
+
+// Background image
+.bgimage
+  block-size: 100%
+  inline-size: 100%
+  inset-block-start: 0
+  inset-inline-start: 0
+  object-fit: cover
+  position: absolute
+  z-index: -1
+  @include dsm.mq ($from: tablet-small)
+    display: none
+
+// Actions container
+.actions
+  display: grid
+  gap: dsm.grid(1.5)
+  width: 100%
+  @include dsm.mq ($until: tablet-small)
+    margin-block-end: dsm.grid(5)
+
+// Individual action button
+.action
+  @include dsm.flex
+  > *
+    flex: 1
+    @include dsm.mq ($until: tablet-small)
+      border-radius: 100px
+      &[class*="secondary"]
+        border: 1px solid rgba(0, 0, 0, 0.2)

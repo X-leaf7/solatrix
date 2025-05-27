@@ -16,5 +16,12 @@
 
 .box
   @include dsm.flex ($justify: flex-end)
+  gap: dsm.grid(1)
   &
     font-size: dsm.pixrem(14)
+
+.divider
+  height:  24px
+  width: 2px
+  background: rgba(#000, .16)
+  

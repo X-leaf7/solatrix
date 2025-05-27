@@ -19,9 +19,22 @@
 .box
   background: rgba(dsm.$white-400, .85)
   border-radius: dsm.grid(4)
-  inline-size: dsm.grid(93.75)
   max-inline-size: 100%
   padding: dsm.grid(5)
   @include dsm.mq ($until: tablet-medium)
     border-end-end-radius: 0
     border-end-start-radius: 0
+
+// Size variants
+.size-small
+  inline-size: dsm.grid(75)
+
+.size-medium
+  inline-size: dsm.grid(93.75) // Original size
+
+.size-large
+  inline-size: dsm.grid(120) // ~960px
+
+.size-full
+  inline-size: 95%
+  max-inline-size: dsm.grid(150) // ~1200px

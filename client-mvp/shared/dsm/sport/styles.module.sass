@@ -1,13 +1,13 @@
 @use '@/shared/dsm/system' as dsm
 
 .base
-  @include dsm.flex ($justify: center)
+  @include dsm.flex ($justify: flex-end, $align: flex-start)
+  width: dsm.grid(12)
   &
     display: inline-flex
     border-radius: dsm.grid(.5)
     background: dsm.$white-900
     gap: dsm.grid(.5)
-    padding: dsm.grid(.5) dsm.grid(1)
 
 .heading
   font-family: var(--font-dm-sans)

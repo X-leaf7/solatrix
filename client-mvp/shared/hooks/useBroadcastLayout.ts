@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import toast from "react-hot-toast"
 
 import { useContext, useRef, useState, type RefObject } from "react"
 import { DEFAULT_TEMPLATE, SCREENSHARE_TEMPLATE } from "@/shared/utils/broadcastLayoutTemplates"
@@ -8,7 +9,7 @@ import { BroadcastContext } from "@/shared/providers/BroadCastContext"
 import { calcScaledCoords, formatPositionFromDimensions } from "@/shared/utils/broadcastLayout"
 import { LocalMediaContext } from "@/shared/providers/LocalMediaContext"
 import { BroadcastMixerContext } from "@/shared/providers/BroadcastMixerContext"
-import toast from "react-hot-toast"
+import { Dimensions } from "../types"
 
 // Define interfaces for the layer types
 interface Layer {
@@ -23,15 +24,6 @@ interface Position {
   width: number
   height: number
   zIndex?: number
-  [key: string]: any
-}
-
-interface Dimensions {
-  x: number
-  y: number
-  width: number
-  height: number
-  z?: number
   [key: string]: any
 }
 
@@ -148,8 +140,14 @@ const useBroadcastLayout = (): UseBroadcastLayoutReturn => {
     localScreenShareStreamRef,
     enableCanvasCamera,
   } = useContext(LocalMediaContext)
-  const { micMuted, mixerDevicesRef, removeMixerDevice, addMixerDevice, addMixerDevices, removeOldDevices } =
-    useContext(BroadcastMixerContext)
+  const {
+    micMuted,
+    mixerDevicesRef,
+    removeMixerDevice,
+    addMixerDevice,
+    addMixerDevices,
+    removeOldDevices
+  } = useContext(BroadcastMixerContext)
 
   const [camActive, setCamActive] = useState<boolean>(true)
   const [screenShareActive, setScreenShareActive] = useState<boolean>(false)
@@ -434,7 +432,15 @@ const useBroadcastLayout = (): UseBroadcastLayoutReturn => {
       if (resize) {
         if (resize.mode === "FILL") {
           const { width, height } = resize.naturalSize
-          calculatedDimensions = calcScaledCoords(width, height, baseCanvasSize.width, baseCanvasSize.height)
+          const rawCalculatedDimensions = calcScaledCoords(width, height, baseCanvasSize.width, baseCanvasSize.height)
+
+          calculatedDimensions = {
+            x: rawCalculatedDimensions.x,
+            y: rawCalculatedDimensions.y,
+            width: rawCalculatedDimensions.w,
+            height: rawCalculatedDimensions.h
+          }
+
           calculatedDimensions.z = dimensions.z
         }
       }

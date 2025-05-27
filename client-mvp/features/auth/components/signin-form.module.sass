@@ -1,0 +1,25 @@
+@use '@/shared/dsm/system' as dsm
+  
+.group
+  margin-block-end: dsm.grid(4)
+  
+.action
+  button
+    inline-size: 100%
+
+.errorMessage
+  display: flex
+  align-items: center
+  gap: dsm.grid(1)
+  color: dsm.$red-900
+  font-size: 14px
+  margin-top: dsm.grid(1)
+
+.errorIcon
+  color: dsm.$red-900
+
+.inputError
+  border-color: dsm.$red-900
+  &:focus
+    border-color: dsm.$red-900
+    box-shadow: 0 0 0 1px dsm.$red-900

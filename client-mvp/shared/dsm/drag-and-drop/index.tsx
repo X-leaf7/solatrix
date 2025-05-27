@@ -1,14 +1,14 @@
 'use client';
 
-import { PropsWithChildren, useState } from 'react';
+import { useState } from 'react';
 
 type DragAndDropProps = {
-  handleDrop: (event: React.DragEvent<HTMLDivElement>) => void;
+  handleDrop: (files: FileList) => void;
   children: (props: { isDragging: boolean }) => React.ReactNode;
 };
 
 export function DragAndDrop(props: DragAndDropProps) {
-  const { children, handleDrop } = props;
+  const { children } = props;
 
   // not sure if i need this
   const [isDragging, setIsDragging] = useState(false);
@@ -22,7 +22,7 @@ export function DragAndDrop(props: DragAndDropProps) {
     setIsDragging(true);
   };
 
-  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDragLeave = () => {
     setIsDragging(false);
   };
 
@@ -30,7 +30,7 @@ export function DragAndDrop(props: DragAndDropProps) {
   const onDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     setIsDragging(false);
-    handleDrop(event);
+    // handleDrop(event);
   };
 
   return (

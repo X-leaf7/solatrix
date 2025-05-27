@@ -1,4 +1,5 @@
 import { Parser } from "expr-eval"
+import { Dimensions } from "../types";
 
 /**
  * Calculate scaled coordinates to fit an item within a container while maintaining aspect ratio
@@ -20,19 +21,6 @@ export function calcScaledCoords(
   const x = containerWidth / 2 - (itemWidth / 2) * scale
   const y = containerHeight / 2 - (itemHeight / 2) * scale
   return { x, y, w: itemWidth * scale, h: itemHeight * scale }
-}
-
-/**
- * Interface for dimensions object
- */
-interface Dimensions {
-  x: number | string
-  y: number | string
-  z?: number | string
-  w: number | string
-  h: number | string
-  visible?: boolean
-  [key: string]: any
 }
 
 /**
@@ -74,9 +62,13 @@ export function formatPositionFromDimensions({
     CANVAS_HEIGHT: baseCanvasSize.height,
   }
 
-  parserConstants.LAYER_WIDTH = parser.evaluate(dimensions.w.toString(), parserConstants)
-
-  parserConstants.LAYER_HEIGHT = parser.evaluate(dimensions.h.toString(), parserConstants)
+  if (dimensions.w) {
+    parserConstants.LAYER_WIDTH = parser.evaluate(dimensions.w.toString(), parserConstants)
+    parserConstants.LAYER_HEIGHT = parser.evaluate(dimensions.h.toString(), parserConstants)
+  } else {
+    parserConstants.LAYER_WIDTH = parser.evaluate(dimensions.width.toString(), parserConstants)
+    parserConstants.LAYER_HEIGHT = parser.evaluate(dimensions.height.toString(), parserConstants)
+  }
 
   const formattedDimensions: Record<string, number> = {}
 

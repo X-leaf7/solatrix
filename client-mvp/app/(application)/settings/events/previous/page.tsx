@@ -1,5 +1,5 @@
 import { TableEvents } from "@/features/settings/pages";
 
 export default function Page() {
-  return <TableEvents />;
+  return <TableEvents timing='previous' />;
 }

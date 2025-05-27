@@ -1,10 +1,10 @@
 @use '@/shared/dsm/system' as dsm
 
 .base
+  @include dsm.flex ($direction: column, $align: flex-start, $justify: flex-start)
   background: dsm.$white
   border: 1px solid dsm.$purple-100
   border-radius: dsm.grid(1.5)
-  display: grid
   gap: dsm.grid(1)
   padding: dsm.grid(2)
 

@@ -3,14 +3,16 @@
 .base
   background: rgba(dsm.$white, .8)
   border-block-end: 1px solid dsm.$grey-200
-  display: grid
+  display: flex
+  flex-direction: column
+  width: 100%
   gap: dsm.grid(2)
   padding: dsm.grid(2)
 
 .grid
-  align-items: center
-  display: grid
-  grid-template-columns: auto 1fr auto
+  display: flex
+  justify-content: space-between
+  width: 100%
 
 .host
   font-size: dsm.pixrem(14)

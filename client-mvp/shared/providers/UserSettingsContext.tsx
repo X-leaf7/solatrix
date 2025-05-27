@@ -1,75 +1,85 @@
-'use client'
+"use client"
 
-import { ReactNode, createContext, useState, Dispatch, SetStateAction } from 'react';
-import { getSavedValuesFromLocalStorage, clearSavedSettings } from '@/shared/utils/userSettings';
-
-// Define allowed values for specific fields
-type ChannelType = 'BASIC' | 'STANDARD' | 'ADVANCED_HD' | 'ADVANCED_SD' | undefined;
-type OrientationType = 'PORTRAIT' | 'LANDSCAPE' | undefined;
+import { type ReactNode, createContext } from "react"
+import {
+  clearSavedSettings,
+  useSavedStreamSettings,
+  type ChannelType,
+  type Orientation as OrientationType,
+} from "@/shared/utils/userSettings"
 
 // Define TypeScript interface for context values
 interface UserSettingsContextType {
-  channelType?: ChannelType;
-  setChannelType?: Dispatch<SetStateAction<ChannelType>>;
-  selectedVideoDeviceId?: string;
-  setSelectedVideoDeviceId?: Dispatch<SetStateAction<string>>;
-  selectedAudioDeviceId?: string;
-  setSelectedAudioDeviceId?: Dispatch<SetStateAction<string>>;
-  orientation?: OrientationType;
-  setOrientation?: Dispatch<SetStateAction<OrientationType>>;
-  resolution?: string;
-  setResolution?: Dispatch<SetStateAction<string>>;
-  configRef?: any;
-  streamKey?: string;
-  setStreamKey?: Dispatch<SetStateAction<string>>;
-  ingestEndpoint?: string;
-  setIngestEndpoint?: Dispatch<SetStateAction<string>>;
-  localVideoMirror?: boolean;
-  setLocalVideoMirror?: Dispatch<SetStateAction<boolean>>;
-  audioNoiseSuppression?: boolean;
-  setAudioNoiseSuppression?: Dispatch<SetStateAction<boolean>>;
-  autoGainControl?: boolean;
-  setAutoGainControl?: Dispatch<SetStateAction<boolean>>;
-  saveSettings?: boolean;
-  setSaveSettings?: Dispatch<SetStateAction<boolean>>;
-  clearSavedSettings: () => void;
+  channelType: ChannelType
+  setChannelType: (value: ChannelType) => void
+  selectedVideoDeviceId: string | undefined
+  setSelectedVideoDeviceId: (value: string | undefined) => void
+  selectedAudioDeviceId: string | undefined
+  setSelectedAudioDeviceId: (value: string | undefined) => void
+  orientation: OrientationType
+  setOrientation: (value: OrientationType) => void
+  resolution: number | string
+  setResolution: (value: number | string) => void
+  configRef: any
+  streamKey: string | undefined
+  setStreamKey: (value: string | undefined) => void
+  ingestEndpoint: string
+  setIngestEndpoint: (value: string) => void
+  localVideoMirror: boolean
+  setLocalVideoMirror: (value: boolean) => void
+  audioNoiseSuppression: boolean
+  setAudioNoiseSuppression: (value: boolean) => void
+  autoGainControl: boolean
+  setAutoGainControl: (value: boolean) => void
+  saveSettings: boolean
+  setSaveSettings: (value: boolean) => void
+  clearSavedSettings: () => void
 }
 
-// Create context with default values
-const UserSettingsContext = createContext<UserSettingsContextType>({
-  clearSavedSettings,
-});
+// Create context with default values (we'll provide actual values in the provider)
+const UserSettingsContext = createContext<UserSettingsContextType>({} as UserSettingsContextType)
 
 interface UserSettingsProviderProps {
-  children: ReactNode;
+  children: ReactNode
 }
 
 function UserSettingsProvider({ children }: UserSettingsProviderProps) {
-  const savedValues = getSavedValuesFromLocalStorage();
-
-  // State management with correct types
-  const [channelType, setChannelType] = useState<ChannelType>(savedValues.channelType || 'BASIC');
-  const [selectedVideoDeviceId, setSelectedVideoDeviceId] = useState<string>('');
-  const [selectedAudioDeviceId, setSelectedAudioDeviceId] = useState<string>('');
-  const [orientation, setOrientation] = useState<OrientationType>(savedValues.orientation || 'PORTRAIT');
-  const [resolution, setResolution] = useState<string>(String(savedValues.resolution || ''));
-  const [streamKey, setStreamKey] = useState<string>(savedValues.streamKey || '');
-  const [ingestEndpoint, setIngestEndpoint] = useState<string>(savedValues.ingestEndpoint || '');
-  const [localVideoMirror, setLocalVideoMirror] = useState<boolean>(savedValues.localVideoMirror || false);
-  const [audioNoiseSuppression, setAudioNoiseSuppression] = useState<boolean>(savedValues.audioNoiseSuppression || false);
-  const [autoGainControl, setAutoGainControl] = useState<boolean>(savedValues.autoGainControl || false);
-  const [saveSettings, setSaveSettings] = useState<boolean>(savedValues.saveSettings || false);
-  const configRef = savedValues.configRef
+  // Use our custom hook to get all the saved values and setters
+  const {
+    channelType,
+    setChannelType,
+    savedVideoDeviceId,
+    setSavedVideoDeviceId,
+    savedAudioDeviceId,
+    setSavedAudioDeviceId,
+    orientation,
+    setOrientation,
+    resolution,
+    setResolution,
+    configRef,
+    streamKey,
+    setStreamKey,
+    ingestEndpoint,
+    setIngestEndpoint,
+    localVideoMirror,
+    setLocalVideoMirror,
+    audioNoiseSuppression,
+    setAudioNoiseSuppression,
+    autoGainControl,
+    setAutoGainControl,
+    saveSettings,
+    setSaveSettings,
+  } = useSavedStreamSettings()
 
   return (
     <UserSettingsContext.Provider
       value={{
         channelType,
         setChannelType,
-        selectedVideoDeviceId,
-        setSelectedVideoDeviceId,
-        selectedAudioDeviceId,
-        setSelectedAudioDeviceId,
+        selectedVideoDeviceId: savedVideoDeviceId,
+        setSelectedVideoDeviceId: setSavedVideoDeviceId,
+        selectedAudioDeviceId: savedAudioDeviceId,
+        setSelectedAudioDeviceId: setSavedAudioDeviceId,
         orientation,
         setOrientation,
         resolution,
@@ -92,7 +102,7 @@ function UserSettingsProvider({ children }: UserSettingsProviderProps) {
     >
       {children}
     </UserSettingsContext.Provider>
-  );
+  )
 }
 
-export { UserSettingsContext, UserSettingsProvider };
+export { UserSettingsContext, UserSettingsProvider }

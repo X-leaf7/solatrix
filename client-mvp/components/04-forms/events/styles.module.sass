@@ -9,3 +9,158 @@
     > *:last-child
       @include dsm.mq ($until: tablet-medium)
         width: 100%
+
+.selectContainer
+  position: relative
+  min-width: 120px // Reduced from 180px to match design
+
+// Base styles
+.selectTrigger
+  display: flex
+  align-items: center
+  justify-content: space-between
+  width: 100%
+  padding: dsm.grid(0.75) dsm.grid(1.25) // Reduced padding to match design
+  border-radius: 12px
+  font-size: 14px // Reduced font size to match design
+  cursor: pointer
+  text-align: left
+  height: 36px // Explicit height to match design
+
+.chevron
+  margin-left: dsm.grid(0.5)
+
+.dropdown
+  position: absolute
+  top: 100%
+  left: 0
+  width: 170px // Reduced from 200px to match design
+  margin-top: dsm.grid(0.5)
+  border-radius: 12px
+  overflow: hidden
+  z-index: 10
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1)
+
+.option
+  display: flex
+  align-items: center
+  padding: dsm.grid(0.75) dsm.grid(1.25) // Reduced padding to match design
+  cursor: pointer
+  font-size: 14px // Reduced font size to match design
+
+.checkbox
+  margin-right: dsm.grid(1)
+  appearance: none
+  width: 18px // Reduced from 20px to match design
+  height: 18px // Reduced from 20px to match design
+  border-radius: 4px
+  position: relative
+  cursor: pointer
+  &:checked
+    &:after
+      content: ""
+      position: absolute
+      left: 6px
+      top: 2px
+      width: 5px
+      height: 10px
+      border: solid white
+      border-width: 0 2px 2px 0
+      transform: rotate(45deg)
+
+.searchContainer
+  position: relative
+  flex-grow: 1
+
+.searchIcon
+  position: absolute
+  left: dsm.grid(1.25) // Adjusted to match design
+  top: 50%
+  transform: translateY(-50%)
+  width: 16px // Reduced size to match design
+  height: 16px // Reduced size to match design
+
+.searchInput
+  width: 100%
+  padding-left: dsm.grid(3.5) // Adjusted to match design
+  border-radius: 12px
+  height: 36px // Reduced from 40px to match design
+  font-size: 14px // Reduced font size to match design
+  &:focus
+    outline: none
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3)
+    border-color: inherit // Prevent black border on focus
+
+// Orange theme
+.selectTrigger--orange
+  background-color: rgba(255, 200, 130, 0.8)
+  border: 1px solid rgba(220, 150, 80, 0.6)
+  color: rgba(80, 40, 0, 0.9)
+
+.dropdown--orange
+  background-color: rgba(255, 200, 130, 0.95)
+  border: 1px solid rgba(220, 150, 80, 0.6)
+
+.option--orange
+  color: rgba(80, 40, 0, 0.9)
+  &:hover
+    background-color: rgba(255, 180, 100, 0.7)
+
+.checkbox--orange
+  border: 1px solid rgba(80, 40, 0, 0.5)
+  background-color: rgba(255, 255, 255, 0.5)
+  &:checked
+    background-color: rgba(80, 40, 0, 0.9)
+    border-color: rgba(80, 40, 0, 0.9)
+    &:after
+      border: solid white
+      border-width: 0 2px 2px 0
+
+.searchIcon--orange
+  color: rgba(80, 40, 0, 0.7)
+
+.searchInput--orange
+  background-color: rgba(255, 200, 130, 0.8)
+  border: 1px solid rgba(220, 150, 80, 0.6)
+  color: rgba(80, 40, 0, 0.9)
+  &::placeholder
+    color: rgba(80, 40, 0, 0.7)
+  &:focus
+    border-color: rgba(220, 150, 80, 0.6) // Keep same border on focus
+
+// Green theme
+.selectTrigger--green
+  background-color: rgba(150, 230, 150, 0.8)
+  border: 1px solid rgba(100, 200, 100, 0.6)
+  color: rgba(0, 80, 40, 0.9)
+
+.dropdown--green
+  background-color: rgba(150, 230, 150, 0.95)
+  border: 1px solid rgba(100, 200, 100, 0.6)
+
+.option--green
+  color: rgba(0, 80, 40, 0.9)
+  &:hover
+    background-color: rgba(130, 210, 130, 0.7)
+
+.checkbox--green
+  border: 1px solid rgba(0, 80, 40, 0.5)
+  background-color: rgba(255, 255, 255, 0.5)
+  &:checked
+    background-color: rgba(0, 80, 40, 0.9)
+    border-color: rgba(0, 80, 40, 0.9)
+    &:after
+      border: solid white
+      border-width: 0 2px 2px 0
+
+.searchIcon--green
+  color: rgba(0, 80, 40, 0.7)
+
+.searchInput--green
+  background-color: rgba(150, 230, 150, 0.8)
+  border: 1px solid rgba(100, 200, 100, 0.6)
+  color: rgba(0, 80, 40, 0.9)
+  &::placeholder
+    color: rgba(0, 80, 40, 0.7)
+  &:focus
+    border-color: rgba(100, 200, 100, 0.6) // Keep same border on focus

@@ -14,7 +14,6 @@ import { SettingsButton } from "./settings-button"
 import { StreamButton } from "./stream-button"
 // import About from "@/components/about"
 import Settings from "@/components/settings/Settings"
-import { InformationCircleIcon } from "@heroicons/react/24/outline"
 import {
   BroadcastContext,
   BroadcastLayoutContext,

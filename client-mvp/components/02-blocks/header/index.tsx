@@ -26,7 +26,7 @@ function Buttons() {
 
   if (pathname.includes('chat')) {
     return (
-      <Button href={`${pathname}/leave`} intent="secondary">
+      <Button href={`${pathname}/leave`} intent="secondaryWhite">
         Leave Chat
       </Button>
     );

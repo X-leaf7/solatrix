@@ -9,14 +9,22 @@ import React, {
 } from "react"
 
 import { useWebSocket } from "./websocket.provider"
-import { Message } from "@/features/chat/types"
+import { ChatRoomInfo, Message } from "../types"
 
 // Define the context type
 interface ChatContextType {
   messages: Message[]
   setMessages: React.Dispatch<React.SetStateAction<Message[]>>
+  hostMessages: Message[]
+  setHostMessages: React.Dispatch<React.SetStateAction<Message[]>>
+  userMessages: Message[]
+  setUserMessages: React.Dispatch<React.SetStateAction<Message[]>>
+  chatRoomInfo: ChatRoomInfo | undefined
+  setChatRoomInfo: React.Dispatch<React.SetStateAction<ChatRoomInfo | undefined>>
   rules: string[]
   addMessage: (message: Message) => void
+  addHostMessage: (message: Message) => void
+  addUserMessage: (message: Message) => void
   updateMessage: (id: string, text: string) => void
   deleteMessage: (id: string) => void
   setRules: (rules: string[]) => void
@@ -39,6 +47,12 @@ interface ChatProviderProps {
 // Create the provider component
 export function ChatProvider({ children, initialMessages = [], initialRules = [] }: ChatProviderProps) {
   const [messages, setMessages] = useState<Message[]>(initialMessages)
+  const [hostMessages, setHostMessages] = useState<Message[]>([])
+  const [userMessages, setUserMessages] = useState<Message[]>([])
+
+  // TODO: Remove dummy data after development
+  const [chatRoomInfo, setChatRoomInfo] = useState<ChatRoomInfo>()
+
   const [rules, setRules] = useState<string[]>(initialRules)
 
   const chatWebsocketService = useWebSocket()
@@ -47,9 +61,30 @@ export function ChatProvider({ children, initialMessages = [], initialRules = []
   const addMessage = useCallback((message: Message) => {
     setMessages((prevMessages) => {
       return [
-      ...prevMessages,
-      message
-    ]})
+        ...prevMessages,
+        message
+      ]
+    })
+  }, [])
+
+  // Add a new message
+  const addHostMessage = useCallback((message: Message) => {
+    setHostMessages((prevMessages) => {
+      return [
+        ...prevMessages,
+        message
+      ]
+    })
+  }, [])
+
+  // Add a new message
+  const addUserMessage = useCallback((message: Message) => {
+    setUserMessages((prevMessages) => {
+      return [
+        ...prevMessages,
+        message
+      ]
+    })
   }, [])
 
   // Update an existing message
@@ -92,8 +127,16 @@ export function ChatProvider({ children, initialMessages = [], initialRules = []
   const contextValue: ChatContextType = {
     messages,
     setMessages,
+    hostMessages,
+    setHostMessages,
+    userMessages,
+    setUserMessages,
+    chatRoomInfo,
+    setChatRoomInfo,
     rules,
     addMessage,
+    addHostMessage,
+    addUserMessage,
     updateMessage,
     deleteMessage,
     setRules,
@@ -103,7 +146,11 @@ export function ChatProvider({ children, initialMessages = [], initialRules = []
     sendMessage
   }
 
-  return <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>
+  return (
+    <ChatContext.Provider value={contextValue}>
+      {children}
+    </ChatContext.Provider>
+  )
 }
 
 // Custom hook to use the chat context

@@ -73,3 +73,31 @@
   @include dsm.flex ($justify: center)
   &
     gap: dsm.grid(1)
+
+.loading
+  position: relative
+  cursor: wait
+  opacity: 0.7
+  pointer-events: none
+
+.spinner
+  display: inline-flex
+  margin-right: 8px
+  vertical-align: middle
+
+.spinnerSvg
+  animation: spin 1s linear infinite
+  height: 1em
+  width: 1em
+
+.spinnerCircle
+  stroke: currentColor
+  stroke-dasharray: 60, 180
+  stroke-dashoffset: 0
+  transform-origin: center
+
+@keyframes spin
+  0%
+    transform: rotate(0deg)
+  100%
+    transform: rotate(360deg)

@@ -52,7 +52,7 @@ const StreamPreview: React.FC<IStreamPreviewProps> = ({ previewRef }) => {
           {!permissions && (
             <div className={styles.permissionsOverlay}>
               <div className={styles.permissionsMessage}>
-                <Icon size="lg">
+                <Icon size="sm">
                   <HandRaisedIcon className={styles.icon} />
                 </Icon>
                 <span className={styles.text}>To start streaming, allow access to your camera and microphone</span>

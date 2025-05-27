@@ -8,9 +8,24 @@
     margin-block-end: dsm.grid(2)
 
 .subheading
+  display: flex
+  justify-content: center
+  align-items: center
+  gap: 8px
+  width: 100%
   color: dsm.$grey-600
   font-size: dsm.pixrem(14)
   font-weight: 400
+  .home
+    text-align: end
+    width: 200px
+    font-size: dsm.pixrem(16)
+    font-weight: 500
+  .away
+    text-align: start
+    width: 200px
+    font-size: dsm.pixrem(16)
+    font-weight: 500
   &:not(:last-child)
     margin-block-end: dsm.grid(1)
 

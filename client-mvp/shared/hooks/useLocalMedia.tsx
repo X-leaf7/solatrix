@@ -25,11 +25,11 @@ interface MediaDevice {
 }
 
 // Define interface for the return value of getAvailableDevices
-interface AvailableDevices {
-  videoDevices: MediaDeviceInfo[]
-  audioDevices: MediaDeviceInfo[]
-  permissions: boolean
-}
+// interface AvailableDevices {
+//   videoDevices: MediaDeviceInfo[]
+//   audioDevices: MediaDeviceInfo[]
+//   permissions: boolean
+// }
 
 // Define interface for the return value of refreshDevices
 interface RefreshedDevices {
@@ -47,13 +47,13 @@ interface InitialDevices {
 }
 
 // Define interface for the UserSettingsContext
-interface UserSettingsContextType {
-  configRef: RefObject<{
-    width?: number
-    height?: number
-  }>
-  orientation: "LANDSCAPE" | "PORTRAIT"
-}
+// interface UserSettingsContextType {
+//   configRef: RefObject<{
+//     width?: number
+//     height?: number
+//   }>
+//   orientation: "LANDSCAPE" | "PORTRAIT"
+// }
 
 // Define interface for the return value of useLocalMedia
 interface UseLocalMediaReturn {
@@ -84,14 +84,14 @@ interface UseLocalMediaReturn {
 }
 
 // Define interface for camera stream options
-interface CameraStreamOptions {
-  deviceId: string
-  width: number
-  height: number
-  facingMode: string
-  frameRate: number
-  aspectRatio: number
-}
+// interface CameraStreamOptions {
+//   deviceId: string
+//   width: number
+//   height: number
+//   facingMode: string
+//   frameRate: number
+//   aspectRatio: number
+// }
 
 // Define interface for refresh scene parameters
 interface RefreshSceneParams {
@@ -133,7 +133,7 @@ function useLocalMedia(): UseLocalMediaReturn {
     const {
       videoDevices: _videoDevices,
       audioDevices: _audioDevices,
-      permissions: _permissions,
+      // permissions: _permissions,
     } = await refreshDevices()
 
     const audioDeviceId = getIdealDevice(savedAudioDeviceId, _audioDevices)

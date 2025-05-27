@@ -2,29 +2,35 @@ import { DividerGradient } from '@/shared/dsm';
 import { Score } from './score';
 import { Team } from './team';
 import { Time } from './time';
+import { useChatContext } from '@/features/chat/providers';
+
 import styles from './styles.module.sass';
 
 export function ChatEventCard() {
+  const { chatRoomInfo } = useChatContext();
+
   return (
     <div className={styles.base}>
       <div className={styles.grid}>
-        <div>
-          <Team />
-        </div>
+        <Team
+          isHome={true}
+          teamName={chatRoomInfo?.homeTeam}
+        />
         <div className={styles.main}>
-          <Score />
+          <Score
+            home={chatRoomInfo?.score.homeTeamScore}
+            away={chatRoomInfo?.score.awayTeamScore}
+          />
         </div>
-        <div>
-          <Team />
-        </div>
+        <Team
+          isHome={false}
+          teamName={chatRoomInfo?.awayTeam}
+        />
       </div>
-      <div className={styles.grid}>
-        <div></div>
-        <div className={styles.time}>
-          <DividerGradient color="#888" />
-          <Time />
-        </div>
-        <div></div>
+
+      <div className={styles.time}>
+        <DividerGradient color="#888" />
+        <Time />
       </div>
     </div>
   );

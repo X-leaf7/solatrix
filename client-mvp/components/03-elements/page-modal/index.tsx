@@ -1,10 +1,12 @@
 'use client';
 
-import { Content } from '@/components/02-blocks';
-import { Icons } from '@/shared/dsm';
 import { PropsWithChildren } from 'react';
-import styles from './styles.module.sass';
 import { useRouter } from 'next/navigation';
+
+import { Content } from '@/shared/components';
+import { Icons } from '@/shared/dsm';
+
+import styles from './styles.module.sass';
 
 type PageModalProps = {
   title: string;

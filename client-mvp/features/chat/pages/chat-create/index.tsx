@@ -1,17 +1,24 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/shared/dsm"
+import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
+import { Button } from "@/shared/dsm"
+
 import styles from "./styles.module.sass"
 
 export const ChatCreate = () => {
   const router = useRouter()
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string | null>(null)
+  const searchParams = useSearchParams();
+  const eventId = searchParams.get("eventId");
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleCreateChat = useCallback(async () => {
+    if (!eventId) {
+      return
+    }
     try {
       setIsLoading(true)
       setError(null)
@@ -24,7 +31,10 @@ export const ChatCreate = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: defaultName }),
+        body: JSON.stringify({
+          name: defaultName,
+          eventId: eventId
+        }),
       })
 
       if (!response.ok) {
@@ -34,7 +44,7 @@ export const ChatCreate = () => {
 
       const data = await response.json()
 
-      router.push(`/chat/${data.id}/invite?code=${data.invitation_code}`)
+      router.push(`/chat/${data.id}/invite?code=${data.invitation_code}&eventId=${eventId}`)
 
     } catch (err) {
       console.error("Error creating chat room:", err)
@@ -42,7 +52,7 @@ export const ChatCreate = () => {
     } finally {
       setIsLoading(false)
     }
-  }, [router])
+  }, [router, eventId])
 
   return (
     <section className={styles.base}>
@@ -62,10 +72,18 @@ export const ChatCreate = () => {
         </div>
       </div>
       <div className={styles.actions}>
-        <Button href="/" intent="tertiary" disabled={isLoading}>
+        <Button
+          href="/"
+          intent="tertiary"
+          disabled={isLoading}
+        >
           Cancel
         </Button>
-        <Button onClick={handleCreateChat} disabled={isLoading} loading={isLoading}>
+        <Button
+          onClick={handleCreateChat}
+          disabled={isLoading}
+          loading={isLoading}
+        >
           {isLoading ? "Creating..." : "Create Chat"}
         </Button>
       </div>

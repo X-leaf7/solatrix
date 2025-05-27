@@ -47,16 +47,18 @@ interface IVSBroadcastClient {
   [key: string]: any
 }
 
+interface IBroadcastClientEvents {
+  CONNECTION_STATE_CHANGE: BroadcastEvent
+  ACTIVE_STATE_CHANGE: BroadcastEvent
+  ERROR: BroadcastEvent
+  [key: string]: BroadcastEvent
+}
+
 // Main SDK interface
 interface IVSBroadcastSDK {
   create(config: BroadcastClientConfig): IVSBroadcastClient
   isSupported(): boolean
-  BroadcastClientEvents: {
-    CONNECTION_STATE_CHANGE: BroadcastEvent
-    ACTIVE_STATE_CHANGE: BroadcastEvent
-    ERROR: BroadcastEvent
-    [key: string]: BroadcastEvent
-  }
+  BroadcastClientEvents: IBroadcastClientEvents
   __version: string
   [key: string]: any
 }
@@ -137,15 +139,15 @@ const useBroadcastSDK = (): UseBroadcastSDKReturn => {
 
   const IVSBroadcastClientRef = useRef<IVSBroadcastSDK>(undefined)
   const broadcastClientRef = useRef<IVSBroadcastClient>(undefined)
-  const broadcastClientEventsRef = useRef<any>(undefined)
+  const broadcastClientEventsRef = useRef<IBroadcastClientEvents>(undefined)
   const startTimeRef = useRef<Date>(undefined)
   const sdkVersionRef = useRef<string>(undefined)
 
   const importBroadcastSDK = async (): Promise<IVSBroadcastSDK> => {
     try {
       // Import the SDK and cast it to our interface
-      const module = await import("amazon-ivs-web-broadcast")
-      const sdk = module.default as unknown as IVSBroadcastSDK
+      const sdkModule = await import("amazon-ivs-web-broadcast")
+      const sdk = sdkModule.default as unknown as IVSBroadcastSDK
 
       broadcastClientEventsRef.current = sdk.BroadcastClientEvents
       IVSBroadcastClientRef.current = sdk
@@ -185,20 +187,24 @@ const useBroadcastSDK = (): UseBroadcastSDKReturn => {
   }
 
   const attachBroadcastClientListeners = (client: IVSBroadcastClient): void => {
-    client.on(broadcastClientEventsRef.current.CONNECTION_STATE_CHANGE, handleConnectionStateChange)
-    client.on(broadcastClientEventsRef.current.ACTIVE_STATE_CHANGE, handleActiveStateChange)
-    client.on(broadcastClientEventsRef.current.ERROR, handleClientError)
+    if (broadcastClientEventsRef.current) {
+      client.on(broadcastClientEventsRef.current.CONNECTION_STATE_CHANGE, handleConnectionStateChange)
+      client.on(broadcastClientEventsRef.current.ACTIVE_STATE_CHANGE, handleActiveStateChange)
+      client.on(broadcastClientEventsRef.current.ERROR, handleClientError)
+    }
   }
 
   const detachBroadcastClientListeners = (client: IVSBroadcastClient): void => {
-    client.off(broadcastClientEventsRef.current.CONNECTION_STATE_CHANGE, handleConnectionStateChange)
-    client.off(broadcastClientEventsRef.current.ACTIVE_STATE_CHANGE, handleActiveStateChange)
-    client.off(broadcastClientEventsRef.current.ERROR, handleClientError)
+    if (broadcastClientEventsRef.current) {
+      client.off(broadcastClientEventsRef.current.CONNECTION_STATE_CHANGE, handleConnectionStateChange)
+      client.off(broadcastClientEventsRef.current.ACTIVE_STATE_CHANGE, handleActiveStateChange)
+      client.off(broadcastClientEventsRef.current.ERROR, handleClientError)
+    }
   }
 
   const restartBroadcastClient = async ({
     config,
-    ingestEndpoint,
+    // ingestEndpoint,
   }: RestartBroadcastClientParams): Promise<IVSBroadcastClient> => {
     if (isLive && broadcastClientRef.current) stopStream(broadcastClientRef.current)
     if (broadcastClientRef.current) destroyBroadcastClient(broadcastClientRef.current)
@@ -268,10 +274,10 @@ const useBroadcastSDK = (): UseBroadcastSDKReturn => {
 
       streamTimeout = setTimeout(() => {
         toast(
-          (t) => {
+          () => {
             return (
               <span style={{ color: "rgba(0, 0, 0, 0.5)" }}>
-                It's taking longer than usual to start the stream. If you are on a VPN, check if port 4443 is unblocked
+                It&apos;s taking longer than usual to start the stream. If you are on a VPN, check if port 4443 is unblocked
                 and try again.
               </span>
             )

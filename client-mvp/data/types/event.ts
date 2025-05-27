@@ -22,4 +22,8 @@ export type Event = {
   host: User;
 };
 
+export interface EventDetail extends Event {
+  public_chatroom_id: string
+}
+
 export type EventTiming = "live" | "upcoming" | "previous" | "all";

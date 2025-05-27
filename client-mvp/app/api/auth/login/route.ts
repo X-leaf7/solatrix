@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
 
       // Set cookies with HTTP-only flag
       cookieStore.set({
-        name: "access_token",
+        name: "split_access_token",
         value: data.auth_token,
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",

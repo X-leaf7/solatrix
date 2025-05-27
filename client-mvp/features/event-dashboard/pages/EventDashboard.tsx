@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { parseAsBoolean, useQueryState } from 'nuqs';
 
 import { Events } from '../components';
 import { EventTiming } from '@/data';
+import { EventsProvider } from '../provider';
 
 interface EventDashboardProps {
   eventTiming: EventTiming
@@ -22,8 +23,8 @@ export const EventDashboard: React.FC<EventDashboardProps> = ({ eventTiming }) =
   }, [router, onboarding])
 
   return (
-    <>
+    <EventsProvider>
       <Events eventTiming={eventTiming} />
-    </>
+    </EventsProvider>
   )
 }

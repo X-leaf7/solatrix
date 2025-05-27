@@ -126,7 +126,7 @@ const useBroadcastMixer = (): UseBroadcastMixerReturn => {
       if (!broadcastClientRef.current || !IVSBroadcastClientRef.current) return
 
       const client = broadcastClientRef.current as unknown as BroadcastClient
-      const ivsClient = IVSBroadcastClientRef.current as unknown as IVSBroadcastClient
+      // const ivsClient = IVSBroadcastClientRef.current as unknown as IVSBroadcastClient
 
       await client.removeAudioInputDevice(deviceName)
       removeDeviceFromRef(deviceName)

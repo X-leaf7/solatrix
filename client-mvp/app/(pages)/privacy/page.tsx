@@ -1,4 +1,4 @@
-import { Content } from '@/components';
+import { Content } from '@/shared/components';
 import Privacy from '@/markdown/privacy.mdx';
 
 export default function Page() {

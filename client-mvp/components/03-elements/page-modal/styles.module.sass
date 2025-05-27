@@ -1,5 +1,21 @@
 @use '@/shared/dsm/system' as dsm
 
+.box
+  max-block-size: dsm.grid(58)
+  @include dsm.hide-scrollbar
+  overflow: auto
+  padding-block-start: dsm.grid(5)
+  padding-block-end: 0
+  margin-block-end: 0
+  
+  // Target content inside box instead of using global
+  :global(.content)
+    margin-block-end: 0
+    padding-block-end: 0
+    
+    & > *:last-child
+      margin-block-end: 0
+
 .header
   @include dsm.flex
   &
@@ -38,11 +54,6 @@
   svg
     block-size: dsm.grid(3.5)
     inline-size: dsm.grid(3.5)
-
-.box
-  max-block-size: dsm.grid(58)
-  overflow: auto
-  padding-block-start: dsm.grid(5)
 
 .group
   display: contents

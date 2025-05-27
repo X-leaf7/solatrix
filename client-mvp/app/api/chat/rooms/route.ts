@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
 
     // Get token from cookies
     const cookieStore = await cookies()
-    const token = cookieStore.get("access_token")?.value
+    const token = cookieStore.get("split_access_token")?.value
 
     if (!token) {
       return NextResponse.json({ detail: "Authentication required" }, { status: 401 })
@@ -24,6 +24,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         name: body.name,
+        event_id: body.eventId,
         is_private: true,
       }),
     })
@@ -45,7 +46,7 @@ export async function GET(request: NextRequest) {
   try {
     // Get token from cookies
     const cookieStore = await cookies()
-    const token = cookieStore.get("access_token")?.value
+    const token = cookieStore.get("split_access_token")?.value
 
     if (!token) {
       return NextResponse.json({ detail: "Authentication required" }, { status: 401 })

@@ -1,14 +1,23 @@
-'use client';
+"use client"
 
-import { PropsWithChildren, cloneElement, isValidElement, useRef } from 'react';
+import type React from "react"
 
-import { motion } from 'framer-motion';
-import styles from './styles.module.sass';
-import { useRouter } from 'next/navigation';
+import { type PropsWithChildren, cloneElement, isValidElement, useRef } from "react"
+
+import { motion } from "framer-motion"
+import styles from "./styles.module.sass"
+import { useRouter } from "next/navigation"
+import { cx } from "cva"
 
 type ModalChildProps = {
-  onDismiss?: () => void;
-};
+  onDismiss?: () => void
+}
+
+type ModalSize = "small" | "medium" | "large" | "full"
+
+interface ModalProps extends PropsWithChildren {
+  size?: ModalSize
+}
 
 const backdropVariant = {
   hidden: {
@@ -20,40 +29,38 @@ const backdropVariant = {
       duration: 0.5,
     },
   },
-};
+}
 
 const modalVariant = {
   hidden: {
-    y: '5vh',
+    y: "5vh",
   },
   visible: {
     y: 0,
     transition: {
       duration: 0.4,
-      type: 'spring',
+      type: "spring",
       stiffness: 125,
     },
   },
-};
+}
 
-export function Modal(props: PropsWithChildren) {
-  const ref = useRef<HTMLDialogElement | null>(null);
+export function Modal(props: ModalProps) {
+  const ref = useRef<HTMLDialogElement | null>(null)
 
-  const { children } = props;
+  const { children, size = "medium" } = props
 
-  const router = useRouter();
+  const router = useRouter()
 
   function onDismiss() {
-    router.back();
+    router.back()
   }
 
   function onClick(e: React.MouseEvent<HTMLDialogElement, MouseEvent>) {
-    return e.target === ref.current && router.back();
+    return e.target === ref.current && router.back()
   }
 
-  const childWithProps = isValidElement<ModalChildProps>(children)
-    ? cloneElement(children, { onDismiss })
-    : children;
+  const childWithProps = isValidElement<ModalChildProps>(children) ? cloneElement(children, { onDismiss }) : children
 
   return (
     <motion.dialog
@@ -72,10 +79,10 @@ export function Modal(props: PropsWithChildren) {
         initial="hidden"
         animate="visible"
         exit="hidden"
-        className={styles.box}
+        className={cx(styles.box, styles[`size-${size}`])}
       >
         {childWithProps}
       </motion.div>
     </motion.dialog>
-  );
+  )
 }

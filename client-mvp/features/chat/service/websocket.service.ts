@@ -5,7 +5,7 @@ class ChatWebSocketService {
   private ws: WebSocket | null = null
   private messageHandlers: Record<string, ((data: any) => void)[]> = {}
 
-  private constructor() { }
+  private constructor() {}
 
   public static getInstance(): ChatWebSocketService {
     if (!ChatWebSocketService.instance) {

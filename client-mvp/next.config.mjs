@@ -6,6 +6,29 @@ const nextConfig = {
   sassOptions: {
     silenceDeprecations: ['legacy-js-api'],
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: '135.181.137.214',
+        port: '8088',
+        pathname: '/media/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'django',
+        port: '8000',
+        pathname: '/media/**',
+      },
+      // If you need to support localhost during development
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '8000',
+        pathname: '/media/**',
+      },
+    ],
+  },
   rewrites: function () {
     return [
       {

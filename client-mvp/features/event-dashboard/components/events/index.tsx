@@ -1,44 +1,51 @@
 "use client"
 
-import { DateTime } from 'luxon';
+import { EventItem } from '../event-item'
+import { useEvents } from '../../hooks'
+import { InfiniteScroll } from '@/shared/components'
+import { EventTiming } from '@/data/types/event'
 
-import { Event as EventType, EventTiming } from '@/data/types/event';
-import { Event } from '@/components/01-cards';
-import { useEvents } from '@/data/api';
-import styles from './styles.module.sass';
+import styles from './styles.module.sass'
 
-export function Events({eventTiming}: {eventTiming: EventTiming}) {
-  const { events, isLoadingEvents, isErrorEvents } = useEvents();
+interface EventsProps {
+  eventTiming: EventTiming
+}
 
-  const now = DateTime.now();
-  const filters = {
-    live: (event: EventType) => {
-      return DateTime.fromISO(event.event_start_time) < now && event.status === 'InProgress';
-    },
-    upcoming: (event: EventType) => {
-      return DateTime.fromISO(event.event_start_time) > now && event.status === 'Scheduled';
-    },
-    previous: (event: EventType) => {
-      return DateTime.fromISO(event.event_start_time) < now && event.status === 'Final';
-    },
-    all: () => true
-  };
-
-  const filterFunc = filters[eventTiming];
+export const Events: React.FC<EventsProps> = ({ eventTiming }) => {
+  const { 
+    events, 
+    isLoadingEvents, 
+    isErrorEvents,
+    hasMore,
+    loadMore,
+    isLoadingMore,
+  } = useEvents(eventTiming);
 
   return (
-    <div className={styles.base}>
-      {
-        isLoadingEvents ? (
-          <div>Checking the Scoreboards...</div>
-        ) : isErrorEvents ? (
-        <div>Scoreboards are down. Sad day. Come back later?</div>
-        ) : (
-          events.filter(filterFunc).map((event: EventType) => {
-            return <Event key={event.id} event={event} eventTiming={eventTiming} />
-          })
-        )
-      }
+    <div className={styles.container}>
+      {isLoadingEvents ? (
+        <div className={styles.message}>Checking the Scoreboards...</div>
+      ) : isErrorEvents ? (
+        <div className={styles.errorMessage}>Scoreboards are down. Sad day. Come back later?</div>
+      ) : events.length === 0 ? (
+        <div className={styles.message}>No {eventTiming} events found.</div>
+      ) : (
+        <InfiniteScroll
+          loadMore={loadMore}
+          hasMore={hasMore}
+          isLoading={isLoadingMore}
+        >
+          <div className={styles.base}>
+            {events.map((event, index) => (
+              <EventItem
+                key={index}
+                event={event}
+                eventTiming={eventTiming}
+              />
+            ))}
+          </div>
+        </InfiniteScroll>
+      )}
     </div>
-  );
+  )
 }

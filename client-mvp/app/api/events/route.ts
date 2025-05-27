@@ -3,23 +3,31 @@ import { cookies } from "next/headers"
 
 import { REST_API_BASE_URL } from "@/shared/constants"
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    // Prepare headers for the backend request
+    const { searchParams } = new URL(request.url)
+    const queryString = searchParams.toString()
+
     const headers: HeadersInit = {
       "Content-Type": "application/json",
     }
 
-    // Forward the request to your backend
-    const response = await fetch(`${REST_API_BASE_URL}/api/events/`, {
+    const backendUrl = `${REST_API_BASE_URL}/api/events/${queryString ? `?${queryString}` : ''}`
+
+    const response = await fetch(backendUrl, {
       method: "GET",
       headers,
     })
 
-    // Get the response data
     const data = await response.json()
 
-    // Return the response
+    if (!response.ok) {
+      return NextResponse.json(
+        { error: data?.error || data?.detail || "Unknown error" },
+        { status: response.status }
+      )
+    }
+
     return NextResponse.json(data)
   } catch (error) {
     console.error("Error fetching events:", error)
@@ -34,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     // Get token from cookies - use await
     const cookieStore = await cookies()
-    const token = cookieStore.get("access_token")?.value
+    const token = cookieStore.get("split_access_token")?.value
 
     const headers: HeadersInit = {
       "Content-Type": "application/json",

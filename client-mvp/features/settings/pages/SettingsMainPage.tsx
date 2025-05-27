@@ -1,14 +1,21 @@
-import React from 'react'
-import { cx } from 'cva';
+'use client';
 
-import styles from './page.module.sass';
+import React from 'react';
+import { cx } from 'cva';
+import { Suspense } from 'react';
+
 import {
   AvatarUpload,
   FormProfile,
   ProfileProgress
 } from '../components';
+import { useUser } from '../providers';
+
+import styles from './page.module.sass';
 
 export const SettingsMainPage = () => {
+  const { user } = useUser();
+
   return (
     <div className={styles.base}>
       <h2 className={styles.heading}>Profile</h2>
@@ -18,7 +25,9 @@ export const SettingsMainPage = () => {
           <ProfileProgress label="Rookie" />
         </div>
         <div className={styles.box}>
-          <FormProfile />
+          <Suspense>
+            <FormProfile user={user} />
+          </Suspense>
         </div>
       </div>
     </div>

@@ -9,7 +9,7 @@ import {
   LocalMediaContext
 } from '@/shared/providers'
 
-import ControllBar from './controll-bar'
+// import ControllBar from './controll-bar'
 import StreamPreview from './stream-preview'
 import styles from './video.module.sass'
 
@@ -45,14 +45,15 @@ export const ChatVideo = () => {
     cleanUpDevices,
     enableCanvasCamera,
     refreshSceneRef,
+    localVideoStreamRef
   } = useContext(LocalMediaContext)
 
   const previewRef = useRef<HTMLCanvasElement>(null)
   const sdkIsStarting = useRef(false)
 
-  // const [canvasWidth, setCanvasWidth] = useState()
-  // const [canvasHeight, setCanvasHeight] = useState()
-  // const [videoStream, setVideoStream] = useState()
+  const [canvasWidth, setCanvasWidth] = useState()
+  const [canvasHeight, setCanvasHeight] = useState()
+  const [videoStream, setVideoStream] = useState<MediaStream | undefined>(undefined);
 
   useEffect(() => {
     if (sdkIsStarting.current) return
@@ -61,12 +62,13 @@ export const ChatVideo = () => {
 
     setInitialDevices().then(
       ({ audioDeviceId, audioStream, videoDeviceId, videoStream }) => {
+        
         if (!broadcastClientRef.current) {
           createBroadcastClient({
             config: configRef.current,
           }).then(() => {
             if (videoStream) {
-              // const { width, height } = videoStream.getTracks()[0].getSettings()
+              const { width, height } = videoStream.getTracks()[0].getSettings()
             }
             refreshSceneRef.current = refreshCurrentScene
             showFullScreenCam({
@@ -85,11 +87,24 @@ export const ChatVideo = () => {
     )
 
     return () => {
-      if (broadcastClientRef.current)
+      if (broadcastClientRef.current) {
         destroyBroadcastClient(broadcastClientRef.current)
+      }
       cleanUpDevices()
     }
-  }, [])
+  }, [
+    broadcastClientRef,
+    canvasElemRef,
+    cleanUpDevices,
+    configRef,
+    createBroadcastClient,
+    destroyBroadcastClient,
+    enableCanvasCamera,
+    refreshCurrentScene,
+    setInitialDevices,
+    refreshSceneRef,
+    showFullScreenCam
+  ])
 
   useEffect(() => {
     const uidQuery = searchParams.get('uid')
@@ -126,30 +141,43 @@ export const ChatVideo = () => {
       }
     }
 
-  }, [searchParams])
+  }, [
+    setChannelType,
+    setIngestEndpoint,
+    setStreamKey,
+    searchParams
+  ])
 
   useEffect(() => {
     if (broadcastClientMounted && broadcastClientRef.current) {
+      console.log('attaching preview')
       broadcastClientRef.current.attachPreview(previewRef.current)
     }
     return () => {
       if (broadcastClientRef.current) {
+        console.log('detaching preview')
         broadcastClientRef.current.detachPreview()
       }
     }
-  }, [broadcastClientMounted])
+  }, [broadcastClientMounted, broadcastClientRef])
 
   useEffect(() => {
     if (!broadcastClientMounted || !enableCanvasCamera) return;
-    // if (broadcastClientRef.current) {
-    //   const { width, height } = broadcastClientRef.current.getCanvasDimensions();
-    //   setCanvasWidth(width);
-    //   setCanvasHeight(height);
-    // }
-    // if (localVideoStreamRef.current) {
-    //   setVideoStream(localVideoStreamRef.current);
-    // }
-  }, [localVideoDeviceId, broadcastClientMounted, enableCanvasCamera]);
+    if (broadcastClientRef.current) {
+      const { width, height } = broadcastClientRef.current.getCanvasDimensions();
+      setCanvasWidth(width);
+      setCanvasHeight(height);
+    }
+    if (localVideoStreamRef.current) {
+      setVideoStream(localVideoStreamRef.current);
+    }
+  }, [
+    localVideoDeviceId,
+    broadcastClientMounted,
+    enableCanvasCamera,
+    broadcastClientRef,
+    localVideoStreamRef
+  ]);
 
   if (!isClient) {
     return null

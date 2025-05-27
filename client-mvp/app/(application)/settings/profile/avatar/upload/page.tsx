@@ -1,5 +1,10 @@
+import { Suspense } from "react";
 import { AvatarUploader } from "@/features/settings/components";
 
 export default function Page() {
-  return <AvatarUploader />;
+  return (
+    <Suspense>
+      <AvatarUploader />
+    </Suspense>
+  )
 }

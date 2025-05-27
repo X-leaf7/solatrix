@@ -26,6 +26,16 @@
 .secondary
   border: 1px solid currentColor
   color: dsm.$black-900
+  background-color: rgba(255, 255, 255, 0.2)
+  font-weight: 700
+  &.error
+    color: dsm.$red-900
+  &:not(.error):hover
+    color: dsm.$blue-900
+
+.secondaryWhite
+  border: 1px solid currentColor
+  color: dsm.$white-900
   &.error
     color: dsm.$red-900
   &:not(.error):hover
@@ -42,6 +52,19 @@
 .danger
   background: dsm.$red-900
   color: dsm.$white
+
+.long
+  font-size: dsm.pixrem(16)
+  min-block-size: dsm.grid(7.5)
+  padding-inline: dsm.grid(11)
+  &.hasIcon
+    block-size: dsm.grid(5.5)
+    inline-size: dsm.grid(5.5)
+    min-block-size: auto
+    padding: 0
+    svg
+      height: dsm.grid(3)
+      width: dsm.grid(3)
 
 .large
   font-size: dsm.pixrem(16)

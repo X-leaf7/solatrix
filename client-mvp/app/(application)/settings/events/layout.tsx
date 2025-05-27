@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
-
 import { TabsMyEvents } from '@/features/settings/components';
+import { EventsProvider } from '@/features/event-dashboard/provider';
+
 import styles from './layout.module.sass';
 
 export default function Layout(props: PropsWithChildren) {
@@ -12,7 +13,9 @@ export default function Layout(props: PropsWithChildren) {
         <h2 className={styles.heading}>My Events</h2>
         <TabsMyEvents />
       </header>
-      {children}
+      <EventsProvider>
+        {children}
+      </EventsProvider>
     </div>
   );
 }

@@ -20,6 +20,9 @@ import { TikTok } from './tiktok';
 import { Trash } from './trash';
 import { Twitter } from './twitter';
 import { Wallet } from './wallet';
+import { default as ChatButton } from './chat-button'
+import { UserIcon } from './user';
+import { AlertCircle } from './alert-circle';
 
 export const Icons = {
   arrowBack: ArrowBack,
@@ -46,6 +49,9 @@ export const Icons = {
   location: Location,
   soccer: Soccer,
   trash: Trash,
+  chatButton: ChatButton,
+  user: UserIcon,
+  alertCircle: AlertCircle
 };
 
 export type IconName = keyof typeof Icons;
