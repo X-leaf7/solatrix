@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Q, UniqueConstraint
 from django.utils.translation import gettext_lazy as _
 from users.models import User
+from events.models import Event
 import uuid
 
 class ChatRoom(models.Model):
@@ -14,7 +15,15 @@ class ChatRoom(models.Model):
     creator = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='created_rooms'
+        related_name='created_rooms',
+        null=True,
+        blank=True
+    )
+    event = models.ForeignKey(
+        Event,
+        on_delete=models.CASCADE,
+        # TODO: update the related name
+        related_name='created_rooms_event'
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -37,6 +46,11 @@ class ChatRoom(models.Model):
         return self.members.count() < self.max_members
 
 class ChatRoomMember(models.Model):
+    TEAM_CHOICES = (
+        ('home', 'Home Team'),
+        ('away', 'Away Team'),
+        ('neutral', 'Neutral'),
+    )
     room = models.ForeignKey(
         ChatRoom,
         on_delete=models.CASCADE,
@@ -49,6 +63,14 @@ class ChatRoomMember(models.Model):
     )
     joined_at = models.DateTimeField(auto_now_add=True)
     is_admin = models.BooleanField(default=False)
+
+    supported_team = models.CharField(
+        _('Supported Team'),
+        max_length=10,
+        choices=TEAM_CHOICES,
+        default='neutral',
+        help_text=_('The team this user is supporting or betting on')
+    )
     
     class Meta:
         constraints = [
@@ -56,7 +78,21 @@ class ChatRoomMember(models.Model):
         ]
     
     def __str__(self):
-        return f"{self.user.username} in {self.room.name}"
+        team_support = ""
+        if self.supported_team == 'home':
+            team_support = f" (Supporting: {self.room.event.home_team.name})"
+        elif self.supported_team == 'away':
+            team_support = f" (Supporting: {self.room.event.away_team.name})"
+        
+        return f"{self.user.username} in {self.room.name}{team_support}"
+    
+    def get_supported_team_object(self):
+        """Returns the actual Team object that the user is supporting"""
+        if self.supported_team == 'home':
+            return self.room.event.home_team
+        elif self.supported_team == 'away':
+            return self.room.event.away_team
+        return None
 
 class Message(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -70,6 +106,7 @@ class Message(models.Model):
         on_delete=models.CASCADE,
         related_name='sent_messages'
     )
+    is_host_message = models.BooleanField(null=False, blank=False)
     content = models.TextField(_('Message Content'))
     timestamp = models.DateTimeField(auto_now_add=True)
     
@@ -79,3 +116,18 @@ class Message(models.Model):
     def __str__(self):
         return f"{self.sender.username}: {self.content[:20]}"
 
+class HostMessage(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    room = models.ForeignKey(
+        ChatRoom,
+        on_delete=models.CASCADE,
+        related_name='host_message'
+    )
+    content = models.TextField(_('Host Message Content'))
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['timestamp']
+
+    def __str__(self):
+        return f"{self.content[:20]}"

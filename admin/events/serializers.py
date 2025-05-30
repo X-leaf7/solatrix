@@ -38,6 +38,23 @@ class EventSerializer(serializers.HyperlinkedModelSerializer):
             'slug', 'id'
         ]
 
+class EventDetailSerializer(EventSerializer):
+    public_chatroom_id = serializers.SerializerMethodField()
+    
+    def get_public_chatroom_id(self, obj):
+        """
+        Get the ID of the public chatroom associated with this event.
+        Returns None if no public chatroom exists.
+        """
+        public_chatroom = obj.created_rooms_event.filter(is_private=False).first()
+        
+        if public_chatroom:
+            return public_chatroom.id
+        return None
+    
+    class Meta:
+        model = Event
+        fields = EventSerializer.Meta.fields + ['public_chatroom_id']
 
 class CopyEventSerializer(serializers.Serializer):
     source_event_id = serializers.UUIDField()

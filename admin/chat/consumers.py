@@ -3,8 +3,11 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
 
 from config import settings
-from .models import ChatRoom, Message, ChatRoomMember
-from django.utils import timezone
+from .models import (
+    ChatRoom,
+    Message,
+    ChatRoomMember
+)
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -48,16 +51,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             await self.close()
             return
         
-        # For public rooms, auto-join if not a member
-        if not is_private and not is_member:
-            # Check if room has reached max members
-            can_add_more = await self.can_add_more_members(self.room_id)
-            if can_add_more:
-                await self.add_to_room(self.user.id, self.room_id)
-            else:
-                await self.close()
-                return
-        
         # Join room group
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -65,17 +58,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         )
         
         await self.accept()
-        
-        # Send user joined message to group
-        # await self.channel_layer.group_send(
-        #     self.room_group_name,
-        #     {
-        #         'type': 'user_join',
-        #         'user_id': str(self.user.id),
-        #         'username': self.user.username,
-        #         'timestamp': timezone.now().isoformat(),
-        #     }
-        # )
     
     async def disconnect(self, close_code):
         # Leave room group
@@ -84,37 +66,32 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 self.channel_name
             )
-            
-            # Send user left message
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'user_leave',
-                    'user_id': str(self.user.id),
-                    'username': self.user.username,
-                    'timestamp': timezone.now().isoformat(),
-                }
-            )
     
     async def receive(self, text_data):
         data = json.loads(text_data)
         message_type = data.get('type', 'send_message')
+
+        profile_image_url = await self.get_profile_image_url(self.user)
         
         if message_type == 'send_message':
             message = data.get('message', '')
             
             if not message.strip():
                 return
+
+            is_room_creator = await self.is_room_creator(self.user.id, self.room_id)
+
+            selected_team = await self.get_user_selected_team(self.user.id, self.room_id)
+
+            print(f"user selected team {selected_team}")
             
             # Save message to database
             message_obj = await self.save_message(
                 self.user.id,
                 self.room_id,
-                message
+                message,
+                is_room_creator
             )
-
-            # Get the profile image URL
-            profile_image_url = await self.get_profile_image_url(self.user)
             
             # Send message to room group
             await self.channel_layer.group_send(
@@ -122,11 +99,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 {
                     'type': 'chat_message',
                     'message': message,
+                    'is_host_message': message_obj.is_host_message,
                     'sender_id': str(self.user.id),
+                    'first_name': str(self.user.first_name),
+                    'last_name': str(self.user.last_name),
                     'username': self.user.username,
                     'timestamp': message_obj.timestamp.isoformat(),
                     'message_id': str(message_obj.id),
-                    'profile_image_url': profile_image_url
+                    'profile_image_url': profile_image_url,
+                    'selected_team': selected_team
                 }
             )
     
@@ -135,29 +116,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'type': 'message_received',
             'message': event['message'],
+            'is_host_message': event['is_host_message'],
             'sender_id': event['sender_id'],
+            'first_name': event['first_name'],
+            'last_name': event['last_name'],
             'username': event['username'],
             'timestamp': event['timestamp'],
             'message_id': event['message_id'],
-            'profile_image_url': event['profile_image_url']
-        }))
-    
-    async def user_join(self, event):
-        # Send user joined notification to WebSocket
-        await self.send(text_data=json.dumps({
-            'type': 'user_join',
-            'user_id': event['user_id'],
-            'username': event['username'],
-            'timestamp': event['timestamp'],
-        }))
-    
-    async def user_leave(self, event):
-        # Send user left notification to WebSocket
-        await self.send(text_data=json.dumps({
-            'type': 'user_leave',
-            'user_id': event['user_id'],
-            'username': event['username'],
-            'timestamp': event['timestamp'],
+            'profile_image_url': event['profile_image_url'],
+            'selected_team': event['selected_team']
         }))
     
     @database_sync_to_async
@@ -181,26 +148,40 @@ class ChatConsumer(AsyncWebsocketConsumer):
             room_id=room_id
         ).exists()
     
-    # @database_sync_to_async
-    # def add_to_room(self, user_id, room_id):
-    #     room = ChatRoom.objects.get(id=room_id)
-    #     user = User.objects.get(id=user_id)
-        
-    #     ChatRoomMember.objects.create(
-    #         room=room,
-    #         user=user,
-    #         is_admin=False
-    #     )
+    @database_sync_to_async
+    def is_room_creator(self, user_id, room_id):
+        print(f'is room creator {user_id} {room_id}')
+        try:
+            room = ChatRoom.objects.get(id=room_id)
+            print(f'room retrieved: {room} {room.creator_id}')
+            return str(room.creator_id) == str(user_id)
+        except ChatRoom.DoesNotExist:
+            return False
     
     @database_sync_to_async
-    def save_message(self, user_id, room_id, content):
+    def get_user_selected_team(self, user_id, room_id):
+        """Get the user's selected team for this chat room"""
+        try:
+            membership = ChatRoomMember.objects.get(
+                user_id=user_id,
+                room_id=room_id
+            )
+            print(f"membership check: {membership}")
+            print(f"membership supported team: {membership.supported_team}")
+            return membership.supported_team
+        except ChatRoomMember.DoesNotExist:
+            return 'neutral'
+    
+    @database_sync_to_async
+    def save_message(self, user_id, room_id, content, is_room_creator):
         room = ChatRoom.objects.get(id=room_id)
         user = User.objects.get(id=user_id)
         
         message = Message.objects.create(
             room=room,
             sender=user,
-            content=content
+            content=content,
+            is_host_message=is_room_creator
         )
         
         # Update room's updated_at timestamp
@@ -227,12 +208,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_profile_image_url(self, user):
         if user.profile_image and user.profile_image.name:
-            # Check if MEDIA_URL is already an absolute URL
-            if settings.MEDIA_URL.startswith(('http://', 'https://')):
+            # Check if MEDIA_URL exists in settings
+            media_url = getattr(settings, 'MEDIA_URL', '/media/')
+            
+            # Check if it's an absolute URL
+            if media_url.startswith(('http://', 'https://')):
                 return user.profile_image.url
             else:
-                # Construct absolute URL using your site's domain
-                domain = settings.SITE_URL  # You need to define this in settings
-                return f"{domain}{user.profile_image.url}"
+                # Get domain from settings or use a default
+                domain = getattr(settings, 'SITE_URL', '') or getattr(settings, 'DOMAIN', '')
+                
+                # If we have a domain, construct absolute URL
+                if domain:
+                    if not domain.startswith(('http://', 'https://')):
+                        domain = f"https://{domain}"
+                    return f"{domain}{user.profile_image.url}"
+                else:
+                    # Fall back to relative URL if no domain is available
+                    return user.profile_image.url
         return ""
 

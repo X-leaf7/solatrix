@@ -1,6 +1,5 @@
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.core.files.base import ContentFile
-from django.utils.dateparse import parse_datetime
 
 from requests import get
 
