@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     'daphne',
     'djangocms_admin_style', # must be before admin
     'users', # must be before auth
+    'django_celery_beat',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -98,6 +99,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'drf_yasg',
 
     'django_otp',
     'django_otp.plugins.otp_email',
