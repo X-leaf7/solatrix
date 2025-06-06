@@ -24,6 +24,8 @@ export function Team({ team, type = "home" }: TeamProps) {
     // use null default
   }
 
+  console.log('clean logo url: ', cleanLogo)
+
   return (
     <div className={`${styles.base} ${alignmentClass}`}>
       {cleanLogo ? (
