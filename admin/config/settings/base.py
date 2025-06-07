@@ -44,6 +44,7 @@ ALLOWED_HOSTS = [
   "23.131.24.126:8000",
   "13.211.135.105",
   "54.161.195.111",
+  "api.split-side.com",
 ]
 CSRF_TRUSTED_ORIGINS = [
   "http://localhost",
