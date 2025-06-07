@@ -45,7 +45,7 @@ run-redis:
 	docker run -d --name redis7 -p 6379:6379 redis:7.4-alpine
 
 run:
-	python3 manage.py runserver 0.0.0.0:8089
+	python3 manage.py runserver 0.0.0.0:8000
 
 run-celery-worker:
 	DJANGO_SETTINGS_MODULE=config.settings.base celery -A config worker -l INFO
