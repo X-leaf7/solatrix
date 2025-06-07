@@ -1,7 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
-python manage.py collectstatic --no-input
+# Activate virtual environment
+source /home/ubuntu/split-side/admin/venv/bin/activate
 
-python manage.py migrate
+# Navigate to project directory
+cd /home/ubuntu/split-side/admin
 
-python -m gunicorn -w 4 -b 0.0.0.0:8000 --reload config.wsgi
+# Export environment variables from .env
+export $(cat .env | xargs)
+
+# Run Django server
+exec python3 manage.py runserver 0.0.0.0:8000
