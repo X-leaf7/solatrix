@@ -188,6 +188,8 @@ class Command(BaseCommand):
                             file_extension = os.path.splitext(path)[1].lower()
                             
                             # Create a more reliable filename
+                            print(f"sports data id: {team.sports_data_id}")
+                            print(f"file extension: {file_extension}")
                             logo_name = f"{team.sports_data_id}{file_extension}"
                             
                             # Check if we need to download the logo
@@ -196,15 +198,24 @@ class Command(BaseCommand):
                                 headers = {
                                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
                                 }
+                                print(f"logo url: {logo_url}")
                                 logo_request = get(logo_url, headers=headers, timeout=10)
                                 
                                 if logo_request.status_code == 200:
                                     # Make sure the media directory exists
-                                    os.makedirs('media/team_logos', exist_ok=True)
+                                    # os.makedirs('media/team_logos', exist_ok=True)
                                     
                                     # Save the file
-                                    team.logo.save(f"team_logos/{logo_name}", ContentFile(logo_request.content), save=True)
-                                    logos_processed += 1
+                                    # team.logo.save(f"team_logos/{logo_name}", ContentFile(logo_request.content), save=True)
+                                    print(f"saving logo")
+                                    # print(f"logo content {logo_request.content}")
+                                    try:
+                                        team.logo.save(f"team_logos/{logo_name}", ContentFile(logo_request.content), save=True)
+                                        logos_processed += 1
+                                    except Exception as e:
+                                        self.stderr.write(self.style.ERROR(
+                                            f"Failed saving logo for {team.name} ({logo_name}): {e}"
+                                        ))
                                     
                                     if verbose:
                                         self.stdout.write(self.style.SUCCESS(f"Downloaded logo for {team.name}"))

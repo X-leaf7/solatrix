@@ -45,6 +45,8 @@ ALLOWED_HOSTS = [
   "13.211.135.105",
   "54.161.195.111",
   "api.split-side.com",
+  "www.google.com",
+  "msu.io",
 ]
 CSRF_TRUSTED_ORIGINS = [
   "http://localhost",
@@ -135,6 +137,7 @@ INSTALLED_APPS = [
     'cms',
     'menus',
     'treebeard',
+    'storages',
 
     # Custom Apps
     'sports',
@@ -292,15 +295,21 @@ TIME_INPUT_FORMATS = [
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = "/app/static"
+# Storage settings
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID', default=None)
 AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY', default=None)
 AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME', default='myapp-media-files')
 AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='us-east-1')
 
-MEDIA_URL = '/media/'
+AWS_S3_FILE_OVERWRITE = False
+AWS_QUERYSTRING_AUTH = False
+
+STATIC_URL = 'static/'
+STATIC_ROOT = "/app/static"
+
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 FIXTURE_DIRS = [
