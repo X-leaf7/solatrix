@@ -4,7 +4,7 @@ import type React from "react"
 import Image from "next/image"
 import { Icons } from "@/shared/dsm"
 import type { TeamType } from "../../types"
-import { REST_API_BASE_URL } from "@/shared/constants"
+import { CDN_BASE_URL } from "@/shared/constants"
 
 import styles from "./styles.module.sass"
 
@@ -51,7 +51,7 @@ export const TeamChoose: React.FC<TeamChooseProps> = ({
       <input type="checkbox" className={styles.input} checked={isSelected} readOnly />
       {cleanLogo ? (
         <Image
-          src={REST_API_BASE_URL + cleanLogo}
+          src={CDN_BASE_URL + cleanLogo}
           width={74}
           height={74}
           alt={`${team.name} logo`}
