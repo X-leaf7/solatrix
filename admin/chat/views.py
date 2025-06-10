@@ -99,7 +99,7 @@ class ChatRoomViewSet(viewsets.ModelViewSet):
         # Check if user is a member
         if not ChatRoomMember.objects.filter(room=room, user=request.user).exists():
             return Response(
-                {"detail": "You don't have access to this room"},
+                {"detail": "You already joined this room"},
                 status=status.HTTP_403_FORBIDDEN
             )
         
@@ -293,7 +293,7 @@ class ChatRoomViewSet(viewsets.ModelViewSet):
             # Check if chat room exists
             chat_room = get_object_or_404(ChatRoom, id=chat_room_id)
 
-            if chat_room.is_private:
+            if not chat_room.is_private:
                 return Response(
                     {"valid": False, "message": "This is public chat room, this is not join method for public room"},
                     status=status.HTTP_400_BAD_REQUEST
