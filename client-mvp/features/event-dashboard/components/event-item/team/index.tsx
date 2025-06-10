@@ -4,7 +4,7 @@ import { useState } from "react"
 import type { Team as TeamType } from "@/data/types/team"
 import styles from "./styles.module.sass"
 
-import { REST_API_BASE_URL } from "@/shared/constants"
+import { CDN_BASE_URL } from "@/shared/constants"
 
 type TeamProps = {
   team: TeamType
@@ -36,7 +36,7 @@ export function Team({ team, type = "home" }: TeamProps) {
           )}
 
           <Image
-            src={cleanLogo ? REST_API_BASE_URL + cleanLogo : "/images/avatar-default.svg"}
+            src={cleanLogo ? CDN_BASE_URL + cleanLogo : "/images/avatar-default.svg"}
             width={64}
             height={64}
             alt={team.name}
