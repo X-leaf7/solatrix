@@ -124,13 +124,13 @@ export function EventChoose() {
   }, [router, event, membershipCreatable, selectedTeam])
 
   const joinPrivateChatRoom = useCallback(async () => {
-    if (!privateChatRoomId || !invitationCode || selectedTeam) {
+    if (!privateChatRoomId || !invitationCode) {
       return false
     }
 
     try {
       setIsJoiningChatRoom(true)
-      const response = await fetch("/api/chat/check-invitation", {
+      const response = await fetch("/api/chat/join-private-room", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -157,10 +157,16 @@ export function EventChoose() {
     } finally {
       setIsJoiningChatRoom(false)
     }
-  }, [router, privateChatRoomId, invitationCode, selectedTeam])
+  }, [
+    router,
+    privateChatRoomId,
+    invitationCode,
+    selectedTeam
+  ])
 
   const handleEnterChat = useCallback(async () => {
     // If we have a private chat room ID and invitation code, check permissions first
+
     if (privateChatRoomId && invitationCode && membershipCreatable) {
       joinPrivateChatRoom()
     }
@@ -171,7 +177,9 @@ export function EventChoose() {
       return
     }
 
-    joinPublicChatRoom()
+    if (!privateChatRoomId && !invitationCode) {
+      joinPublicChatRoom()
+    }
   }, [
     joinPrivateChatRoom,
     joinPublicChatRoom,
