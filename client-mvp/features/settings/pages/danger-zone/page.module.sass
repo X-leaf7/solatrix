@@ -1,0 +1,18 @@
+@use '@/shared/dsm/system' as dsm
+  
+.box
+  @include dsm.flex ($direction: column, $justify: center)
+  background: dsm.$white
+  border-radius: dsm.grid(2)
+  padding: dsm.grid(10) dsm.grid(4)
+
+.subheading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(24)
+  font-weight: 500
+  &:not(:last-child)
+    margin-block-end: dsm.grid(1.5)
+
+.content
+  &:not(:last-child)
+    margin-block-end: dsm.grid(4)

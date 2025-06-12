@@ -1,0 +1,54 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  display: flex
+  flex-direction: column
+  cursor: pointer
+  background: rgba(dsm.$white-100, 1)
+  border-radius: dsm.grid(1)
+  gap: dsm.grid(0)
+  padding: dsm.grid(3)
+
+.flexStart
+  display: flex
+  width: 100%
+  justify-content: space-between
+  align-items: flex-start
+
+.flexCenter
+  display: flex
+  width: 100%
+  justify-content: space-between
+  align-items: center
+
+.grid
+  align-items: center
+  display: grid
+  grid-template-columns: dsm.grid(10.5) 1fr dsm.grid(10.5)
+  &:last-child
+    grid-template-columns: auto 1fr auto
+
+.host
+  font-size: dsm.pixrem(14)
+  font-weight: 500
+  width: dsm.grid(12)
+
+.location
+  @include dsm.flex ($direction: column, $justify: center)
+  &
+    gap: dsm.grid(1)
+  > *:nth-child(2)
+    margin-block-start: dsm.grid(-.25)
+    margin-block-end: dsm.grid(.75)
+  svg:last-child
+    margin-block-start: dsm.grid(-3.5)
+
+.time
+  @include dsm.flex ($direction: column, $justify: center)
+  &
+    gap: dsm.grid(1)
+  svg
+    margin-block-end: dsm.grid(-3)
+
+.main
+  @include dsm.flex ($justify: center)

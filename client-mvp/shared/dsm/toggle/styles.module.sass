@@ -1,0 +1,52 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  appearance: none
+  background: dsm.$black
+  border-radius: dsm.grid(2)
+  border: none
+  padding: dsm.grid(.25)
+  position: relative
+  &[disabled]
+    background: dsm.$white-100
+    box-shadow: 0 0 #{dsm.grid(.25)} rgba(dsm.$black, .1)
+    &:hover
+      cursor: default
+  &:hover
+    cursor: pointer
+
+.switch
+  background: dsm.$white
+  border-radius: 100%
+  position: relative
+  .base[disabled] &
+    background: dsm.$grey-300
+  .base.on &
+    left: 100%
+    transform: translateX(-100%)
+  .base.medium &
+    block-size: dsm.grid(2)
+    inline-size: dsm.grid(2)
+  .base.large &
+    block-size: dsm.grid(3)
+    inline-size: dsm.grid(3)
+  .base.long &
+    block-size: dsm.grid(2.5)
+    inline-size: dsm.grid(2.5)
+
+.off
+  background: dsm.$grey-300
+  &:hover
+    background: dsm.$grey-400
+
+.medium
+  inline-size: dsm.grid(5)
+  block-size: dsm.grid(2.5)
+
+.large
+  inline-size: dsm.grid(6.75)
+  block-size: dsm.grid(3.75)
+
+.long
+  min-inline-size: dsm.grid(7.5)
+  block-size: dsm.grid(3)

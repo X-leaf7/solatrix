@@ -1,0 +1,29 @@
+@use '@/shared/dsm/system' as dsm
+  
+.main
+  align-items: center
+  grid-area: main
+  display: grid
+  padding: dsm.grid(3)
+  @include dsm.mq ($from: tablet-medium)
+    grid-template-columns: repeat(2, 1fr)
+    gap: dsm.grid(3)
+
+.box
+  @include dsm.flex ($justify: center)
+  @include dsm.mq ($until: tablet-medium)
+    height: 100%
+
+.inner
+  max-inline-size: dsm.grid(56.25)
+  inline-size: 100%
+  @include dsm.mq ($until: tablet-medium)
+    display: contents
+
+.image
+  @include dsm.mq ($until: tablet-medium)
+    display: none
+  img
+    @include dsm.image-full
+    &
+      border-radius: dsm.grid(2)

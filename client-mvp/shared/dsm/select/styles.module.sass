@@ -1,0 +1,21 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  @include dsm.flex
+  &
+    background: rgba(dsm.$white, .4)
+    border: 1px solid dsm.$white-900
+    border-radius: dsm.grid(1)
+
+.control
+  appearance: none
+  background: none
+  border: none
+  block-size: dsm.grid(5.5)
+  color: dsm.$black-900
+  flex: 1
+  padding-inline: dsm.grid(2)
+  &::placeholder
+    color: dsm.$grey-600
+  &:focus
+    outline: none

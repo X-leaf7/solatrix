@@ -1,0 +1,45 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  @include dsm.flex ($direction: column, $justify: center)
+  
+.header
+  max-inline-size: dsm.grid(62)
+  margin-inline: auto
+  text-align: center
+  &:not(:last-child)
+    margin-block-end: dsm.grid(4)
+
+.heading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(48)
+  font-weight: 400
+  &:not(:last-child)
+    margin-block-end: dsm.grid(3)
+
+.subheading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(14)
+  font-weight: 500
+  &:not(:last-child)
+    margin-block-end: dsm.grid(1)
+
+.box
+  background: dsm.$grey-100
+  inline-size: 100%
+  padding: dsm.grid(3)
+  max-inline-size: dsm.grid(64.375)
+  margin-inline: auto
+  &:not(:last-child)
+    margin-block-end: dsm.grid(3)
+
+.list
+  display: grid
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(12)
+  gap: dsm.grid(1)
+
+.actions
+  @include dsm.flex ($justify: center)
+  &
+    gap: dsm.grid(1)

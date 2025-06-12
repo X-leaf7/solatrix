@@ -1,0 +1,168 @@
+@use '@/shared/dsm/system' as dsm
+  
+.base
+  @include dsm.flex ($direction: column, $justify: center)
+  &
+    gap: dsm.grid(4)
+    inline-size: 100%
+
+.box
+  inline-size: 100%
+
+.header
+  text-align: center
+  &:not(:last-child)
+    margin-block-end: dsm.grid(4)
+
+.heading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(48)
+  font-weight: 400
+  &:not(:last-child)
+    margin-block-end: dsm.grid(2)
+
+.image
+  @include dsm.flex ($justify: center)
+  &:not(:last-child)
+    margin-block-end: dsm.grid(1)
+
+.actions
+  @include dsm.flex ($justify: center)
+  &
+    gap: dsm.grid(1)
+
+.form
+  @include dsm.flex ($direction: column, $justify: center)
+  &
+    border: 1px dashed dsm.$white
+    border-radius: dsm.grid(1)
+    padding: dsm.grid(5)
+    gap: dsm.grid(2)
+  &.dragging
+    border-color: dsm.$blue-900
+
+.text
+  color: dsm.$grey-600
+  font-size: dsm.pixrem(12)
+  text-align: center
+
+.file
+  opacity: 0
+  height: 0
+  width: 0
+  position: fixed
+  left: -99999px
+  overflow: hidden
+
+.label
+  @include dsm.flex ($justify: center)
+  &
+    background: dsm.$gradient-black
+    border: none
+    border-radius: dsm.grid(9)
+    color: dsm.$white-900
+    font-family: var(--font-dm-sans)
+    font-size: dsm.pixrem(14)
+    font-weight: 500
+    min-block-size: dsm.grid(4.25)
+    padding-inline: dsm.grid(2)
+  &:hover
+    cursor: pointer
+  &[disabled]
+    background: dsm.$grey-400
+  &.error
+    background: dsm.$red-900
+    color: dsm.$white
+  &:not(.error):hover
+    background: dsm.$blue-900
+
+// Avatar preview styles
+.avatarPreview
+  @include dsm.flex ($justify: center)
+  &
+    margin-block: dsm.grid(3)
+    inline-size: 100%
+
+.avatarContainer
+  position: relative
+  inline-size: dsm.grid(20)
+  block-size: dsm.grid(20)
+  border-radius: 50%
+  overflow: visible // Changed from hidden to make the edit button visible outside
+  background-color: dsm.$grey-100
+
+.avatarImage
+  inline-size: 100%
+  block-size: 100%
+  object-fit: cover
+  border-radius: 50%
+
+.editButton
+  position: absolute
+  inset-block-end: dsm.grid(0)
+  inset-inline-end: dsm.grid(0)
+  inline-size: dsm.grid(4)
+  block-size: dsm.grid(4)
+  border-radius: 50%
+  background-color: dsm.$white
+  border: 1px solid dsm.$grey-200
+  z-index: 10 // Ensure it's above other elements
+  @include dsm.flex ($justify: center, $align: center)
+  &
+    cursor: pointer
+    box-shadow: 0 dsm.grid(0.25) dsm.grid(0.5) rgba(0, 0, 0, 0.1)
+    transition: all 0.2s ease
+    color: dsm.$grey-600 // Set icon color
+  &:hover
+    background-color: dsm.$grey-100
+
+// Button container for Cancel and Save buttons
+.buttonContainer
+  @include dsm.flex ($justify: center)
+  gap: 8px
+  &
+    margin-block-start: dsm.grid(4)
+    inline-size: 100%
+
+// Success screen styles
+.successContainer
+  @include dsm.flex ($direction: column, $justify: center, $align: center)
+  &
+    inline-size: 100%
+    text-align: center
+
+.successContent
+  @include dsm.flex ($direction: column, $align: center)
+  &
+    max-inline-size: dsm.grid(38)
+    margin-inline: auto
+
+.logoContainer
+  margin-block-end: dsm.grid(2)
+
+.successLogo
+  inline-size: dsm.grid(10)
+  block-size: auto
+
+.successHeading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(32)
+  font-weight: 500
+  margin-block-end: dsm.grid(1)
+  color: dsm.$black
+
+.successText
+  font-size: dsm.pixrem(16)
+  color: dsm.$grey-600
+  margin-block-end: dsm.grid(4)
+
+.successButtonContainer
+  margin-block-start: dsm.grid(4)
+  inline-size: 100%
+  max-inline-size: dsm.grid(30)
+
+.errorMessage
+  color: dsm.$red-900
+  text-align: center
+  margin-block-end: dsm.grid(2)
+  font-size: dsm.pixrem(14)

@@ -1,0 +1,28 @@
+@use '@/shared/dsm/system' as dsm
+  
+.base
+  @include dsm.flex ($justify: center)
+  &
+    aspect-ratio: 1
+    background: dsm.$white-900
+    border-radius: 100%
+    inline-size: 100%
+    max-inline-size: dsm.grid(20)
+    position: relative
+    z-index: 0
+
+.image
+  width: 100%
+  height: 100%
+  object-fit: cover
+  border-radius: 50%
+  img
+    @include dsm.image-full
+
+.action
+  bottom: 0
+  right: 0
+  transform-origin: 50% 50%
+  transform: translate3d(-15%, -15%, 0)
+  position: absolute
+  z-index: 1

@@ -1,0 +1,40 @@
+version: 0.2
+        
+phases:
+  install:
+    on-failure: ABORT
+    runtime-versions:
+      python: 3.10
+  build:
+    on-failure: ABORT
+    commands:
+      - aws cloudformation validate-template --template-body file://AWS/cloudformation/Stack.yaml
+      - aws cloudformation validate-template --template-body file://AWS/cloudformation/RDS.yaml
+      - aws cloudformation validate-template --template-body file://AWS/cloudformation/DevOps.yaml
+      - aws cloudformation validate-template --template-body file://AWS/cloudformation/FargateService.yaml
+      - aws cloudformation validate-template --template-body file://AWS/cloudformation/VPC.yaml
+      - aws cloudformation validate-template --template-body file://AWS/cloudformation/AdminTask.yaml
+      - aws cloudformation validate-template --template-body file://AWS/cloudformation/ChatTask.yaml
+      - aws cloudformation validate-template --template-body file://AWS/cloudformation/CDN.yaml
+      - aws cloudformation validate-template --template-body file://AWS/cloudformation/RedisCluster.yaml
+      - aws cloudformation validate-template --template-body file://AWS/cloudformation/WAF.yaml
+      - echo "Run more code tests here!"
+  post_build:
+    on-failure: ABORT
+    commands:
+      - aws cloudformation package --template-file AWS/cloudformation/Stack.yaml --s3-bucket $S3_ARTIFACT_BUCKET --s3-prefix $CODEBUILD_RESOLVED_SOURCE_VERSION --output-template-file stack.yaml
+
+artifacts:
+  files:
+    - stack.yaml
+  secondary-artifacts:
+    Stack:
+      name: Stack
+      artifactIdentifier: Stack
+      files:
+        - stack.yaml
+    WafStack:
+      name: WafStack
+      artifactIdentifier: WafStack
+      files:
+        - AWS/cloudformation/WAF.yaml

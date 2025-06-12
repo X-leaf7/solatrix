@@ -1,0 +1,27 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  @include dsm.flex ($align: center, $direction: column, $justify: center)
+  &
+    background: dsm.$grey-100
+    border-radius: dsm.grid(2.5)
+    border: 1px dsm.$grey-100
+    gap: dsm.grid(1.25)
+    min-block-size: dsm.grid(25)
+    cursor: pointer
+  &:has(input:checked)
+    border: 1px solid dsm.$grey-600
+
+.disabled
+  cursor: not-allowed !important
+  opacity: 0.6 !important
+  pointer-events: none !important
+
+.heading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(20)
+  font-weight: 500
+
+.input
+  position: absolute
+  left: -9999999px

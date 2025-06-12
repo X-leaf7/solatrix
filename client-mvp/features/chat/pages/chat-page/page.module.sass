@@ -1,0 +1,82 @@
+@use '@/shared/dsm/system' as dsm
+  
+.base
+  display: flex
+  position: relative
+  height: auto
+  @include dsm.mq ($from: tablet-medium)
+    border-radius: dsm.grid(3)
+    overflow: hidden
+  @include dsm.mq ($until: tablet-medium)
+    flex-direction: column
+    margin-inline: dsm.grid(-2.5)
+  &.has-video
+    align-items: start
+    column-gap: dsm.grid(2)
+  &.has-no-video
+    background: rgba(dsm.$white, .85)
+  
+.notifications
+  display: none
+  grid-area: notifications
+
+.advertising
+  @include dsm.flex($justify: center)
+  color: dsm.$white
+  width: 100%
+  height: dsm.grid(7)
+  grid-area: advertising
+  background-image: url('/images/chat/ad.png')
+  background-size: cover
+  background-position: center
+  background-repeat: no-repeat
+
+  .base.has-video &
+    @include dsm.mq($from: tablet-medium)
+      border-start-start-radius: dsm.grid(3)
+  .base.has-public-room &
+    background-image: none
+    background-color: #4b2d83
+    @include dsm.mq($from: tablet-medium)
+      border-start-start-radius: dsm.grid(3)
+
+.host
+  display: flex
+  flex-direction: column
+  @include dsm.mq($from: tablet-medium)
+    width: 66%
+  @include dsm.mq ($until: tablet-medium)
+    width: 100%
+
+.hostChat
+  padding: dsm.grid(3)
+  .base.has-video &
+    background: rgba(dsm.$white, .85)
+    @include dsm.mq ($from: tablet-medium)
+      border-end-start-radius: dsm.grid(3)
+      border-end-end-radius: dsm.grid(3)
+
+.video
+  @include dsm.image-full
+  &
+    background: dsm.$black
+    aspect-ratio: 16 / 9
+    .base.has-video &
+      @include dsm.mq ($from: tablet-medium)
+        border-start-end-radius: dsm.grid(3)
+
+.chat
+  @include dsm.flex ($align: stretch, $direction: column)
+  height: 100% !important
+  @include dsm.mq($from: tablet-medium)
+    width: 34%
+  @include dsm.mq ($until: tablet-medium)
+    width: 100%
+  &
+    .base.has-video &
+      background: rgba(dsm.$white, .85)
+      @include dsm.mq ($from: tablet-medium)
+        border-radius: dsm.grid(3)
+    .base.has-public-room &
+      width: 100%
+      height: 100% !important

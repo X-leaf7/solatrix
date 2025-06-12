@@ -1,0 +1,27 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  @include dsm.flex ($direction: column, $justify: center)
+
+.header
+  text-align: center
+  &:not(:last-child)
+    margin-block-end: dsm.grid(4)
+
+.heading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(48)
+  font-weight: 400
+  &:not(:last-child)
+    margin-block-end: dsm.grid(2)
+
+.content
+  font-size: dsm.pixrem(14)
+  line-height: calc(18/14)
+  max-inline-size: dsm.grid(48.75)
+  margin-inline: auto
+
+.actions
+  @include dsm.flex ($justify: center)
+  &
+    gap: dsm.grid(1)

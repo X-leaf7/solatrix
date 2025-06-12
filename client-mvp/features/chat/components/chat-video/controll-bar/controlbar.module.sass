@@ -1,0 +1,67 @@
+@use '@/shared/dsm/system' as dsm
+
+.icon
+  width: 1.5rem
+  height: 1.5rem
+  color: currentColor
+
+.desktopText
+  display: block
+  
+  @media (max-width: 639px)
+    display: none
+
+.mobileIcon
+  display: none
+  align-items: center
+  
+  @media (max-width: 639px)
+    display: inline-flex
+
+.controlBar
+  width: 100%
+  padding: 1rem
+  display: grid
+  grid-template-columns: 1fr
+  align-items: center
+  justify-content: center
+  flex-shrink: 0
+  gap: 0.5rem
+  
+  @media (min-width: 640px)
+    grid-template-columns: 6.4rem 1fr 6.4rem
+
+.leftBar
+  display: flex
+  justify-content: flex-start
+  
+  @media (max-width: 639px)
+    display: none
+
+.centerBar
+  display: flex
+  justify-content: center
+
+.buttonGroup
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-wrap: wrap
+  gap: 0.5rem
+
+.mobileInfoButton
+  @media (min-width: 640px)
+    display: none
+
+.rightBar
+  display: flex
+  justify-content: flex-end
+  
+  @media (max-width: 639px)
+    display: none
+
+.infoIcon
+  color: inherit
+  height: 1.5rem
+  width: 1.5rem
+

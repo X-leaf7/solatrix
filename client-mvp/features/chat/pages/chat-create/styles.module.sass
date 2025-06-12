@@ -1,0 +1,103 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  text-align: center
+  margin-inline: auto
+  max-inline-size: dsm.grid(58.5)
+
+.image
+  @include dsm.flex ($justify: center)
+  img
+    @include dsm.image
+    @include dsm.mq ($until: tablet-medium)
+      max-inline-size: dsm.grid(15)
+  &:not(:last-child)
+    margin-block-end: dsm.grid(2)
+  
+
+.heading
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(48)
+  font-weight: 400
+  @include dsm.mq ($until: tablet-medium)
+    font-size: dsm.pixrem(32)
+  &:not(:last-child)
+    margin-block-end: dsm.grid(2)
+    @include dsm.mq ($until: tablet-medium)
+      margin-block-end: dsm.grid(2.5)
+
+.fineprint
+  color: dsm.$grey-600
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(14)
+  line-height: calc(20/14)
+  @include dsm.mq ($until: tablet-medium)
+    p
+      &:first-child
+        font-weight: 600
+        font-size: dsm.pixrem(16)
+
+  &:not(:last-child)
+    margin-block-end: dsm.grid(2)
+
+.divider
+  background: dsm.$light-grey
+  border: none
+  height: dsm.grid(.125)
+  margin-inline: auto
+  max-inline-size: dsm.grid(46.25)
+  &:not(:last-child)
+    margin-block-end: dsm.grid(2)
+
+.content
+  color: dsm.$black-800
+  font-family: var(--font-dm-sans)
+  font-size: dsm.pixrem(16)
+  font-weight: 500
+  line-height: calc(24/16)
+  margin-inline: auto
+  max-inline-size: dsm.grid(40)
+  &:not(:last-child)
+    margin-block-end: dsm.grid(4)
+
+.box
+  &:not(:last-child)
+    margin-block-end: dsm.grid(4)
+  @include dsm.mq ($until: tablet-medium)
+    background: dsm.$white
+    border-radius: dsm.grid(1)
+    margin-inline: dsm.grid(-3)
+    padding: dsm.grid(2)
+
+.actions
+  @include dsm.flex ($justify: center)
+  &
+    gap: dsm.grid(1)
+
+.loading
+  position: relative
+  cursor: wait
+  opacity: 0.7
+  pointer-events: none
+
+.spinner
+  display: inline-flex
+  margin-right: 8px
+  vertical-align: middle
+
+.spinnerSvg
+  animation: spin 1s linear infinite
+  height: 1em
+  width: 1em
+
+.spinnerCircle
+  stroke: currentColor
+  stroke-dasharray: 60, 180
+  stroke-dashoffset: 0
+  transform-origin: center
+
+@keyframes spin
+  0%
+    transform: rotate(0deg)
+  100%
+    transform: rotate(360deg)

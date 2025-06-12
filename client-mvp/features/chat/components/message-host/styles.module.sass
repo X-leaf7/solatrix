@@ -1,0 +1,22 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  @include dsm.flex ($direction: column, $align: flex-start, $justify: flex-start)
+  background: dsm.$white
+  border: 1px solid dsm.$purple-100
+  border-radius: dsm.grid(1.5)
+  gap: dsm.grid(1)
+  padding: dsm.grid(2)
+
+.header
+  @include dsm.flex ($justify: flex-start)
+  &
+    gap: dsm.grid(1)
+
+.heading
+  font-size: dsm.pixrem(10)
+  font-weight: 600
+
+.content
+  font-size: dsm.pixrem(12)
+  line-height: calc(18/12)

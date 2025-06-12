@@ -1,0 +1,46 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  @include dsm.flex
+
+.label
+  @include dsm.flex ($justify: center)
+  &
+    background: dsm.$gradient-purple
+    block-size: dsm.grid(3.75)
+    border-radius: dsm.grid(4)
+    color: dsm.$white
+    font-size: dsm.pixrem(12)
+    font-family: var(--font-dm-sans)
+    font-weight: 700
+    min-inline-size: dsm.grid(11)
+    outline: 5px solid rgba(dsm.$white, .5)
+    position: relative
+    z-index: 2
+    
+.bar
+  background: dsm.$gradient-grey-highlight
+  block-size: dsm.grid(3.5)
+  border: 2px solid dsm.$white
+  border-radius: dsm.grid(4)
+  box-shadow: 0 0 #{dsm.grid(.75)} rgba(dsm.$black, .15), inset 0 0 #{dsm.grid(1)} rgba(dsm.$black, .25)
+  overflow: hidden
+  flex: 1
+  margin-inline-start: dsm.grid(-2)
+  inline-size: dsm.grid(35)
+  position: relative
+  z-index: 1
+  &::before
+    background: repeating-linear-gradient(-45deg, dsm.$white, dsm.$white dsm.grid(.25), transparent dsm.grid(.25), transparent dsm.grid(2))
+    block-size: 100%
+    content: ' '
+    position: absolute
+    inline-size: 100%
+    inset-block-start: 0
+    inset-inline-start: dsm.grid(-.75)
+    z-index: 1
+
+.progress
+  background: dsm.$gradient-purple-reversed
+  block-size: 100%
+  transform: skewX(-45deg)

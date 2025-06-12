@@ -1,0 +1,39 @@
+@use '@/shared/dsm/system' as dsm
+  
+.base
+  @include dsm.flex ($align: flex-start, $justify: flex-start)
+  &
+    gap: dsm.grid(1)
+    padding: 0 dsm.grid(2) dsm.grid(2)
+  &.isAwaySelected
+    flex-direction: row-reverse
+
+.content
+  background: dsm.$white-900
+  border-radius: dsm.grid(1.25)
+  border-start-start-radius: dsm.grid(.25)
+  font-size: dsm.pixrem(12)
+  flex: 1
+  line-height: calc(16/12)
+  max-inline-size: dsm.grid(28)
+  padding: dsm.grid(1)
+
+.hostBase
+  @include dsm.flex ($direction: column, $align: flex-start, $justify: flex-start)
+  &
+    margin: 0 dsm.grid(6) dsm.grid(2)
+    padding: dsm.grid(1)
+    gap: dsm.grid(1)
+    // max-inline-size: 100%  # This will respect margins
+    border: 1px solid #B8C8EE
+    background: #D8DFEE
+    border-radius: 10px
+    font-size: dsm.pixrem(12)
+
+.header
+  @include dsm.flex($align: center, $justify:flex-start)
+  &
+    gap: dsm.grid(1)
+    color: dsm.$black-dark
+    font-weight: 600
+    font-size: dsm.pixrem(10)

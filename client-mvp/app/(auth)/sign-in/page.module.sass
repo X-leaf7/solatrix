@@ -1,0 +1,63 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  @include dsm.mq ($until: tablet-medium)
+    @include dsm.flex ($direction: column, $align: stretch)
+    &
+      block-size: 100%
+      inline-size: 100%
+
+.box
+  margin-block-end: dsm.grid(5)
+  @include dsm.mq ($from: tablet-medium)
+    text-align: center
+  @include dsm.mq ($until: tablet-medium)
+    @include dsm.flex ($direction: column, $align: stretch)
+    &
+      flex: 1
+
+.logo
+  max-inline-size: dsm.grid(5)
+  margin-block-end: dsm.grid(4)
+  @include dsm.mq ($from: tablet-medium)
+    margin-inline: auto
+  @include dsm.mq ($until: tablet-medium)
+    margin-block-end: auto
+  img
+    @include dsm.image-full
+
+.group
+  @include dsm.mq ($until: tablet-medium)
+    margin-block-start: auto
+
+.heading
+  font-family: var(--font-dm-sans)  
+  font-size: dsm.pixrem(40)
+  margin-block-end: dsm.grid(2)
+
+.content
+  font-size: dsm.pixrem(14)
+  line-height: 1.4
+  @include dsm.mq ($from: tablet-medium)
+    max-inline-size: dsm.grid(31)
+    margin-inline: auto
+
+.bgimage
+  block-size: 100%
+  inline-size: 100%
+  inset-block-start: 0
+  inset-inline-start: 0
+  object-fit: cover
+  position: absolute
+  z-index: -1
+  @include dsm.mq ($from: tablet-medium)
+    display: none
+
+.actions
+  display: grid
+  gap: dsm.grid(1.5)
+
+.action
+  @include dsm.flex
+  > *
+    flex: 1

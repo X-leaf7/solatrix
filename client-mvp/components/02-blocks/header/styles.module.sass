@@ -1,0 +1,21 @@
+@use '@/shared/dsm/system' as dsm
+  
+.base
+  @include dsm.container
+  &
+    grid-area: header
+    padding-block: dsm.grid(3)
+
+.logo
+  color: dsm.$white
+  max-inline-size: dsm.grid(5)
+  @include dsm.mq ($until: tablet-medium)
+    max-inline-size: dsm.grid(3.75)
+  svg
+    @include dsm.image-full
+
+.boxed
+  @include dsm.flex
+
+.nav
+  @include dsm.flex ($justify: flex-end)

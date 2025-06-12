@@ -1,0 +1,33 @@
+// components/infinite-scroll/styles.module.sass
+.container
+  width: 100%
+  position: relative
+
+.loadingContainer
+  padding: 2rem 0
+  display: flex
+  justify-content: center
+  align-items: center
+  width: 100%
+
+.loadingSpinner
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 0.5rem
+  
+  span
+    font-size: 0.875rem
+    color: #718096
+
+.spinner
+  width: 2rem
+  height: 2rem
+  border: 3px solid rgba(0, 0, 0, 0.1)
+  border-radius: 50%
+  border-top-color: #4299e1
+  animation: spin 1s ease-in-out infinite
+  
+@keyframes spin
+  to
+    transform: rotate(360deg)

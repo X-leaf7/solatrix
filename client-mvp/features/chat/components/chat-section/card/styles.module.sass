@@ -1,0 +1,29 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  background: rgba(dsm.$white, .8)
+  border-block-end: 1px solid dsm.$grey-200
+  display: flex
+  flex-direction: column
+  width: 100%
+  gap: dsm.grid(2)
+  padding: dsm.grid(2)
+
+.grid
+  display: flex
+  justify-content: space-between
+  width: 100%
+
+.host
+  font-size: dsm.pixrem(14)
+  font-weight: 500
+
+.time
+  @include dsm.flex ($direction: column, $justify: center)
+  &
+    gap: dsm.grid(1)
+  svg
+    margin-block-end: dsm.grid(-3)
+
+.main
+  @include dsm.flex ($justify: center)

@@ -1,0 +1,109 @@
+AWSTemplateFormatVersion: "2010-09-09"
+
+Description:
+  This template runs the ECS task definition on a schedule for different cron events
+
+Metadata:
+  Author: https://www.linkedin.com/in/jacob-foster-508280140/
+
+Parameters:
+  Cluster:
+    Type: String
+
+  TaskDefinition:
+    Type: String
+
+  ExecutionRole:
+    Type: String
+
+  TaskRole:
+    Type: String
+  
+  ContainerName:
+    Type: String
+
+  SecurityGroup:
+    Type: String
+
+  SubnetA:
+    Type: AWS::EC2::Subnet::Id
+
+  SubnetB:
+    Type: AWS::EC2::Subnet::Id
+
+Resources:
+
+  CronExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: AllowPassRole
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: 'iam:PassRole'
+                Resource:
+                  - !Ref ExecutionRole
+                  - !Ref TaskRole
+        - PolicyName: AllowRunTasks
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: 'ecs:RunTask'
+                Resource: !Ref TaskDefinition
+
+  SoccerEvents:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Run Soccer Schedule Script on Mondays at 12 UTC
+      ScheduleExpression: cron(5 0 ? * MON *)
+      State: ENABLED
+      Targets:
+        - Arn: !Ref Cluster
+          Id: RunEcsTask
+          RoleArn: !GetAtt CronExecutionRole.Arn
+          Input: !Sub '{"containerOverrides": [{"name": "${ContainerName}", "command": ["python", "manage.py", "load_soccer_events"]}]}'
+          EcsParameters:
+            TaskCount: 1
+            TaskDefinitionArn: !Ref TaskDefinition
+            LaunchType: FARGATE
+            NetworkConfiguration:
+              AwsVpcConfiguration:
+                AssignPublicIp: DISABLED
+                SecurityGroups:
+                  - !Ref SecurityGroup
+                Subnets:
+                  - !Ref SubnetA
+                  - !Ref SubnetB
+
+  NFLEvents:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Run NFL Schedule Script on Tuesdays at 12 UTC
+      ScheduleExpression: cron(5 0 ? * TUE *)
+      State: ENABLED
+      Targets:
+        - Arn: !Ref Cluster
+          Id: RunEcsTask
+          RoleArn: !GetAtt CronExecutionRole.Arn
+          Input: !Sub '{"containerOverrides": [{"name": "${ContainerName}", "command": ["python", "manage.py", "load_nfl_events"]}]}'
+          EcsParameters:
+            TaskCount: 1
+            TaskDefinitionArn: !Ref TaskDefinition
+            LaunchType: FARGATE
+            NetworkConfiguration:
+              AwsVpcConfiguration:
+                AssignPublicIp: DISABLED
+                SecurityGroups:
+                  - !Ref SecurityGroup
+                Subnets:
+                  - !Ref SubnetA
+                  - !Ref SubnetB

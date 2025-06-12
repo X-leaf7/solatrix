@@ -1,0 +1,52 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  // background: dsm.$white
+  grid-area: footer
+  padding-block: dsm.grid(5)
+
+.boxed
+  @include dsm.container
+  @include dsm.flex ($align: stretch)
+  @include dsm.mq ($until: tablet-medium)
+    align-items: center
+    flex-direction: column
+    gap: dsm.grid(2)
+
+.box1
+  @include dsm.flex ($direction: column, $align: flex-start)
+  @include dsm.mq ($until: tablet-medium)
+    align-items: center
+  &
+    gap: dsm.grid(2)
+
+.box2
+  @include dsm.flex ($direction: column, $align: flex-end)
+  @include dsm.mq ($until: tablet-medium)
+    align-items: center
+  &
+    gap: dsm.grid(2)
+
+.logo
+  max-inline-size: dsm.grid(34)
+  @include dsm.mq ($until: tablet-medium)
+    max-inline-size: dsm.grid(20)
+  svg
+    @include dsm.image-full
+
+.colophon
+  color: dsm.$grey-600
+  font-size: dsm.pixrem(14)
+
+.navigation
+  @include dsm.flex ($justify: flex-end)
+  &
+    gap: dsm.grid(5)
+
+.anchor
+  color: dsm.$grey-600
+
+.social
+  @include dsm.flex ($justify: flex-end)
+  &
+    gap: dsm.grid(1.25)

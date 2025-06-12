@@ -1,0 +1,18 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  background: dsm.$white
+  border-radius: 100%
+  border: 1px solid dsm.$purple-100
+  padding: dsm.grid(.5)
+  img
+    @include dsm.image-full
+
+.large
+  width: dsm.grid(8)
+
+.medium
+  width: dsm.grid(5)
+
+.small
+  width: dsm.grid(3)

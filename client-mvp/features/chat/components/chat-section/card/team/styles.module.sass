@@ -1,0 +1,23 @@
+@use '@/shared/dsm/system' as dsm
+
+.base
+  @include dsm.flex ($direction: column, $justify: flex-start, $align: flex-start)
+  gap: dsm.grid(1)
+.away
+  align-items: flex-end
+  .heading
+    text-align: right
+
+.heading
+  width: dsm.grid(20)
+  overflow-wrap: break-word
+  word-break: break-word
+  font-family: var(--font-dm-sans)
+  max-width: dsm.grid(16)
+
+.location
+  @include dsm.flex ($justify: flex-start)
+  &
+    font-size: dsm.pixrem(12)
+    font-weight: 500
+    gap: dsm.grid(.5)

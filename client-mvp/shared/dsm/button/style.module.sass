@@ -1,0 +1,106 @@
+@use '@/shared/dsm/system' as dsm
+  
+.base
+  @include dsm.flex ($justify: center)
+  &
+    background: none
+    border: none
+    border-radius: dsm.grid(9)
+    font-family: var(--font-dm-sans)
+    font-weight: 500
+    gap: dsm.grid(1)
+  &:hover:not([disabled])
+    cursor: pointer
+
+.primary
+  background: dsm.$gradient-black
+  color: dsm.$white-900
+  &[disabled]
+    background: dsm.$grey-400
+  &.error
+    background: dsm.$red-900
+    color: dsm.$white
+  &:not(.error):not([disabled]):hover
+    background: dsm.$blue-900
+
+.secondary
+  border: 1px solid currentColor
+  color: dsm.$black-900
+  background-color: rgba(255, 255, 255, 0.2)
+  font-weight: 700
+  &.error
+    color: dsm.$red-900
+  &:not(.error):hover
+    color: dsm.$blue-900
+
+.secondaryWhite
+  border: 1px solid currentColor
+  color: dsm.$white-900
+  &.error
+    color: dsm.$red-900
+  &:not(.error):hover
+    color: dsm.$blue-900
+
+.ghost
+  background: rgba(dsm.$white, .3)
+
+.tertiary
+  color: dsm.$black-900
+  &.error
+    color: dsm.$red-900
+
+.danger
+  background: dsm.$red-900
+  color: dsm.$white
+
+.long
+  font-size: dsm.pixrem(16)
+  min-block-size: dsm.grid(7.5)
+  padding-inline: dsm.grid(11)
+  &.hasIcon
+    block-size: dsm.grid(5.5)
+    inline-size: dsm.grid(5.5)
+    min-block-size: auto
+    padding: 0
+    svg
+      height: dsm.grid(3)
+      width: dsm.grid(3)
+
+.large
+  font-size: dsm.pixrem(16)
+  min-block-size: dsm.grid(7.5)
+  padding-inline: dsm.grid(5)
+  &.hasIcon
+    block-size: dsm.grid(5.5)
+    inline-size: dsm.grid(5.5)
+    min-block-size: auto
+    padding: 0
+    svg
+      height: dsm.grid(3)
+      width: dsm.grid(3)
+
+.medium
+  font-size: dsm.pixrem(14)
+  min-block-size: dsm.grid(4.25)
+  padding-inline: dsm.grid(2)
+  &.hasIcon
+    block-size: dsm.grid(4.25)
+    inline-size: dsm.grid(4.25)
+    min-block-size: auto
+    padding: 0
+    svg
+      height: dsm.grid(2)
+      width: dsm.grid(2)
+
+.small
+  font-size: dsm.pixrem(12)
+  min-block-size: dsm.grid(3)
+  padding-inline: dsm.grid(1.25)
+  &.hasIcon
+    block-size: dsm.grid(3)
+    inline-size: dsm.grid(3)
+    min-block-size: auto
+    padding: 0
+    svg
+      height: dsm.grid(1)
+      width: dsm.grid(1)
