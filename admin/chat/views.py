@@ -14,6 +14,10 @@ from .serializers import (
     MessageSerializer
 )
 
+import boto3
+
+ivs_client = boto3.client('ivs', region_name='us-east-1')
+
 class MessagePagination(PageNumberPagination):
     page_size = 50
     page_size_query_param = 'page_size'
@@ -65,6 +69,19 @@ class ChatRoomViewSet(viewsets.ModelViewSet):
                 user=self.request.user,
                 is_admin=True
             )
+
+            response = ivs_client.create_channel(
+                name=f"chatroom-{room.id}",
+                latencyMode='LOW',
+                type='STANDARD',
+            )
+            channel = response['channel']
+            stream_key_response = ivs_client.create_stream_key(channelArn=channel['arn'])
+
+            room.ivs_channel_arn = channel['arn']
+            room.ivs_stream_key = stream_key_response['streamKey']['value']
+            room.ivs_playback_url = channel['playbackUrl']
+            room.save()
     
     @action(detail=False, methods=['get'])
     def all(self, request):

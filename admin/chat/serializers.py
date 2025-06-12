@@ -16,12 +16,13 @@ class ChatRoomSerializer(serializers.ModelSerializer):
     max_members = serializers.IntegerField(min_value=2, max_value=100, default=10)
     current_member_count = serializers.SerializerMethodField()
     event_id = serializers.UUIDField(write_only=True)
+    ivs_playback_url = serializers.CharField(read_only=True)
     
     class Meta:
         model = ChatRoom
         fields = [
             'id', 'name', 'description', 'creator', 'creator_details',
-            'created_at', 'updated_at', 'member_count', 'is_member', 'event_id',
+            'created_at', 'updated_at', 'member_count', 'is_member', 'event_id', 'ivs_playback_url',
             'last_message', 'is_private', 'max_members', 'invitation_code', 'current_member_count'
         ]
         read_only_fields = ['creator', 'created_at', 'updated_at', 'current_member_count']

@@ -25,6 +25,9 @@ class ChatRoom(models.Model):
         # TODO: update the related name
         related_name='created_rooms_event'
     )
+    ivs_channel_arn = models.CharField(max_length=255, blank=True, null=True)
+    ivs_stream_key = models.CharField(max_length=255, blank=True, null=True)
+    ivs_playback_url = models.URLField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
